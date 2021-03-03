@@ -13,10 +13,6 @@ assignees: ''
 
 <!-- Note: This should be the helm chart name and version you have deployed. e.g. jackett 5.4.0 -->
 
-**Container name and tag:**
-
-<!-- Note: This should be the container image version you have deployed. e.g. linuxserver/jackett:v0.16.2106 -->
-
 **What steps did you take and what happened:**
 
 <!-- Note: This should be a clear and concise description of what the bug is. -->
