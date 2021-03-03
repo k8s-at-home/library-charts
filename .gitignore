@@ -1,0 +1,18 @@
+# Developer dependencies
+.bin
+
+# IDE resources
+.vscode
+.idea
+.devcontainer/
+
+# Helm resources
+stable/*/Chart.lock
+stable/*/charts
+incubator/*/Chart.lock
+incubator/*/charts
+
+# Other rsources
+.env
+.envrc
+Gemfile.lock
