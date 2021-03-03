@@ -40,8 +40,8 @@ jobs:
 
     - name: Run chart-testing (lint)
       id: lint
-      run: ct lint --config .github/ct.yaml
       if: steps.list-changed.outputs.changed == 'true'
+      run: ct lint --config .github/ct.yaml
 
   unittest:
     if: "!contains(github.event.head_commit.message, '[ci-skip]')"
