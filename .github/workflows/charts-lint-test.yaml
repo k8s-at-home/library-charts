@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       changed: ${{ steps.list-changed.outputs.changed }}
-      common: ${{ steps.list-changed.outputs.common }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -68,10 +67,11 @@ jobs:
         ruby-version: 2.7
 
     - name: Install dependencies
+      env:
+        RUBYJQ_USE_SYSTEM_LIBRARIES: 1
       run: |
-        export RUBYJQ_USE_SYSTEM_LIBRARIES=1
         bundle install
 
     - name: Run tests
       run: |
-        bundle exec m -r test/charts
+        bundle exec m -r test
