@@ -6,3 +6,5 @@ chart-dirs:
 - stable
 chart-repos:
 - k8s-at-home=https://k8s-at-home.com/charts
+excluded-charts:
+- common-test
