@@ -16,3 +16,6 @@ incubator/*/charts
 .env
 .envrc
 Gemfile.lock
+
+# Trash
+.DS_Store
