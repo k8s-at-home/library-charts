@@ -6,7 +6,7 @@ kubeVersion: ">=1.16.0-0"
 keywords:
 - k8s-at-home
 - common
-home: https://github.com/k8s-at-home/charts/tree/master/charts/common-test
+home: https://github.com/k8s-at-home/library-charts/tree/main/stable/common-test
 maintainers:
 - name: bjw-s
   email: me@bjw-s.dev
