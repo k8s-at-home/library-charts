@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require_relative '../test_helper'
+require_relative '../../test_helper'
 
 class Test < ChartTest
-  @@chart = Chart.new('stable/common-test')
+  @@chart = Chart.new('helper-charts/common-test')
   
   describe @@chart.name do
     describe 'controller type' do

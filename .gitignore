@@ -7,10 +7,10 @@
 .devcontainer/
 
 # Helm resources
-stable/*/Chart.lock
-stable/*/charts
-incubator/*/Chart.lock
-incubator/*/charts
+charts/*/Chart.lock
+charts/*/charts
+helper-charts/*/Chart.lock
+helper-charts/*/charts
 
 # Other rsources
 .env
