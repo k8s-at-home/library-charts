@@ -4,10 +4,14 @@ on:
   push:
     # branches:
     # - main
+    # paths:
+    # - 'stable/**'
+    # - 'incubator/**'
+    # - '!/**/README.md'
+  pull_request:
     paths:
-    - 'stable/**'
     - 'incubator/**'
-    - '!/**/README.md'
+    - 'stable/**'
 
 jobs:
   pre-release:
