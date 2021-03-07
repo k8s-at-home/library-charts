@@ -11,6 +11,7 @@ incubator/*/charts
 
 # Other rsources
 .env
+.deploy/
 Gemfile.lock
 
 # Trash
