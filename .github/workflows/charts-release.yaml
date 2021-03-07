@@ -2,12 +2,12 @@ name: "Charts: Release"
 
 on:
   push:
-    # branches:
-    # - main
-    # paths:
-    # - 'stable/**'
-    # - 'incubator/**'
-    # - '!/**/README.md'
+    branches:
+    - main
+    paths:
+    - 'stable/**'
+    - 'incubator/**'
+    - '!/**/README.md'
   pull_request:
     paths:
     - 'incubator/**'
@@ -57,7 +57,7 @@ jobs:
       uses: helm/chart-releaser-action@v1.2.0
       with:
         charts_dir: stable
-        charts_repo_url: https://library-charts.k8s-at-home.com/stable/
+        charts_repo_url: https://library-charts.k8s-at-home.com
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -92,6 +92,6 @@ jobs:
       uses: helm/chart-releaser-action@v1.2.0
       with:
         charts_dir: incubator
-        charts_repo_url: https://library-charts.k8s-at-home.com/incubator/
+        charts_repo_url: https://library-charts.k8s-at-home.com
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
