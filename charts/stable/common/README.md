@@ -33,8 +33,8 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: common
-  version: 3.1.0
-  repository: https://k8s-at-home.com/charts/
+  version: 1.0.0
+  repository: https://library-charts.k8s-at-home.com
 ```
 Write a `values.yaml` with some basic defaults you want to present to the user e.g.
 
