@@ -5,13 +5,8 @@ on:
     branches:
     - main
     paths:
-    - 'stable/**'
-    - 'incubator/**'
+    - 'charts/**'
     - '!/**/README.md'
-  pull_request:
-    paths:
-    - 'incubator/**'
-    - 'stable/**'
 
 jobs:
   pre-release:

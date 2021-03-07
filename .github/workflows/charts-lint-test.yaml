@@ -3,8 +3,8 @@ name: "Charts: Lint and test"
 on:
   pull_request:
     paths:
-    - 'incubator/**'
-    - 'stable/**'
+    - 'charts/**'
+    - 'helper-charts/**'
 
 jobs:
   lint:
@@ -103,5 +103,5 @@ jobs:
       if: needs.lint.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
-      run: ct install --config .github/ct.yaml --excluded-charts "common"
+      run: ct install --chart-dirs "helper-charts" --config .github/ct.yaml
       if: needs.lint.outputs.changed == 'true'
