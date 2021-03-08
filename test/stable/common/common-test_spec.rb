@@ -156,7 +156,6 @@ class Test < ChartTest
           }
         }
         chart.value values
-        puts jq('.metadata', resource('Secret'))
         jq('.spec.template.spec.containers[0].envFrom[0].secretRef.name', resource('Deployment')).must_equal expectedSecretName
         jq('.metadata.name', resource('Secret')).must_equal expectedSecretName
         jq('.stringData.STATIC_SECRET', resource('Secret')).must_equal values[:secret].values[0].to_s
