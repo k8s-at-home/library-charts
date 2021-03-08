@@ -1,0 +1,57 @@
+name: "Charts: Release"
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'charts/**'
+    - '!/**/README.md'
+
+jobs:
+  pre-release:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    steps:
+    - name: Block concurrent jobs
+      uses: softprops/turnstyle@v1
+      with:
+        continue-after-seconds: 180
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-charts:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    needs: pre-release
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Block concurrent jobs
+      uses: softprops/turnstyle@v1
+      with:
+        continue-after-seconds: 180
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Configure Git
+      run: |
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.4.0
+
+    - name: Run chart-releaser
+      uses: helm/chart-releaser-action@v1.2.0
+      with:
+        charts_dir: charts/*
+        charts_repo_url: https://library-charts.k8s-at-home.com
+      env:
+        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

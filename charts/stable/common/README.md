@@ -1,6 +1,6 @@
 # common
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -19,54 +19,13 @@ Kubernetes: `>=1.16.0-0`
 | Repository | Name | Version |
 |------------|------|---------|
 
-## TL;DR
-
-```console
-helm repo add k8s-at-home https://k8s-at-home.com/charts/
-helm repo update
-helm install common k8s-at-home/common
-```
-
-## Installing the Chart
-
-To install the chart with the release name `common`
-
-```console
-helm install common k8s-at-home/common
-```
-
-## Uninstalling the Chart
-
-To uninstall the `common` deployment
-
-```console
-helm uninstall common
-```
-
-The command removes all the Kubernetes components associated with the chart **including persistent volumes** and deletes the release.
-
 ## Configuration
 
 Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
-Other values may be used from the [values.yaml](../common/values.yaml) from the [common library](../common).
-
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
-
-```console
-helm install common \
-  --set env.TZ="America/New York" \
-    k8s-at-home/common
-```
-
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart.
-
-```console
-helm install common k8s-at-home/common -f values.yaml
-```
 
 ## Creating a new chart
 
-First be sure to checkout the many charts that already use this like [qBittorrent](../qbittorrent/), [node-red](../node-red/) or the many others in this repository.
+First be sure to checkout the many charts that already use this like [qBittorrent](https://github.com/k8s-at-home/charts/tree/master/charts/qbittorrent/), [node-red](https://github.com/k8s-at-home/charts/tree/master/charts/node-red/) or the many others in this repository.
 
 Include this chart as a dependency in your `Chart.yaml` e.g.
 
@@ -74,8 +33,8 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: common
-  version: 3.1.0
-  repository: https://k8s-at-home.com/charts/
+  version: 1.0.0
+  repository: https://library-charts.k8s-at-home.com
 ```
 Write a `values.yaml` with some basic defaults you want to present to the user e.g.
 
@@ -84,7 +43,7 @@ Write a `values.yaml` with some basic defaults you want to present to the user e
 # IMPORTANT NOTE
 #
 # This chart inherits from our common library chart. You can check the default values/options here:
-# https://github.com/k8s-at-home/charts/tree/master/charts/common/values.yaml
+# https://github.com/k8s-at-home/library-charts/tree/main/stable/common/values.yaml
 #
 
 image:
@@ -143,7 +102,7 @@ helm dependency update
 
 ## Values
 
-**Important**: When deploying an application Helm chart you can add more values from our common library chart [here](https://github.com/k8s-at-home/charts/tree/master/charts/common/)
+**Important**: When deploying an application Helm chart you can add more values from our common library chart [here](https://github.com/k8s-at-home/library-charts/tree/main/stable/common/)
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -278,156 +237,21 @@ All notable changes to this application Helm chart will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [3.1.0]
-
-#### Added
-
-- Allow setting secret values through Helm values file.
-
-### [3.0.1]
-
-#### Fixed
-
-- Fixed `kubeVersion` in `Chart.yaml` not working with people running k8s pre-releases
-- Added `ingressClassName` to `values.yaml`
-
-### [3.0.0]
+### [1.0.0]
 
 #### Changed
 
-- `probes.startupProbe` is now enabled by default. This will allow for quicker `Ready` states on Pods. It will precede the liveness and readiness Probes. *Note:* This requires that you are running [Kubernetes 1.16](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/)
-- Aligned our default values for liveness and readiness Probes with the Kubernetes defaults:
-  - `initialDelaySeconds` is now `0`
-  - `timeoutSeconds` is now `1`
-  - `failureThreshold` is now `3`
-
-### [2.5.1]
-
-#### Added
-
-- Fixed a small typo in `values.yaml`: `ingress.tls.hostTpl` -> `ingress.tls.hostsTpl`
-
-### [2.5.0]
-
-#### Added
-
-- Allow setting ingress values through Helm templates:
-  - `ingress.hosts.hostTpl`
-  - `ingress.tls.secretNameTpl`
-  - `ingress.tls.hostsTpl`
-
-### [2.4.0]
-
-#### Added
-
-- Allow setting environment variables from Downward API via `envValueFrom`. See [the Kubernetes docs](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) for more information.
-
-### [2.3.0]
-
-#### Added
-
-- Allow overriding the main container command.
-- Allow setting Helm templates as environment variables via `envTpl`. The given value is parsed through Helm's `tpl` function, allowing for powerful variable substitution.
-- Support for defining volumeClaimTemplates for StatefulSet.
-- Allow the following Pod spec fields to be configurable:
-  - `priorityClassName`
-  - `schedulerName`
-  - `hostname`
+- Moved common library chart to separate repository
 
 #### Fixed
 
-- `values.yaml` now contains the following sections, these were already functional but were previously undocumented:
-  - `podSecurityContext`
-  - `securityContext`
-  - `resources`
+- The `command` and `args` values now properly support both string and list values.
 
-### [2.2.1]
-
-#### Fixed
-
-- Made explicit that `service.port.targetPort` cannot be a named port.
-
-### [2.2.0]
-
-#### Added
-
-- Allow serviceLinks to be enabled/disabled.
-- Support for ingressClassName on apiVersion `networking.k8s.io/v1` by setting `ingress.ingressClassName`.
-- Added some initial proper unit tests for the `common` chart.
-
-#### Changed
-
-- `service.port.targetPort` is now used in the container spec instead of `service.port.port` if specified. This allows for different service and container ports. (Implements [#465](https://github.com/k8s-at-home/charts/issues/465)).
-
-#### Fixed
-
-- Document setting environment variables for code-server add-on in `values.yaml` (Fixes [#436](https://github.com/k8s-at-home/charts/issues/436)).
-- Set service targetPort to the service port name first if no `targetPort` value is given.
-
-### [2.1.0]
-
-#### Added
-
-- Allow for additional arguments to be added to code-server runtime via `addons.codeserver.args`
-
-### [2.0.4]
-
-#### Fixed
-
-- `periodSeconds` now works for all probe types.
-
-### [2.0.0]
-
-#### Changed
-
-- :warning: Updated `probes` logic to support custom probes, it is now possible to set your own custom probes by setting the `probes.[liveness|readiness|startup].custom` value to `true` and configuring them. Default is `false`.
-- :warning: `addon.vpn.imagePullPolicy` is now `addon.vpn.[openvpn|wireguard].image.pullPolicy`. Default is `IfNotPresent`
-- [code-server](https://github.com/cdr/code-server) is now an `addon` like `vpn`. This enables a code-server container inside the pod which allows you to modify a configuration in a volume attached to the pod. Default for `addons.codeserver.enabled` is `false`
-- Added `envFrom` for more configuration with environment variables
-- Added `dnsConfig` to be configurable
-- Added support for 1.19+ ingress spec
-- Added this [CHANGELOG.md](CHANGELOG.md)
-
-#### Fixed
-
-- `nameOverride` and `fullNameOverride` not in `values.yaml`
-
-### [1.7.0]
-
-This is the last version before starting this changelog. All sorts of cool stuff was changed, but only `git log` remembers what that was :slightly_frowning_face:
-
-[3.1.0]: #3.1.0
-
-[3.0.1]: #3.0.1
-
-[3.0.0]: #3.0.0
-
-[2.5.1]: #2.5.1
-
-[2.5.0]: #2.5.0
-
-[2.4.0]: #2.4.0
-
-[2.3.0]: #2.3.0
-
-[2.2.1]: #2.2.1
-
-[2.2.0]: #2.2.0
-
-[2.1.0]: #2.1.0
-
-[2.0.4]: #2.0.4
-
-[2.0.0]: #2.0.0
-
-[1.7.0]: #1.7.0
+[1.0.0]: #1.0.0
 
 ## Support
 
-- See the [Wiki](https://github.com/k8s-at-home/charts/wiki).
-- Open a [issue](https://github.com/k8s-at-home/charts/issues/new/choose)
-- Ask a [question](https://github.com/k8s-at-home/charts/discussions)
+- See the [Docs](http://docs.k8s-at-home.com).
+- Open an [issue](https://github.com/k8s-at-home/library-charts/issues/new/choose)
+- Ask a [question](https://github.com/k8s-at-home/organization/discussions)
 - Join our [Discord](https://discord.gg/sTMX7Vh) community
-
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

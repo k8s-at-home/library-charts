@@ -6,10 +6,20 @@ The main container included in the controller.
   image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- with .Values.command }}
+  {{- if kindIs "string" . }}
   command: {{ . }}
+  {{- else }}
+  command: 
+  {{ toYaml . | nindent 2 }}
+  {{- end }}
   {{- end }}
   {{- with .Values.args }}
+  {{- if kindIs "string" . }}
   args: {{ . }}
+  {{- else }}
+  args: 
+  {{ toYaml . | nindent 2 }}
+  {{- end }}
   {{- end }}
   {{- with .Values.securityContext }}
   securityContext:
