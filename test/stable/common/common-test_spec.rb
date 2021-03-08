@@ -38,6 +38,56 @@ class Test < ChartTest
       end
     end
 
+    describe 'container command' do
+      it 'defaults to nil' do
+        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][0]['command'])
+      end
+
+      it 'accepts a single string' do
+        values = {
+          command: "/bin/sh"
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].command', resource('Deployment')).must_equal values[:command]
+      end
+
+      it 'accepts a list of strings' do
+        values = {
+          command: [
+            "/bin/sh",
+            "-c"
+          ]
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].command', resource('Deployment')).must_equal values[:command]
+      end
+    end
+
+    describe 'container arguments' do
+      it 'defaults to nil' do
+        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][0]['args'])
+      end
+
+      it 'accepts a single string' do
+        values = {
+          args: "sleep infinity"
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].args', resource('Deployment')).must_equal values[:args]
+      end
+
+      it 'accepts a list of strings' do
+        values = {
+          args: [
+            "sleep",
+            "infinity"
+          ]
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].args', resource('Deployment')).must_equal values[:args]
+      end
+    end
+
     describe 'Environment settings' do
       it 'Check no environment variables' do
         values = {}

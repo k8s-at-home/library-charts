@@ -243,6 +243,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved common library chart to separate repository
 
+#### Fixed
+
+- The `command` and `args` values now properly support both string and list values.
 
 [1.0.0]: #1.0.0
 
