@@ -33,7 +33,7 @@ jobs:
     - name: Run chart-testing (list-changed)
       id: list-changed
       run: |
-        changed=$(ct list-changed --config .github/ct.yaml)
+        changed=$(ct list-changed --config .github/ct-lint.yaml)
         if [[ -n "$changed" ]]; then
           echo "::set-output name=changed::true"
         fi
@@ -41,7 +41,7 @@ jobs:
     - name: Run chart-testing (lint)
       id: lint
       if: steps.list-changed.outputs.changed == 'true'
-      run: ct lint --config .github/ct.yaml
+      run: ct lint --config .github/ct-lint.yaml
 
   unittest:
     if: "!contains(github.event.head_commit.message, '[ci-skip]')"
@@ -98,10 +98,12 @@ jobs:
     - name: Set up chart-testing
       uses: helm/chart-testing-action@v2.0.1
 
-    - name: Create kind cluster
-      uses: helm/kind-action@v1.1.0
+    - name: Create k3d cluster
+      uses: nolar/setup-k3d-k3s@v1
+      with:
+        version: v1.19
       if: needs.lint.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
-      run: ct install --chart-dirs "helper-charts" --config .github/ct.yaml
+      run: ct install --config .github/ct-install.yaml
       if: needs.lint.outputs.changed == 'true'
