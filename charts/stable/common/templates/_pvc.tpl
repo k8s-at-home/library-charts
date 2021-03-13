@@ -11,7 +11,7 @@ of all the entries of the persistence key.
         {{- $_ := set $persistenceValues "nameSuffix" $index -}}
       {{- end -}}
       {{- $_ := set $ "ObjectValues" (dict "persistence" $persistenceValues) -}}
-      {{- print ("---") | nindent 0 -}}
+      {{- print ("") | nindent 0 -}}
       {{- include "common.classes.pvc" $ -}}
     {{- end }}
   {{- end }}
