@@ -12,7 +12,12 @@ Volumes included by the controller.
 {{- else -}}
   {{- if $persistence.emptyDir -}}
   {{- /* Always prefer an emptyDir next if that is set */}}
+  {{- if $persistence.emptyDir.medium -}}
+  emptyDir:
+    medium: "{{ $persistence.emptyDir.medium }}"
+  {{- else -}}
   emptyDir: {}
+  {{- end }}
   {{- else -}}
   {{- /* Otherwise refer to the PVC name */}}
   persistentVolumeClaim:
