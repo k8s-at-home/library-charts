@@ -244,7 +244,8 @@ persistence:
   # Create an emptyDir volume to share between all containers
   shared:
     enabled: false
-    emptyDir: true
+    emptyDir:
+      enabled: true
     mountPath: /shared
 
 additionalVolumes: []
