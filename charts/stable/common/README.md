@@ -239,9 +239,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [1.1.0]
 
-#### Changed
+#### Added
 
-- Added support for configuring `$persistence.emptyDir.medium`
+- Added support for using Helm template language in `additionalContainers`
+- Added support for configuring `persistence.emptyDir.medium`
 
 ### [1.0.0]
 
