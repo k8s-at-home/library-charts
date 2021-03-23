@@ -12,5 +12,6 @@ ingress:
 
 config:
   enabled: true
-  emptyDir: true
+  emptyDir:
+    enabled: true
     medium: "Memory"
