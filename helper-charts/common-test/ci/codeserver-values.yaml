@@ -13,7 +13,8 @@ ingress:
 persistence:
   config:
     enabled: true
-    emptyDir: true
+    emptyDir: 
+      enabled: true
     mountPath: /www/assets
 
 addons:

@@ -128,5 +128,76 @@ class Test < ChartTest
         jq('.stringData.STATIC_SECRET', resource('Secret')).must_equal values[:secret].values[0].to_s
       end
     end
+
+    describe 'container::persistence' do
+      it 'supports multiple volumeMounts' do
+        values = {
+          persistence: {
+              cache: {
+                enabled: true,
+                emptyDir: {
+                  enabled: true
+                }
+              },
+              config: {
+                enabled: true,
+                existingClaim: "configClaim"
+              },
+              data: {
+                enabled: true,
+                existingClaim: "dataClaim"
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "cache"
+        jq('.spec.template.spec.containers[0].volumeMounts[1].name', resource('Deployment')).must_equal "config"
+        jq('.spec.template.spec.containers[0].volumeMounts[2].name', resource('Deployment')).must_equal "data"
+      end
+
+      it 'defaults mountPath to persistence key' do
+        values = {
+          persistence: {
+              data: {
+                enabled: true,
+                existingClaim: "dataClaim"
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
+        jq('.spec.template.spec.containers[0].volumeMounts[0].mountPath', resource('Deployment')).must_equal "/data"
+      end
+
+      it 'supports setting custom mountPath' do
+        values = {
+          persistence: {
+              data: {
+                enabled: true,
+                existingClaim: "dataClaim",
+                mountPath: "/myMountPath"
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
+        jq('.spec.template.spec.containers[0].volumeMounts[0].mountPath', resource('Deployment')).must_equal "/myMountPath"
+      end
+
+      it 'supports setting subPath' do
+        values = {
+          persistence: {
+              data: {
+                enabled: true,
+                existingClaim: "dataClaim",
+                subPath: "mySubPath"
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
+        jq('.spec.template.spec.containers[0].volumeMounts[0].subPath', resource('Deployment')).must_equal "mySubPath"
+      end
+    end
   end
 end

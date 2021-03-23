@@ -42,6 +42,38 @@ class Test < ChartTest
       end
     end
 
+    describe 'pod::persistence' do
+      it 'multiple volumes' do
+        values = {
+          persistence: {
+              cache: {
+                enabled: true,
+                emptyDir: {
+                  enabled: true
+                }
+              },
+              config: {
+                enabled: true,
+                existingClaim: "configClaim",
+                emptyDir: {
+                  enabled: false
+                }
+              },
+              data: {
+                enabled: true,
+                existingClaim: "dataClaim"
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'cache'
+        jq('.spec.template.spec.volumes[1].name', resource('Deployment')).must_equal 'config'
+        jq('.spec.template.spec.volumes[1].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'configClaim'
+        jq('.spec.template.spec.volumes[2].name', resource('Deployment')).must_equal 'data'
+        jq('.spec.template.spec.volumes[2].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'dataClaim'
+      end
+    end
+
     describe 'pod::persistence::emptyDir' do
       it 'can be configured' do
         values = {

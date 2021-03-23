@@ -55,7 +55,7 @@ The main container included in the controller.
   volumeMounts:
   {{- range $index, $PVC := .Values.persistence }}
   {{- if $PVC.enabled }}
-  - mountPath: {{ $PVC.mountPath }}
+  - mountPath: {{ $PVC.mountPath | default (printf "/%v" $index) }}
     name: {{ $index }}
   {{- if $PVC.subPath }}
     subPath: {{ $PVC.subPath }}
