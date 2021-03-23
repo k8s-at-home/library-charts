@@ -5,7 +5,7 @@ of all the entries of the persistence key.
 {{- define "common.pvc" -}}
   {{- /* Generate pvc as required */ -}}
   {{- range $index, $PVC := .Values.persistence }}
-    {{- if and $PVC.enabled (not (or $PVC.emptyDir $PVC.existingClaim)) -}}
+    {{- if and $PVC.enabled (not (or $PVC.emptyDir.enabled $PVC.existingClaim)) -}}
       {{- $persistenceValues := $PVC -}}
       {{- if not $persistenceValues.nameSuffix -}}
         {{- $_ := set $persistenceValues "nameSuffix" $index -}}
