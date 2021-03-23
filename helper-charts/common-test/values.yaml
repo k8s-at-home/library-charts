@@ -9,3 +9,8 @@ service:
 
 ingress:
   enabled: true
+
+config:
+  enabled: true
+  emptyDir: true
+    medium: "Memory"
