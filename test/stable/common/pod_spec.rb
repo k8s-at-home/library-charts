@@ -54,7 +54,10 @@ class Test < ChartTest
               },
               config: {
                 enabled: true,
-                existingClaim: "configClaim"
+                existingClaim: "configClaim",
+                emptyDir: {
+                  enabled: false
+                }
               },
               data: {
                 enabled: true,
