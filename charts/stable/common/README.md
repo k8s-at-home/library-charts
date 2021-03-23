@@ -73,7 +73,8 @@ ingress:
 persistence:
   data:
     enabled: false
-    emptyDir: false
+    emptyDir: 
+      enabled: false
     mountPath: /data
 ```
 
