@@ -10,13 +10,20 @@ Volumes included by the controller.
   persistentVolumeClaim:
     claimName: {{ $persistence.existingClaim }}
 {{- else -}}
-  {{- if $persistence.emptyDir -}}
+  {{- if $persistence.emptyDir }}
   {{- /* Always prefer an emptyDir next if that is set */}}
-  {{- if $persistence.emptyDir.medium -}}
+  {{- if $persistence.emptyDir.enabled }}
+  {{- if or $persistence.emptyDir.medium $persistence.emptyDir.sizeLimit }}
   emptyDir:
-    medium: "{{ $persistence.emptyDir.medium }}"
-  {{- else -}}
+    {{- with $persistence.emptyDir.medium }}
+    medium: "{{ . }}"
+    {{- end }}
+    {{- with $persistence.emptyDir.sizeLimit }}
+    sizeLimit: "{{ . }}"
+    {{- end }}
+  {{- else }}
   emptyDir: {}
+  {{- end }}
   {{- end }}
   {{- else -}}
   {{- /* Otherwise refer to the PVC name */}}

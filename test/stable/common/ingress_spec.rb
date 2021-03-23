@@ -6,7 +6,7 @@ class Test < ChartTest
   
   describe @@chart.name do  
     describe 'ingress' do
-      it 'should be disabled when ingress.enabled: false' do
+      it 'disabled when ingress.enabled: false' do
         values = {
           ingress: {
             enabled: false
@@ -16,7 +16,7 @@ class Test < ChartTest
         assert_nil(resource('Ingress'))
       end
 
-      it 'should be enabled when ingress.enabled: true' do
+      it 'enabled when ingress.enabled: true' do
         values = {
           ingress: {
             enabled: true
@@ -27,7 +27,7 @@ class Test < ChartTest
         refute_nil(resource('Ingress'))
       end
 
-      it 'ingress with hosts' do
+      it 'with hosts' do
         values = {
           ingress: {
             hosts: [
@@ -48,7 +48,7 @@ class Test < ChartTest
         jq('.spec.rules[0].http.paths[0].path', resource('Ingress')).must_equal values[:ingress][:hosts][0][:paths][0][:path]
       end
 
-      it 'ingress with hosts template is evaluated' do
+      it 'with hosts template is evaluated' do
         expectedHostName = 'common-test.hostname'
         values = {
           ingress: {
@@ -70,7 +70,7 @@ class Test < ChartTest
         jq('.spec.rules[0].http.paths[0].path', resource('Ingress')).must_equal values[:ingress][:hosts][0][:paths][0][:path]
       end
 
-      it 'ingress with hosts and tls' do
+      it 'with hosts and tls' do
         values = {
           ingress: {
             enabled: true,
@@ -100,7 +100,7 @@ class Test < ChartTest
         jq('.spec.tls[0].secretName', resource('Ingress')).must_equal values[:ingress][:tls][0][:secretName]
       end
 
-      it 'ingress with hosts and tls templates is evaluated' do
+      it 'with hosts and tls templates is evaluated' do
         expectedHostName = 'common-test.hostname'
         expectedSecretName = 'common-test-hostname-secret-name'
         values = {
