@@ -4,6 +4,5 @@ helm-extra-args: --timeout 600s
 chart-dirs:
 - charts/incubator
 - charts/stable
-- helper-charts
 chart-repos:
 - k8s-at-home-libraries=https://library-charts.k8s-at-home.com
