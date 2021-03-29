@@ -454,3 +454,28 @@ addons:
 
     securityContext:
       runAsUser: 0
+
+  # Enable running a promtail container in the pod to access logs and ship them to loki
+  promtail:
+    enabled: false
+
+    image:
+      repository: grafana/promtail
+      pullPolicy: IfNotPresent
+      tag: 2.2.0
+
+    # The URL(s) to Loki
+    loki: []
+    # - http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+
+    # The paths to logs on the volume
+    logs: []
+    # - name: log
+    #   path: /config/logs/*.log
+
+    # Specify a list of volumes that get mounted in the promtail container.
+    # At least 1 volumeMount is required!
+    volumeMounts: []
+    # - name: config
+    #   mountPath: /config
+    #   readOnly: true
