@@ -1,5 +1,5 @@
 {{/*
-The volume (referencing VPN config and scripts) to be inserted into additionalVolumes.
+The volume (referencing config) to be inserted into additionalVolumes.
 */}}
 {{- define "common.addon.promtail.volume" -}}
 name: promtail-config
