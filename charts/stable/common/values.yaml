@@ -389,7 +389,7 @@ addons:
     image:
       repository: codercom/code-server
       pullPolicy: IfNotPresent
-      tag: 3.7.4
+      tag: 3.9.2
 
     # Set any environment variables for code-server here
     env: {}
@@ -451,6 +451,39 @@ addons:
       #  - secretName: chart-example-tls
       #    hosts:
       #      - code.chart-example.local
+
+    securityContext:
+      runAsUser: 0
+
+  # Enable running a promtail container in the pod to access logs and ship them to loki
+  promtail:
+    enabled: false
+
+    image:
+      repository: grafana/promtail
+      pullPolicy: IfNotPresent
+      tag: 2.2.0
+
+    # Set any environment variables for promtail here
+    env: {}
+
+    # Set promtail command line arguments
+    args: []
+
+    # The URL to Loki
+    loki: ""
+
+    # The paths to logs on the volume
+    logs: []
+    # - name: log
+    #   path: /config/logs/*.log
+
+    # Specify a list of volumes that get mounted in the promtail container.
+    # At least 1 volumeMount is required!
+    volumeMounts: []
+    # - name: config
+    #   mountPath: /config
+    #   readOnly: true
 
     securityContext:
       runAsUser: 0
