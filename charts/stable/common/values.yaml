@@ -464,6 +464,12 @@ addons:
       pullPolicy: IfNotPresent
       tag: 2.2.0
 
+    # Set any environment variables for promtail here
+    env: {}
+
+    # Set promtail command line arguments
+    args: []
+
     # The URL(s) to Loki
     loki: []
     # - http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
