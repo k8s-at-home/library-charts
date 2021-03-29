@@ -389,7 +389,7 @@ addons:
     image:
       repository: codercom/code-server
       pullPolicy: IfNotPresent
-      tag: 3.7.4
+      tag: 3.9.2
 
     # Set any environment variables for code-server here
     env: {}
