@@ -11,6 +11,13 @@ It will include / inject the required templates based on the given values.
     {{- $_ := set .Values "additionalContainers" $additionalContainers -}}
   {{- end -}}
 
+  {{/* Include the configmap if not empty */}}
+  {{- $configmap := include "common.addon.promtail.configmap" . -}}
+  {{- if $configmap -}}
+    {{- print "---" | nindent 0 -}}
+    {{- $configmap | nindent 0 -}}
+  {{- end -}}
+
   {{/* Append the promtail config volume to the additionalVolumes */}}
   {{- $volume := include "common.addon.promtail.volume" . | fromYaml -}}
   {{- if $volume -}}
