@@ -19,6 +19,7 @@ env:
     value: {{ $v | quote }}
 {{- end }}
 {{- end }}
+args:
 {{- range .Values.addons.promtail.args }}
 - {{ . | quote }}
 {{- end }}
