@@ -8,6 +8,10 @@ The promtail sidecar container to be inserted.
 name: promtail
 image: "{{ .Values.addons.promtail.image.repository }}:{{ .Values.addons.promtail.image.tag }}"
 imagePullPolicy: {{ .Values.addons.promtail.pullPolicy }}
+{{- with .Values.addons.codeserver.securityContext }}
+securityContext:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- with .Values.addons.promtail.env }}
 env:
 {{- range $k, $v := . }}

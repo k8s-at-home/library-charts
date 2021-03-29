@@ -13,8 +13,7 @@ persistence:
 addons:
   promtail:
     enabled: true
-    loki:
-    - http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+    loki: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
     logs:
     - name: qbittorrent
       path: /config/data/qBittorrent/logs/*.log

@@ -470,9 +470,8 @@ addons:
     # Set promtail command line arguments
     args: []
 
-    # The URL(s) to Loki
-    loki: []
-    # - http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+    # The URL to Loki
+    loki: ""
 
     # The paths to logs on the volume
     logs: []
@@ -485,3 +484,6 @@ addons:
     # - name: config
     #   mountPath: /config
     #   readOnly: true
+
+    securityContext:
+      runAsUser: 0

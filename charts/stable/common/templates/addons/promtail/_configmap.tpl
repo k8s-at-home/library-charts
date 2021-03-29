@@ -16,9 +16,9 @@ data:
       grpc_listen_port: 0
     positions:
       filename: /tmp/positions.yaml
-    clients:
-    {{- range .Values.addons.promtail.loki }}
-    - url: {{ . }}
+    {{- with .Values.addons.promtail.loki }}
+    client:
+      url: {{ . }}
     {{- end }}
     scrape_configs:
     {{- range .Values.addons.promtail.logs }}
