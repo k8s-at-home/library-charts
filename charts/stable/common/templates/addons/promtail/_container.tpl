@@ -22,8 +22,13 @@ env:
 {{- range .Values.addons.promtail.args }}
 - {{ . | quote }}
 {{- end }}
+- "-config.file=/etc/promtail/promtail.yaml"
 {{- with .Values.addons.promtail.volumeMounts }}
 volumeMounts:
+  - name: promtail-config
+    mountPath: /etc/promtail/promtail.yaml
+    subPath: promtail.yaml
+    readOnly: true
   {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with .Values.addons.promtail.resources }}
