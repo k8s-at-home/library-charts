@@ -15,6 +15,11 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.addon.vpn" . }}
   {{- end -}}
 
+  {{- /* Enable promtail add-on if required */ -}}
+  {{- if .Values.addons.promtail.enabled }}
+    {{- include "common.addon.promtail" . }}
+  {{- end -}}
+
   {{- /* Build the templates */ -}}
   {{- include "common.pvc" . }}
   {{- print "---" | nindent 0 -}}
