@@ -72,6 +72,56 @@ class Test < ChartTest
         jq('.spec.template.spec.volumes[2].name', resource('Deployment')).must_equal 'data'
         jq('.spec.template.spec.volumes[2].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'dataClaim'
       end
+
+      it 'default nameSuffix' do
+        values = {
+          persistence: {
+              config: {
+                enabled: true,
+                emptyDir: {
+                  enabled: false
+                }
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
+        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test-config'
+      end
+
+      it 'custom nameSuffix' do
+        values = {
+          persistence: {
+              config: {
+                enabled: true,
+                nameSuffix: "test",
+                emptyDir: {
+                  enabled: false
+                }
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
+        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test-test'
+      end
+
+      it 'no nameSuffix' do
+        values = {
+          persistence: {
+              config: {
+                enabled: true,
+                nameSuffix: "-",
+                emptyDir: {
+                  enabled: false
+                }
+              }
+            }
+        }
+        chart.value values
+        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
+        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test'
+      end
     end
 
     describe 'pod::persistence::emptyDir' do
@@ -125,7 +175,6 @@ class Test < ChartTest
         jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
         jq('.spec.template.spec.volumes[0].emptyDir.sizeLimit', resource('Deployment')).must_equal "1Gi"
       end
-  
     end
   end
 end
