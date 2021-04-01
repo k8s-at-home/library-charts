@@ -19,7 +19,7 @@ of all the entries of the persistence key.
       {{- end -}}
       {{- $_ := set $ "ObjectValues" (dict "persistence" $persistenceValues) -}}
       {{- print ("---") | nindent 0 -}}
-      {{- include "common.classes.pvc" $ -}}
+      {{- include "common.classes.pvc" $ | nindent 0 -}}
     {{- end }}
   {{- end }}
 {{- end }}

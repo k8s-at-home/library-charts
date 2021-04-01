@@ -60,7 +60,7 @@ spec:
           {{- range .paths }}
           - path: {{ .path }}
             {{- if eq (include "common.capabilities.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ default "Prefix" .pathType }}
             {{- end }}
             backend:
             {{- if eq (include "common.capabilities.ingress.apiVersion" $) "networking.k8s.io/v1" }}

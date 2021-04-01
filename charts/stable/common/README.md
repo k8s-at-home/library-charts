@@ -244,6 +244,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Persistence `nameSuffix` can now be set to `-` to disable suffixing that PVC.
 
+#### Fixed
+
+- Ingress `pathType` is now actually configurable. Fixes #16.
+- PVC's are always forced to a newline. This should hopefully fix #17.
+
 ### [2.1.0]
 
 #### Added
