@@ -98,8 +98,6 @@ initContainers: []
 
 additionalContainers: []
 
-
-
 ## Probes configuration
 probes:
   liveness:
