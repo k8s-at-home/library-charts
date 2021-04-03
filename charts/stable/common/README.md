@@ -243,6 +243,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - Persistence `nameSuffix` can now be set to `-` to disable suffixing that PVC.
+- Support for configuring `lifecycle`
 
 #### Fixed
 
