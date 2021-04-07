@@ -193,7 +193,9 @@ ingress:
       # hostTpl: '{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domainname }}'
       paths:
         - path: /
-          # Ignored if not kubeVersion >= 1.14-0
+          ## Or a tpl that is evaluated
+          # pathTpl: '{{ include "common.names.fullname" . }}'
+          ## Ignored if not kubeVersion >= 1.14-0
           pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
