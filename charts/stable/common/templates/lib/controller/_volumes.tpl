@@ -31,13 +31,17 @@ Volumes included by the controller.
   {{- end }}
   {{- else -}}
   {{- /* Otherwise refer to the PVC name */}}
-  persistentVolumeClaim:
-    {{- if $persistence.nameSuffix }}
-    claimName: {{ printf "%s-%s" (include "common.names.fullname" $) $persistence.nameSuffix }}
-    {{- else }}
-    claimName: {{ printf "%s-%s" (include "common.names.fullname" $) $index }}
-    {{- end }}
+  {{- $pvcName := (include "common.names.fullname" $) -}}
+  {{- if $persistence.nameSuffix -}}
+    {{- if not (eq $persistence.nameSuffix "-") -}}
+      {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameSuffix) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $index) -}}
   {{- end }}
+  persistentVolumeClaim:
+    claimName: {{ $pvcName }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

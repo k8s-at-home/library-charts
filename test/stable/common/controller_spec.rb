@@ -28,7 +28,6 @@ class Test < ChartTest
     end
 
     describe 'controller::statefulset::volumeClaimTemplates' do
-
       it 'volumeClaimTemplates should be empty by default' do
         chart.value controllerType: 'statefulset'
         assert_nil(resource('StatefulSet')['spec']['volumeClaimTemplates'])

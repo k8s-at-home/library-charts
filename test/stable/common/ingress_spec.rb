@@ -27,6 +27,28 @@ class Test < ChartTest
         refute_nil(resource('Ingress'))
       end
 
+      it 'with path template is evaluated' do
+        expectedPath = 'common-test.path'
+        values = {
+          ingress: {
+            hosts: [
+              {
+                host: 'hostname',
+                paths: [
+                  {
+                    pathTpl: '{{ .Release.Name }}.path'
+                  }
+                ]
+              }
+            ]
+          }
+        }
+
+        chart.value values
+        jq('.spec.rules[0].host', resource('Ingress')).must_equal values[:ingress][:hosts][0][:host]
+        jq('.spec.rules[0].http.paths[0].path', resource('Ingress')).must_equal expectedPath
+      end
+
       it 'with hosts' do
         values = {
           ingress: {

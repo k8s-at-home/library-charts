@@ -51,16 +51,20 @@ spec:
   rules:
   {{- range $values.hosts }}
   {{- if .hostTpl }}
-    - host: {{ tpl .hostTpl $ | quote }} 
+    - host: {{ tpl .hostTpl $ | quote }}
   {{- else }}
     - host: {{ .host | quote }}
   {{- end }}
       http:
         paths:
           {{- range .paths }}
-          - path: {{ .path }}
+          {{- if .pathTpl }}
+          - path: {{ tpl .pathTpl $ | quote }}
+          {{- else }}
+          - path: {{ .path | quote }}
+          {{- end }}
             {{- if eq (include "common.capabilities.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-            pathType: Prefix
+            pathType: {{ default "Prefix" .pathType }}
             {{- end }}
             backend:
             {{- if eq (include "common.capabilities.ingress.apiVersion" $) "networking.k8s.io/v1" }}

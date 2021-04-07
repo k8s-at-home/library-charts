@@ -11,7 +11,9 @@ within the common library.
 {{ end -}}
 {{- $pvcName := include "common.names.fullname" . -}}
 {{- if hasKey $values "nameSuffix" -}}
-  {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
+  {{- if not (eq $values.nameSuffix "-") -}}
+    {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
+  {{ end -}}    
 {{ end -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
