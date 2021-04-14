@@ -346,7 +346,7 @@ addons:
 
     # Reference an existing secret that contains the VPN configuration file
     # The chart expects it to be present under the "vpnConfigfile" key.
-    configFileSecret: 
+    configFileSecret:
 
     # Provide custom up/down scripts that can be used by the vpnConf
     scripts:
