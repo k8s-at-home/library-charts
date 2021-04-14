@@ -2,7 +2,7 @@
 The VPN config and scripts to be included.
 */}}
 {{- define "common.addon.vpn.configmap" -}}
-{{- if or .Values.addons.vpn.configFile .Values.addons.vpn.scripts.up .Values.addons.vpn.scripts.down }}
+{{- if or .Values.addons.vpn.scripts.up .Values.addons.vpn.scripts.down }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,10 +10,6 @@ metadata:
   labels:
   {{- include "common.labels" . | nindent 4 }}
 data:
-{{- with .Values.addons.vpn.configFile }}
-  vpnConfigfile: |-
-    {{- . | nindent 4}}
-{{- end }}
 {{- with .Values.addons.vpn.scripts.up }}
   up.sh: |-
     {{- . | nindent 4}}

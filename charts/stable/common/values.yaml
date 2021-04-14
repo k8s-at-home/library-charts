@@ -344,6 +344,10 @@ addons:
       # auth-user-pass
       # Cipher AES
 
+    # Reference an existing secret that contains the VPN configuration file
+    # The chart expects it to be present under the "vpnConfigfile" key.
+    configFileSecret: 
+
     # Provide custom up/down scripts that can be used by the vpnConf
     scripts:
       up:  # |-
