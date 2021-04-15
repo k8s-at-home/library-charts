@@ -53,9 +53,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install Dev tools
-      run: sudo apt-get update && sudo apt-get install -y jq libjq-dev
-
     - name: Install Helm
       uses: azure/setup-helm@v1
       with:
@@ -67,8 +64,6 @@ jobs:
         ruby-version: 2.7
 
     - name: Install dependencies
-      env:
-        RUBYJQ_USE_SYSTEM_LIBRARIES: 1
       run: |
         bundle install
 
