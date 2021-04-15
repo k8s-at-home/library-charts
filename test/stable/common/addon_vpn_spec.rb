@@ -6,58 +6,97 @@ class Test < ChartTest
   
   describe @@chart.name do  
     describe 'addon::vpn' do
+      baseValues = {
+        addons: {
+          vpn: {
+            enabled: true
+          }
+        }
+      }
+
       it 'defaults to disabled' do
-        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][1])
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        vpnContainer = containers.find{ |c| c["name"] == "openvpn" }
+
+        assert_nil(vpnContainer)
       end
 
       it 'can be enabled' do
-        values = {
-          addons: {
-            vpn: {
-              enabled: true
-            }
-          }
-        }
+        values = baseValues
 
         chart.value values
-        jq('.spec.template.spec.containers[1].name', resource('Deployment')).must_equal "openvpn"
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        vpnContainer = containers.find{ |c| c["name"] == "openvpn" }
+
+        refute_nil(vpnContainer)
       end
 
       it 'a configuration file can be passed' do
-        values = {
+        values = baseValues.deep_merge_override({
           addons: {
             vpn: {
-              enabled: true,
               configFile: "test"
             }
           }
-        }
-
-        expectedContent = { "vpnConfigfile" => values[:addons][:vpn][:configFile] }
-
+        })
+      
         chart.value values
-        jq('.metadata.name', resource('Secret')).must_equal "common-test-vpnConfig"
-        jq('.stringData', resource('Secret')).must_equal expectedContent
-        jq('.spec.template.spec.containers[1].volumeMounts[0].name', resource('Deployment')).must_equal "vpnconfig"
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal "vpnconfig"
-        jq('.spec.template.spec.volumes[0].secret.secretName', resource('Deployment')).must_equal "common-test-vpnConfig"
+        deployment = chart.resources(kind: "Deployment").first
+        secret = chart.resources(kind: "Secret").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        vpnContainer = containers.find{ |c| c["name"] == "openvpn" }
+        expectedSecretContent = { "vpnConfigfile" => values[:addons][:vpn][:configFile] }
+
+        # Check that the secret has been created
+        refute_nil(secret)
+        assert_equal("common-test-vpnConfig", secret["metadata"]["name"])
+        assert_equal(expectedSecretContent, secret["stringData"])
+
+        # Make sure the deployKey volumeMount is present in the sidecar container
+        vpnconfigVolumeMount = vpnContainer["volumeMounts"].find { |v| v["name"] == "vpnconfig"}
+        refute_nil(vpnconfigVolumeMount)
+        assert_equal("/vpn/vpn.conf", vpnconfigVolumeMount["mountPath"])
+        assert_equal("vpnConfigfile", vpnconfigVolumeMount["subPath"])
+
+        # Make sure the deployKey volume is present in the Deployment
+        vpnconfigVolume = volumes.find{ |v| v["name"] == "vpnconfig" }
+        refute_nil(vpnconfigVolume)
+        assert_equal("common-test-vpnConfig", vpnconfigVolume["secret"]["secretName"])
       end
 
       it 'an existing configuration secret can be passed' do
-        values = {
+        values = baseValues.deep_merge_override({
           addons: {
             vpn: {
-              enabled: true,
               configFileSecret: "testSecret"
             }
           }
-        }
+        })
 
         chart.value values
-        assert_nil(resource('Secret'))
-        jq('.spec.template.spec.containers[1].volumeMounts[0].name', resource('Deployment')).must_equal "vpnconfig"
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal "vpnconfig"
-        jq('.spec.template.spec.volumes[0].secret.secretName', resource('Deployment')).must_equal values[:addons][:vpn][:configFileSecret]
+        deployment = chart.resources(kind: "Deployment").first
+        secret = chart.resources(kind: "Secret").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        vpnContainer = containers.find{ |c| c["name"] == "openvpn" }
+        expectedSecretContent = { "vpnConfigfile" => values[:addons][:vpn][:configFile] }
+
+        # Check that the secret has not been created
+        assert_nil(secret)
+
+        # Make sure the deployKey volumeMount is present in the sidecar container
+        vpnconfigVolumeMount = vpnContainer["volumeMounts"].find { |v| v["name"] == "vpnconfig"}
+        refute_nil(vpnconfigVolumeMount)
+        assert_equal("/vpn/vpn.conf", vpnconfigVolumeMount["mountPath"])
+        assert_equal("vpnConfigfile", vpnconfigVolumeMount["subPath"])
+
+        # Make sure the deployKey volume is present in the Deployment
+        vpnconfigVolume = volumes.find{ |v| v["name"] == "vpnconfig" }
+        refute_nil(vpnconfigVolume)
+        assert_equal(values[:addons][:vpn][:configFileSecret], vpnconfigVolume["secret"]["secretName"])
       end
     end
   end

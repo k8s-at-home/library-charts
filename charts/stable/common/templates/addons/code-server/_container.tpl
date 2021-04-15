@@ -30,9 +30,14 @@ args:
 - "--port"
 - "{{ .Values.addons.codeserver.service.port.port }}"
 - {{ .Values.addons.codeserver.workingDir | default (first .Values.addons.codeserver.volumeMounts).mountPath }}
-{{- with .Values.addons.codeserver.volumeMounts }}
 volumeMounts:
+{{- with .Values.addons.codeserver.volumeMounts }}
   {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- if or .Values.addons.codeserver.git.deployKey .Values.addons.codeserver.git.deployKeyBase64 .Values.addons.codeserver.git.deployKeySecret }}
+  - name: deploykey
+    mountPath: /root/.ssh/id_rsa
+    subPath: id_rsa
 {{- end }}
 {{- with .Values.addons.codeserver.resources }}
 resources:

@@ -114,6 +114,9 @@ helm dependency update
 | addons.codeserver.args[1] | string | `"none"` |  |
 | addons.codeserver.enabled | bool | `false` |  |
 | addons.codeserver.env | object | `{}` |  |
+| addons.codeserver.git.deployKey | string | `""` |  |
+| addons.codeserver.git.deployKeyBase64 | string | `""` |  |
+| addons.codeserver.git.deployKeySecret | string | `""` |  |
 | addons.codeserver.image.pullPolicy | string | `"IfNotPresent"` |  |
 | addons.codeserver.image.repository | string | `"codercom/code-server"` |  |
 | addons.codeserver.image.tag | string | `"3.7.4"` |  |
@@ -244,6 +247,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - Allow `configFileSecret` to be specified under the VPN add-on, to reference an existing secret.
+- Allow `git.deployKey` to be specified under the codeserver add-on. Please refer to `values.yaml` for more details.
 
 ### [2.2.0]
 

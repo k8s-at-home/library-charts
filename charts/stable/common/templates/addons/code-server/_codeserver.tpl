@@ -11,6 +11,20 @@ It will include / inject the required templates based on the given values.
     {{- $_ := set .Values "additionalContainers" $additionalContainers -}}
   {{- end -}}
 
+  {{/* Include the deployKeySecret if not empty */}}
+  {{- $secret := include "common.addon.codeserver.deployKeySecret" . -}}
+  {{- if $secret -}}
+    {{- print "---" | nindent 0 -}}
+    {{- $secret | nindent 0 -}}
+  {{- end -}}
+
+  {{/* Append the secret volume to the additionalVolumes */}}
+  {{- $volume := include "common.addon.codeserver.deployKeyVolume" . | fromYaml -}}
+  {{- if $volume -}}
+    {{- $additionalVolumes := append .Values.additionalVolumes $volume }}
+    {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
+  {{- end -}}
+
   {{/* Add the code-server service */}}
   {{- if .Values.addons.codeserver.service.enabled -}}
     {{- print ("---") | nindent 0 -}}

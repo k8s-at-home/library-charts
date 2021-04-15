@@ -117,3 +117,35 @@ class Minitest::Result
     test_name.to_s.gsub /\Atest_\d{4,}_/, ""
   end
 end
+
+class ::Hash
+  def deep_merge_override(second)
+    merger = proc do |key, original, override|
+      if original.instance_of?(Hash) && override.instance_of?(Hash)
+        original.merge(override, &merger)
+      else
+        if original.instance_of?(Array) && override.instance_of?(Array)
+          # if the lengths are different, prefer the override
+          if original.length != override.length
+            override
+          else
+            # if the first element in the override's Array is a Hash, then we assume they all are
+            if override[0].instance_of?(Hash)
+              original.map.with_index do |v, i|
+                # deep merge everything between the two arrays
+                original[i].merge(override[i], &merger)
+              end
+            else
+              # if we don't have a Hash in the override,
+              # override the whole array with our new one
+              override
+            end
+          end
+        else
+          override
+        end
+      end
+    end
+    self.merge(second.to_h, &merger)
+  end
+end
