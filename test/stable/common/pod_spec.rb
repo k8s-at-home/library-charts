@@ -7,12 +7,14 @@ class Test < ChartTest
   describe @@chart.name do  
     describe 'pod::replicas' do
       it 'defaults to 1' do
-        jq('.spec.replicas', resource('Deployment')).must_equal 1
+        deployment = chart.resources(kind: "Deployment").first
+        assert_equal(1, deployment["spec"]["replicas"])
       end
   
       it 'accepts integer as value' do
         chart.value replicas: 3
-        jq('.spec.replicas', resource('Deployment')).must_equal 3
+        deployment = chart.resources(kind: "Deployment").first
+        assert_equal(3, deployment["spec"]["replicas"])
       end
     end
 
@@ -26,10 +28,14 @@ class Test < ChartTest
           ]
         }
         chart.value values
-        jq('.spec.template.spec.containers[1].name', resource('Deployment')).must_equal 'template-test'
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        additionalContainer = containers.find{ |c| c["name"] == values[:additionalContainers][0][:name] }
+        refute_nil(additionalContainer)
       end
 
       it 'accepts "Dynamic/Tpl" additionalContainers' do
+        expectedContainerName = "common-test-container"
         values = {
           additionalContainers: [
             {
@@ -38,7 +44,10 @@ class Test < ChartTest
           ]
         }
         chart.value values
-        jq('.spec.template.spec.containers[1].name', resource('Deployment')).must_equal 'common-test-container'
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        additionalContainer = containers.find{ |c| c["name"] == expectedContainerName }
+        refute_nil(additionalContainer)
       end
     end
 
@@ -66,11 +75,19 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'cache'
-        jq('.spec.template.spec.volumes[1].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[1].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'configClaim'
-        jq('.spec.template.spec.volumes[2].name', resource('Deployment')).must_equal 'data'
-        jq('.spec.template.spec.volumes[2].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'dataClaim'
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+
+        volume = volumes.find{ |v| v["name"] == "cache"}
+        refute_nil(volume)
+
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal('configClaim', volume["persistentVolumeClaim"]["claimName"])
+
+        volume = volumes.find{ |v| v["name"] == "data"}
+        refute_nil(volume)
+        assert_equal('dataClaim', volume["persistentVolumeClaim"]["claimName"])
       end
 
       it 'default nameSuffix' do
@@ -85,8 +102,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test-config'
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal('common-test-config', volume["persistentVolumeClaim"]["claimName"])
       end
 
       it 'custom nameSuffix' do
@@ -102,8 +122,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test-test'
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal('common-test-test', volume["persistentVolumeClaim"]["claimName"])
       end
 
       it 'no nameSuffix' do
@@ -119,8 +142,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].persistentVolumeClaim.claimName', resource('Deployment')).must_equal 'common-test'
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal('common-test', volume["persistentVolumeClaim"]["claimName"])
       end
     end
 
@@ -137,8 +163,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].emptyDir', resource('Deployment')).must_equal Hash.new
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal(Hash.new, volume["emptyDir"])
       end
 
       it 'medium can be configured' do
@@ -154,8 +183,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].emptyDir.medium', resource('Deployment')).must_equal "memory"
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal("memory", volume["emptyDir"]["medium"])
       end
 
       it 'sizeLimit can be configured' do
@@ -172,8 +204,11 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.volumes[0].name', resource('Deployment')).must_equal 'config'
-        jq('.spec.template.spec.volumes[0].emptyDir.sizeLimit', resource('Deployment')).must_equal "1Gi"
+        deployment = chart.resources(kind: "Deployment").first
+        volumes = deployment["spec"]["template"]["spec"]["volumes"]
+        volume = volumes.find{ |v| v["name"] == "config"}
+        refute_nil(volume)
+        assert_equal("1Gi", volume["emptyDir"]["sizeLimit"])
       end
     end
   end

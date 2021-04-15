@@ -4,7 +4,6 @@ require 'json'
 require 'yaml'
 require 'open3'
 
-require 'jq/extend'
 require 'minitest-implicit-subject'
 require "minitest/reporters"
 require 'minitest/autorun'
@@ -104,10 +103,6 @@ class ChartTest < ExtendedMinitest
 
   def resource(name)
     chart.resources(kind: name).first
-  end
-
-  def jq(matcher, object)
-    value(object.jq(matcher)[0])
   end
 end
 
