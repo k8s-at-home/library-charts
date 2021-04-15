@@ -249,6 +249,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow `configFileSecret` to be specified under the VPN add-on, to reference an existing secret.
 - Allow `git.deployKey` to be specified under the codeserver add-on. Please refer to `values.yaml` for more details.
 
+#### Changed
+
+- Modified unit tests to no longer depend on `jq`.
+
 ### [2.2.0]
 
 #### Added

@@ -12,8 +12,6 @@ RUN \
   apt-get update \
   && \
   apt-get -y install --no-install-recommends \
-    jq \
-    libjq-dev \
     libonig-dev \
     gnupg2 \
   && \
