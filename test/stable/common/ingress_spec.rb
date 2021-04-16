@@ -27,13 +27,70 @@ class Test < ChartTest
         refute_nil(resource('Ingress'))
       end
 
-      it 'with path template is evaluated' do
+      it 'tls can be provided' do
+        expectedPath = 'common-test.path'
+        values = {
+          ingress: {
+            tls: [
+              {
+                hosts: [ 'hostname' ],
+                secretName: 'secret-name'
+              }
+            ]
+          }
+        }
+
+        chart.value values
+        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(ingress)
+        assert_equal(values[:ingress][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
+        assert_equal(values[:ingress][:tls][0][:secretName], ingress["spec"]["tls"][0]["secretName"])
+      end
+
+      it 'tls secret can be left empty' do
+        expectedPath = 'common-test.path'
+        values = {
+          ingress: {
+            tls: [
+              {
+                hosts: [ 'hostname' ]
+              }
+            ]
+          }
+        }
+
+        chart.value values
+        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(ingress)
+        assert_equal(values[:ingress][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
+        assert_equal(false, ingress["spec"]["tls"][0].key?("secretName"))
+        assert_nil(ingress["spec"]["tls"][0]["secretName"])
+      end
+
+      it 'tls secret template can be provided' do
+        expectedPath = 'common-test.path'
+        values = {
+          ingress: {
+            tls: [
+              {
+                secretNameTpl: '{{ .Release.Name }}-secret'
+              }
+            ]
+          }
+        }
+
+        chart.value values
+        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(ingress)
+        assert_equal('common-test-secret', ingress["spec"]["tls"][0]["secretName"])
+      end
+
+      it 'path template can be provided' do
         expectedPath = 'common-test.path'
         values = {
           ingress: {
             hosts: [
               {
-                host: 'hostname',
                 paths: [
                   {
                     pathTpl: '{{ .Release.Name }}.path'
@@ -47,73 +104,15 @@ class Test < ChartTest
         chart.value values
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
-        assert_equal(values[:ingress][:hosts][0][:host], ingress["spec"]["rules"][0]["host"])
         assert_equal(expectedPath, ingress["spec"]["rules"][0]["http"]["paths"][0]["path"])
       end
 
-      it 'with hosts' do
+      it 'hosts can be provided' do
         values = {
           ingress: {
             hosts: [
               {
-                host: 'hostname',
-                paths: [
-                  {
-                    path: '/'
-                  }
-                ]
-              }
-            ]
-          }
-        }
-
-        chart.value values
-        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
-        refute_nil(ingress)
-        assert_equal(values[:ingress][:hosts][0][:paths][0][:path], ingress["spec"]["rules"][0]["http"]["paths"][0]["path"])
-      end
-
-      it 'with hosts template is evaluated' do
-        expectedHostName = 'common-test.hostname'
-        values = {
-          ingress: {
-            hosts: [
-              {
-                hostTpl: '{{ .Release.Name }}.hostname',
-                paths: [
-                  {
-                    path: '/'
-                  }
-                ]
-              }
-            ]
-          }
-        }
-
-        chart.value values
-        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
-        refute_nil(ingress)
-        assert_equal(expectedHostName, ingress["spec"]["rules"][0]["host"])
-      end
-
-      it 'with hosts and tls' do
-        values = {
-          ingress: {
-            enabled: true,
-            hosts: [
-              {
-                host: 'hostname',
-                paths: [
-                  {
-                    path: '/'
-                  }
-                ]
-              }
-            ],
-            tls: [
-              {
-                hosts: [ 'hostname' ],
-                secretName: 'hostname-secret-name'
+                host: 'hostname'
               }
             ]
           }
@@ -123,32 +122,15 @@ class Test < ChartTest
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(values[:ingress][:hosts][0][:host], ingress["spec"]["rules"][0]["host"])
-        assert_equal(values[:ingress][:hosts][0][:paths][0][:path], ingress["spec"]["rules"][0]["http"]["paths"][0]["path"])
-        assert_equal(values[:ingress][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
-        assert_equal(values[:ingress][:tls][0][:secretName], ingress["spec"]["tls"][0]["secretName"])
       end
 
-      it 'with hosts and tls templates is evaluated' do
+      it 'hosts template can be provided' do
         expectedHostName = 'common-test.hostname'
-        expectedPath = '/common-test'
-        expectedSecretName = 'common-test-hostname-secret-name'
         values = {
           ingress: {
-            enabled: true,
             hosts: [
               {
-                hostTpl: '{{ .Release.Name }}.hostname',
-                paths: [
-                  {
-                    pathTpl: '/{{ .Release.Name }}'
-                  }
-                ]
-              }
-            ],
-            tls: [
-              {
-                hostsTpl: [ '{{ .Release.Name }}.hostname' ],
-                secretNameTpl: '{{ .Release.Name }}-hostname-secret-name'
+                hostTpl: '{{ .Release.Name }}.hostname'
               }
             ]
           }
@@ -158,9 +140,6 @@ class Test < ChartTest
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(expectedHostName, ingress["spec"]["rules"][0]["host"])
-        assert_equal(expectedPath, ingress["spec"]["rules"][0]["http"]["paths"][0]["path"])
-        assert_equal(expectedHostName, ingress["spec"]["tls"][0]["hosts"][0])
-        assert_equal(expectedSecretName, ingress["spec"]["tls"][0]["secretName"])
       end
     end
   end

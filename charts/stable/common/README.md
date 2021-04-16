@@ -253,6 +253,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Modified unit tests to no longer depend on `jq`.
 
+#### Fixed
+
+- `secretName` is now truly optional under Ingress TLS configuration. (#20)
+
 ### [2.2.0]
 
 #### Added
