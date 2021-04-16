@@ -255,7 +255,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- `secretName` is now truly optional under Ingress TLS configuration. (#20)
+- `secretName` is now truly optional under Ingress TLS configuration.
 
 ### [2.2.0]
 
