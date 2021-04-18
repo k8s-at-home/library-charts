@@ -41,10 +41,12 @@ spec:
         {{- range .hostsTpl }}
         - {{ tpl . $ | quote }}
         {{- end }}
+      {{- if or .secretNameTpl .secretName }}
       {{- if .secretNameTpl }}
       secretName: {{ tpl .secretNameTpl $ | quote}}
       {{- else }}
       secretName: {{ .secretName }}
+      {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}

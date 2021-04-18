@@ -10,11 +10,17 @@ class Test < ChartTest
       default_port = 8080
 
       it 'defaults to name "http" on port 8080' do
-        jq('.spec.ports[0].port', resource('Service')).must_equal default_port
-        jq('.spec.ports[0].targetPort', resource('Service')).must_equal default_name
-        jq('.spec.ports[0].name', resource('Service')).must_equal default_name
-        jq('.spec.template.spec.containers[0].ports[0].containerPort', resource('Deployment')).must_equal default_port
-        jq('.spec.template.spec.containers[0].ports[0].name', resource('Deployment')).must_equal default_name
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal(default_port, service["spec"]["ports"].first["port"])
+        assert_equal(default_name, service["spec"]["ports"].first["targetPort"])
+        assert_equal(default_name, service["spec"]["ports"].first["name"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(default_port, mainContainer["ports"].first["containerPort"])
+        assert_equal(default_name, mainContainer["ports"].first["name"])
       end
   
       it 'port name can be overridden' do
@@ -26,11 +32,17 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.ports[0].port', resource('Service')).must_equal default_port
-        jq('.spec.ports[0].targetPort', resource('Service')).must_equal values[:service][:port][:name]
-        jq('.spec.ports[0].name', resource('Service')).must_equal values[:service][:port][:name]
-        jq('.spec.template.spec.containers[0].ports[0].containerPort', resource('Deployment')).must_equal default_port
-        jq('.spec.template.spec.containers[0].ports[0].name', resource('Deployment')).must_equal values[:service][:port][:name]
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal(default_port, service["spec"]["ports"].first["port"])
+        assert_equal(values[:service][:port][:name], service["spec"]["ports"].first["targetPort"])
+        assert_equal(values[:service][:port][:name], service["spec"]["ports"].first["name"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(default_port, mainContainer["ports"].first["containerPort"])
+        assert_equal(values[:service][:port][:name], mainContainer["ports"].first["name"])
       end
 
       it 'targetPort can be overridden' do
@@ -42,11 +54,17 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.ports[0].port', resource('Service')).must_equal default_port
-        jq('.spec.ports[0].targetPort', resource('Service')).must_equal values[:service][:port][:targetPort]
-        jq('.spec.ports[0].name', resource('Service')).must_equal default_name
-        jq('.spec.template.spec.containers[0].ports[0].containerPort', resource('Deployment')).must_equal values[:service][:port][:targetPort]
-        jq('.spec.template.spec.containers[0].ports[0].name', resource('Deployment')).must_equal default_name
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal(default_port, service["spec"]["ports"].first["port"])
+        assert_equal(values[:service][:port][:targetPort], service["spec"]["ports"].first["targetPort"])
+        assert_equal(default_name, service["spec"]["ports"].first["name"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:service][:port][:targetPort], mainContainer["ports"].first["containerPort"])
+        assert_equal(default_name, mainContainer["ports"].first["name"])
       end
 
       it 'targetPort cannot be a named port' do

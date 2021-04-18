@@ -7,7 +7,10 @@ class Test < ChartTest
   describe @@chart.name do  
     describe 'container::command' do
       it 'defaults to nil' do
-        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][0]['command'])
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_nil(mainContainer["command"])
       end
 
       it 'accepts a single string' do
@@ -15,7 +18,10 @@ class Test < ChartTest
           command: "/bin/sh"
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].command', resource('Deployment')).must_equal values[:command]
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:command], mainContainer["command"])
       end
 
       it 'accepts a list of strings' do
@@ -26,13 +32,19 @@ class Test < ChartTest
           ]
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].command', resource('Deployment')).must_equal values[:command]
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:command], mainContainer["command"])
       end
     end
 
     describe 'container::arguments' do
       it 'defaults to nil' do
-        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][0]['args'])
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_nil(mainContainer["args"])
       end
 
       it 'accepts a single string' do
@@ -40,7 +52,10 @@ class Test < ChartTest
           args: "sleep infinity"
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].args', resource('Deployment')).must_equal values[:args]
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:args], mainContainer["args"])
       end
 
       it 'accepts a list of strings' do
@@ -51,15 +66,21 @@ class Test < ChartTest
           ]
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].args', resource('Deployment')).must_equal values[:args]
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:args], mainContainer["args"])
       end
     end
 
     describe 'container::environment settings' do
       it 'Check no environment variables' do
         values = {}
-        chart.value values        
-        assert_nil(resource('Deployment')['spec']['template']['spec']['containers'][0]['env'])
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_nil(mainContainer["args"])
       end
 
       it 'set "static" environment variables' do
@@ -69,8 +90,11 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal values[:env].keys[0].to_s
-        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal values[:env].values[0].to_s
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
       end
 
       it 'set "valueFrom" environment variables' do
@@ -84,8 +108,11 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal values[:envValueFrom].keys[0].to_s
-        jq('.spec.template.spec.containers[0].env[0].valueFrom | keys[0]', resource('Deployment')).must_equal values[:envValueFrom].values[0].keys[0].to_s
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:envValueFrom].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envValueFrom].values[0][:fieldRef][:fieldPath], mainContainer["env"][0]["valueFrom"]["fieldRef"]["fieldPath"])
       end
 
       it 'set "static" and "Dynamic/Tpl" environment variables' do
@@ -98,10 +125,13 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal values[:env].keys[0].to_s
-        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal values[:env].values[0].to_s
-        jq('.spec.template.spec.containers[0].env[1].name', resource('Deployment')).must_equal values[:envTpl].keys[0].to_s
-        jq('.spec.template.spec.containers[0].env[1].value', resource('Deployment')).must_equal 'common-test-admin'
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
+        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][1]["name"])
+        assert_equal("common-test-admin", mainContainer["env"][1]["value"])
       end
       
       it 'set "Dynamic/Tpl" environment variables' do
@@ -111,8 +141,11 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].env[0].name', resource('Deployment')).must_equal values[:envTpl].keys[0].to_s
-        jq('.spec.template.spec.containers[0].env[0].value', resource('Deployment')).must_equal 'common-test-admin'
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal("common-test-admin", mainContainer["env"][0]["value"])
       end
       
       it 'set "static" secret variables' do
@@ -123,9 +156,14 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].envFrom[0].secretRef.name', resource('Deployment')).must_equal expectedSecretName
-        jq('.metadata.name', resource('Secret')).must_equal expectedSecretName
-        jq('.stringData.STATIC_SECRET', resource('Secret')).must_equal values[:secret].values[0].to_s
+        secret = chart.resources(kind: "Secret").find{ |s| s["metadata"]["name"] == expectedSecretName }
+        refute_nil(secret)
+        assert_equal(values[:secret].values[0].to_s, secret["stringData"]["STATIC_SECRET"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(expectedSecretName, mainContainer["envFrom"][0]["secretRef"]["name"])
       end
     end
 
@@ -150,9 +188,15 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "cache"
-        jq('.spec.template.spec.containers[0].volumeMounts[1].name', resource('Deployment')).must_equal "config"
-        jq('.spec.template.spec.containers[0].volumeMounts[2].name', resource('Deployment')).must_equal "data"
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        # Check that all persistent volumes have mounts
+        values[:persistence].each { |key, value|
+          volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == key.to_s }
+          refute_nil(volumeMount)
+        }
       end
 
       it 'defaults mountPath to persistence key' do
@@ -165,8 +209,13 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
-        jq('.spec.template.spec.containers[0].volumeMounts[0].mountPath', resource('Deployment')).must_equal "/data"
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "data" }
+        refute_nil(volumeMount)
+        assert_equal("/data", volumeMount["mountPath"])
       end
 
       it 'supports setting custom mountPath' do
@@ -180,8 +229,13 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
-        jq('.spec.template.spec.containers[0].volumeMounts[0].mountPath', resource('Deployment')).must_equal "/myMountPath"
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "data" }
+        refute_nil(volumeMount)
+        assert_equal("/myMountPath", volumeMount["mountPath"])
       end
 
       it 'supports setting subPath' do
@@ -195,8 +249,13 @@ class Test < ChartTest
             }
         }
         chart.value values
-        jq('.spec.template.spec.containers[0].volumeMounts[0].name', resource('Deployment')).must_equal "data"
-        jq('.spec.template.spec.containers[0].volumeMounts[0].subPath', resource('Deployment')).must_equal "mySubPath"
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "data" }
+        refute_nil(volumeMount)
+        assert_equal("mySubPath", volumeMount["subPath"])
       end
     end
   end

@@ -15,7 +15,8 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.metadata.name', resource('PersistentVolumeClaim')).must_equal 'common-test-config'
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
+        refute_nil(pvc)
       end
 
       it 'nameSuffix can be overridden' do
@@ -28,7 +29,8 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.metadata.name', resource('PersistentVolumeClaim')).must_equal 'common-test-customSuffix'
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-customSuffix" }
+        refute_nil(pvc)
       end
 
       it 'nameSuffix can be skipped' do
@@ -41,7 +43,38 @@ class Test < ChartTest
           }
         }
         chart.value values
-        jq('.metadata.name', resource('PersistentVolumeClaim')).must_equal 'common-test'
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(pvc)
+      end
+
+      it 'storageClass can be set' do
+        values = {
+          persistence: {
+            config: {
+              enabled: true,
+              storageClass: "test"
+            }
+          }
+        }
+        chart.value values
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
+        refute_nil(pvc)
+        assert_equal('test', pvc["spec"]["storageClassName"])
+      end
+
+      it 'storageClass can be set to an empty value' do
+        values = {
+          persistence: {
+            config: {
+              enabled: true,
+              storageClass: "-"
+            }
+          }
+        }
+        chart.value values
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
+        refute_nil(pvc)
+        assert_equal('', pvc["spec"]["storageClassName"])
       end
     end
   end

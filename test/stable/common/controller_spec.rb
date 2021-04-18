@@ -30,7 +30,8 @@ class Test < ChartTest
     describe 'controller::statefulset::volumeClaimTemplates' do
       it 'volumeClaimTemplates should be empty by default' do
         chart.value controllerType: 'statefulset'
-        assert_nil(resource('StatefulSet')['spec']['volumeClaimTemplates'])
+        statefulset = chart.resources(kind: "StatefulSet").first
+        assert_nil(statefulset['spec']['volumeClaimTemplates'])
       end
 
       it 'can set values for volumeClaimTemplates' do
@@ -47,10 +48,12 @@ class Test < ChartTest
         }
 
         chart.value values
-        jq('.spec.volumeClaimTemplates[0].metadata.name', resource('StatefulSet')).must_equal values[:volumeClaimTemplates][0][:name]
-        jq('.spec.volumeClaimTemplates[0].spec.accessModes[0]', resource('StatefulSet')).must_equal values[:volumeClaimTemplates][0][:accessMode]
-        jq('.spec.volumeClaimTemplates[0].spec.resources.requests.storage', resource('StatefulSet')).must_equal values[:volumeClaimTemplates][0][:size]
-        jq('.spec.volumeClaimTemplates[0].spec.storageClassName', resource('StatefulSet')).must_equal values[:volumeClaimTemplates][0][:storageClass]
+        statefulset = chart.resources(kind: "StatefulSet").first
+        volumeClaimTemplate = statefulset["spec"]["volumeClaimTemplates"].find{ |v| v["metadata"]["name"] == values[:volumeClaimTemplates][0][:name]}
+        refute_nil(volumeClaimTemplate)
+        assert_equal(values[:volumeClaimTemplates][0][:accessMode], volumeClaimTemplate["spec"]["accessModes"][0])
+        assert_equal(values[:volumeClaimTemplates][0][:size], volumeClaimTemplate["spec"]["resources"]["requests"]["storage"])
+        assert_equal(values[:volumeClaimTemplates][0][:storageClass], volumeClaimTemplate["spec"]["storageClassName"])
       end
     end
   end

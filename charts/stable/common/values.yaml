@@ -344,6 +344,10 @@ addons:
       # auth-user-pass
       # Cipher AES
 
+    # Reference an existing secret that contains the VPN configuration file
+    # The chart expects it to be present under the "vpnConfigfile" key.
+    configFileSecret:
+
     # Provide custom up/down scripts that can be used by the vpnConf
     scripts:
       up:  # |-
@@ -417,6 +421,16 @@ addons:
     # Specify the working dir that will be opened when code-server starts
     # If not given, the app will default to the mountpah of the first specified volumeMount
     workingDir: ""
+
+    # Allow access a Git repository by passing in a private SSH key
+    git:
+      # Raw SSH private key
+      deployKey: ""
+      # Base64-encoded SSH private key. When both variables are set, the raw SSH key takes precedence.
+      deployKeyBase64: ""
+      # Existing secret containing SSH private key
+      # The chart expects it to be present under the "id_rsa" key.
+      deployKeySecret: ""
 
     service:
       enabled: true

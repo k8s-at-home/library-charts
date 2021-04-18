@@ -19,10 +19,24 @@ It will include / inject the required templates based on the given values.
     {{- $configmap | nindent 0 -}}
   {{- end -}}
 
+  {{/* Include the secret if not empty */}}
+  {{- $secret := include "common.addon.vpn.secret" . -}}
+  {{- if $secret -}}
+    {{- print "---" | nindent 0 -}}
+    {{- $secret | nindent 0 -}}
+  {{- end -}}
+
+  {{/* Append the vpn scripts volume to the additionalVolumes */}}
+  {{- $scriptVolume := include "common.addon.vpn.scriptsVolume" . | fromYaml -}}
+  {{- if $scriptVolume -}}
+    {{- $additionalVolumes := append .Values.additionalVolumes $scriptVolume }}
+    {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
+  {{- end -}}
+
   {{/* Append the vpn config volume to the additionalVolumes */}}
-  {{- $volume := include "common.addon.vpn.volume" . | fromYaml -}}
-  {{- if $volume -}}
-    {{- $additionalVolumes := append .Values.additionalVolumes $volume }}
+  {{- $configVolume := include "common.addon.vpn.configVolume" . | fromYaml -}}
+  {{- if $configVolume -}}
+    {{- $additionalVolumes := append .Values.additionalVolumes $configVolume }}
     {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
   {{- end -}}
 
