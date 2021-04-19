@@ -52,7 +52,7 @@ class Test < ChartTest
 
         # Check that the secret has been created
         refute_nil(secret)
-        assert_equal("common-test-vpnConfig", secret["metadata"]["name"])
+        assert_equal("common-test-vpnconfig", secret["metadata"]["name"])
         assert_equal(expectedSecretContent, secret["stringData"])
 
         # Make sure the deployKey volumeMount is present in the sidecar container
@@ -64,14 +64,14 @@ class Test < ChartTest
         # Make sure the deployKey volume is present in the Deployment
         vpnconfigVolume = volumes.find{ |v| v["name"] == "vpnconfig" }
         refute_nil(vpnconfigVolume)
-        assert_equal("common-test-vpnConfig", vpnconfigVolume["secret"]["secretName"])
+        assert_equal("common-test-vpnconfig", vpnconfigVolume["secret"]["secretName"])
       end
 
       it 'an existing configuration secret can be passed' do
         values = baseValues.deep_merge_override({
           addons: {
             vpn: {
-              configFileSecret: "testSecret"
+              configFileSecret: "test-secret"
             }
           }
         })
@@ -82,7 +82,6 @@ class Test < ChartTest
         containers = deployment["spec"]["template"]["spec"]["containers"]
         volumes = deployment["spec"]["template"]["spec"]["volumes"]
         vpnContainer = containers.find{ |c| c["name"] == "openvpn" }
-        expectedSecretContent = { "vpnConfigfile" => values[:addons][:vpn][:configFile] }
 
         # Check that the secret has not been created
         assert_nil(secret)

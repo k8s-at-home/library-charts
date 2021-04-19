@@ -30,7 +30,7 @@ secret:
   {{- if .Values.addons.vpn.configFileSecret }}
   secretName: {{ .Values.addons.vpn.configFileSecret }}
   {{- else }}
-  secretName: {{ include "common.names.fullname" . }}-vpnConfig
+  secretName: {{ include "common.names.fullname" . }}-vpnconfig
   {{- end }}
   items:
     - key: vpnConfigfile

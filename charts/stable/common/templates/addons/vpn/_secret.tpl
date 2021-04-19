@@ -6,7 +6,7 @@ The OpenVPN config secret to be included.
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "common.names.fullname" . }}-vpnConfig
+  name: {{ include "common.names.fullname" . }}-vpnconfig
   labels:
   {{- include "common.labels" $ | nindent 4 }}
 stringData:
