@@ -41,6 +41,10 @@ secret: {}
 env: {}
   # TZ: UTC
 
+envList: []
+  # - name: TZ
+  #   value: UTC
+
 ## Variables with values set from templates, example
 ## With a release name of: demo, the example env value will be: demo-admin
 envTpl: {}

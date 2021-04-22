@@ -29,8 +29,16 @@ The main container included in the controller.
   lifecycle:
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- if or .Values.env .Values.envTpl .Values.envValueFrom }}
   env:
+  {{- if or .Values.envList .Values.env .Values.envTpl .Values.envValueFrom }}
+  {{- range $envList := .Values.envList }}
+  {{- if and $envList.name $envList.value }}
+    - name: {{ $envList.name }}
+      value: {{ $envList.value | quote }}
+  {{- else }}
+    {{- fail "Please specify name/value for environment variable" }}
+  {{- end }}
+  {{- end}}
   {{- range $key, $value := .Values.env }}
   - name: {{ $key }}
     value: {{ $value | quote }}
