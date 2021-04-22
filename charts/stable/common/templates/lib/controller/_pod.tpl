@@ -23,8 +23,13 @@ hostNetwork: {{ . }}
 {{- with .Values.hostname }}
 hostname: {{ . }}
 {{- end }}
+{{- if .Values.dnsPolicy }}
 {{- with .Values.dnsPolicy }}
 dnsPolicy: {{ . }}
+{{- else if .Values.hostNetwork }}
+dnsPolicy: "ClusterFirstWithHostNet"
+{{- else }}
+dnsPolicy: ClusterFirst
 {{- end }}
 {{- with .Values.dnsConfig }}
 dnsConfig:
