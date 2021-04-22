@@ -30,15 +30,15 @@ The main container included in the controller.
     {{- toYaml . | nindent 2 }}
   {{- end }}
   env:
-    - name: PUID
-      value: {{ .Values.PUID | quote }}
-    - name: PGID
-      value: {{ .Values.PGID | quote }}
+  - name: PUID
+    value: {{ .Values.PUID | quote }}
+  - name: PGID
+    value: {{ .Values.PGID | quote }}
   {{- if or .Values.envList .Values.env .Values.envTpl .Values.envValueFrom }}
   {{- range $envList := .Values.envList }}
   {{- if and $envList.name $envList.value }}
-    - name: {{ $envList.name }}
-      value: {{ $envList.value | quote }}
+  - name: {{ $envList.name }}
+    value: {{ $envList.value | quote }}
   {{- else }}
     {{- fail "Please specify name/value for environment variable" }}
   {{- end }}

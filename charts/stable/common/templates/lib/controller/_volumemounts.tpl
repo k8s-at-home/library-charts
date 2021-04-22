@@ -1,7 +1,8 @@
-
 {{/*
 Volumes included by the controller.
 */}}
+{{- define "common.controller.volumeMounts" -}}
+
 {{- range $index, $PVC := .Values.persistence }}
 {{- if $PVC.enabled }}
 - mountPath: {{ $PVC.mountPath | default (printf "/%v" $index) }}
@@ -34,7 +35,7 @@ Creates mountpoints to mount hostPaths directly to the container
 {{ if $hpm.name }}
   {{ $name = $hpm.name }}
 {{ end }}
-- name: customstorage-{{ $name }}
+- name: hostpathmounts-{{ $name }}
   mountPath: {{ $hpm.mountPath }}
   {{ if $hpm.subPath }}
   subPath: {{ $hpm.subPath }}
@@ -44,6 +45,5 @@ Creates mountpoints to mount hostPaths directly to the container
   {{ end }}
 {{- end -}}
 {{ end }}
-
 
 {{- end -}}

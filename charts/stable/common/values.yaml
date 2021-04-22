@@ -265,7 +265,7 @@ persistence:
     mountPath: /shared
 
 # Mount a folder on the host directly to the containers
-# hostPathMount:
+# hostPathMounts:
 #   - name: "data"
 #     enabled: false
 #     emptyDir: false

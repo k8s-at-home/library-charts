@@ -31,7 +31,7 @@ spec:
           - /bin/sh
           - -c
           - | {{ range $index, $hpm := .Values.hostPathMounts}}{{ if and $hpm.enabled $hpm.setPermissions}}
-            chown -R {{ if eq $values.podSecurityContext.runAsNonRoot false }}{{ print $values.PUID }}{{ else }}{{ print $values.podSecurityContext.runAsUser }}{{ end }}:{{ print $values.podSecurityContext.fsGroup }}  {{ print $hpm.mountPath }}{{ end }}{{ end }}
+            chown -R {{ if not $values.podSecurityContext }}{{ print $values.PUID }}{{ else if $values.podSecurityContext.runAsNonRoot }}{{ print $values.PUID }}{{ else if $values.podSecurityContext.runAsUser }}{{ print $values.podSecurityContext.runAsUser }}{{ else }}{{ print $values.PUID }}{{ end }}:{{ if not $values.podSecurityContext }}{{ print $values.PGID }}{{ else if $values.podSecurityContext.fsGroup }}{{ print $values.podSecurityContext.fsGroup }}{{ else }}{{ print $values.PGID }}{{ end }} {{ print $hpm.mountPath }}{{ end }}{{ end }}
           #args:
           #
           #securityContext:
@@ -43,7 +43,7 @@ spec:
           {{ if $hpmm.name }}
             {{ $name = $hpmm.name }}
           {{ end }}
-          - name: hostPathMounts-{{ $name }}
+          - name: hostpathmounts-{{ $name }}
             mountPath: {{ $hpmm.mountPath }}
             {{ if $hpmm.subPath }}
             subPath: {{ $hpmm.subPath }}
@@ -58,7 +58,7 @@ spec:
       {{ if $hpm.name }}
       {{ $name = $hpm.name }}
       {{ end }}
-      - name: hostPathMounts-{{ $name }}
+      - name: hostpathmounts-{{ $name }}
         {{ if $hpm.emptyDir }}
         emptyDir: {}
         {{- else -}}

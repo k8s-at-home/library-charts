@@ -58,7 +58,7 @@ Creates Volumes for hostPaths which can be directly mounted to a container
 {{ if $hpm.name }}
 {{ $name = $hpm.name }}
 {{ end }}
-- name: customstorage-{{ $name }}
+- name: hostpathmounts-{{ $name }}
   {{ if $hpm.emptyDir }}
   emptyDir: {}
   {{- else -}}
