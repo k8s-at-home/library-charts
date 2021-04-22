@@ -258,6 +258,16 @@ persistence:
       enabled: true
     mountPath: /shared
 
+# Mount a folder on the host directly to the containers
+# hostPathMount:
+#   - name: "data"
+#     enabled: false
+#     emptyDir: false
+#     mountPath: "/data"
+#     subPath: some-subpath
+#     hostPath: ""
+#     readOnly: false
+
 additionalVolumes: []
 
 additionalVolumeMounts: []

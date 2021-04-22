@@ -64,27 +64,9 @@ The main container included in the controller.
   {{- end }}
   {{- end }}
   {{- include "common.controller.ports" . | trim | nindent 2 }}
+  {{- with (include "common.controller.volumeMounts" . | trim) }}
   volumeMounts:
-  {{- range $index, $PVC := .Values.persistence }}
-  {{- if $PVC.enabled }}
-  - mountPath: {{ $PVC.mountPath | default (printf "/%v" $index) }}
-    name: {{ $index }}
-  {{- if $PVC.subPath }}
-    subPath: {{ $PVC.subPath }}
-  {{- end }}
-  {{- end }}
-  {{- end }}
-  {{- if .Values.additionalVolumeMounts }}
-    {{- toYaml .Values.additionalVolumeMounts | nindent 2 }}
-  {{- end }}
-  {{- if eq .Values.controllerType "statefulset"  }}
-  {{- range $index, $vct := .Values.volumeClaimTemplates }}
-  - mountPath: {{ $vct.mountPath }}
-    name: {{ $vct.name }}
-  {{- if $vct.subPath }}
-    subPath: {{ $vct.subPath }}
-  {{- end }}
-  {{- end }}
+    {{- . | nindent 2 }}
   {{- end }}
   {{- include "common.controller.probes" . | nindent 2 }}
   {{- with .Values.resources }}
