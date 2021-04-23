@@ -168,6 +168,8 @@ service:
   annotations: {}
   labels: {}
 
+  ## additionalServices can be created as either a dict or a list.
+  ## In case of a dict, please use the nameSuffix as dict name
   additionalServices: []
   # - enabled: false
   #   nameSuffix: api
