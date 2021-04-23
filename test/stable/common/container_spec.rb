@@ -73,63 +73,6 @@ class Test < ChartTest
       end
     end
 
-    describe 'container::PUID and PGID' do
-      it 'Check PUID and PGID default to 568' do
-        values = {}
-        chart.value values
-        deployment = chart.resources(kind: "Deployment").first
-        containers = deployment["spec"]["template"]["spec"]["containers"]
-        mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal("PUID", mainContainer["env"][0]["name"])
-        assert_equal("568", mainContainer["env"][0]["value"])
-        assert_equal("PGID", mainContainer["env"][1]["name"])
-        assert_equal("568", mainContainer["env"][1]["value"])
-      end
-
-      it 'set "PUID"' do
-          values = {
-          PUID: '666'
-        }
-        chart.value values
-        deployment = chart.resources(kind: "Deployment").first
-        containers = deployment["spec"]["template"]["spec"]["containers"]
-        mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal("PUID", mainContainer["env"][0]["name"])
-        assert_equal("666", mainContainer["env"][0]["value"])
-        assert_equal("PGID", mainContainer["env"][1]["name"])
-        assert_equal("568", mainContainer["env"][1]["value"])
-      end
-
-      it 'set "PGID"' do
-          values = {
-          PGID: '999'
-        }
-        chart.value values
-        deployment = chart.resources(kind: "Deployment").first
-        containers = deployment["spec"]["template"]["spec"]["containers"]
-        mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal("PUID", mainContainer["env"][0]["name"])
-        assert_equal("568", mainContainer["env"][0]["value"])
-        assert_equal("PGID", mainContainer["env"][1]["name"])
-        assert_equal("999", mainContainer["env"][1]["value"])
-      end
-
-      it 'set both "PUID" and "PGID"' do
-          values = {
-          PUID: '666',
-          PGID: '999'
-        }
-        chart.value values
-        deployment = chart.resources(kind: "Deployment").first
-        containers = deployment["spec"]["template"]["spec"]["containers"]
-        mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal("PUID", mainContainer["env"][0]["name"])
-        assert_equal("666", mainContainer["env"][0]["value"])
-        assert_equal("PGID", mainContainer["env"][1]["name"])
-        assert_equal("999", mainContainer["env"][1]["value"])
-      end
-    end
-
     describe 'container::environment settings' do
       it 'Check no environment variables' do
         values = {}
@@ -137,7 +80,7 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_nil(mainContainer["env"][2])
+        assert_nil(mainContainer["env"])
       end
 
       it 'set "static" environment variables' do
@@ -150,8 +93,8 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][2]["name"])
-        assert_equal(values[:env].values[0].to_s, mainContainer["env"][2]["value"])
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
       end
       
       it 'set "list" of "static" environment variables' do
@@ -168,8 +111,8 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][2]["name"])
-        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][2]["value"])
+        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][0]["value"])
       end
       
       it 'set both "list" AND "dict" of "static" environment variables' do
@@ -189,10 +132,10 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][2]["name"])
-        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][2]["value"])
-        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][3]["name"])
-        assert_equal(values[:env].values[0].to_s, mainContainer["env"][3]["value"])
+        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][0]["value"])
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][1]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][1]["value"])
       end
 
       it 'set "valueFrom" environment variables' do
@@ -209,8 +152,8 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:envValueFrom].keys[0].to_s, mainContainer["env"][2]["name"])
-        assert_equal(values[:envValueFrom].values[0][:fieldRef][:fieldPath], mainContainer["env"][2]["valueFrom"]["fieldRef"]["fieldPath"])
+        assert_equal(values[:envValueFrom].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envValueFrom].values[0][:fieldRef][:fieldPath], mainContainer["env"][0]["valueFrom"]["fieldRef"]["fieldPath"])
       end
 
       it 'set "static" and "Dynamic/Tpl" environment variables' do
@@ -226,10 +169,10 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][2]["name"])
-        assert_equal(values[:env].values[0].to_s, mainContainer["env"][2]["value"])
-        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][3]["name"])
-        assert_equal("common-test-admin", mainContainer["env"][3]["value"])
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
+        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][1]["name"])
+        assert_equal("common-test-admin", mainContainer["env"][1]["value"])
       end
       
       it 'set "Dynamic/Tpl" environment variables' do
@@ -242,8 +185,8 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][2]["name"])
-        assert_equal("common-test-admin", mainContainer["env"][2]["value"])
+        assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][0]["name"])
+        assert_equal("common-test-admin", mainContainer["env"][0]["value"])
       end
       
       it 'set "static" secret variables' do

@@ -90,12 +90,6 @@ hostNetwork: false
 # for more information.
 enableServiceLinks: true
 
-# Sets the PUID env-var and is used to process ownership of hostPathMounts
-PUID: 568
-
-# Sets the PGID env-var and is used to process ownership of hostPathMounts
-PGID: 568
-
 # Configure the Security Context for the Pod
 podSecurityContext: {}
 

@@ -3,11 +3,29 @@ This template serves as the blueprint for the mountPermissions job that is run
 before chart installation.
 */}}
 {{- define "common.class.mountPermissions" -}}
+{{- if .Values.hostPathMounts -}}
 
 {{- $jobName := include "common.names.fullname" . -}}
 {{- $values := .Values -}}
-
+{{- $user := 568 -}}
+{{- $group := 568 -}}
 {{- print "---" | nindent 0 -}}
+
+{{- if $values.podSecurityContext }}
+{{- if $values.podSecurityContext.runAsUser }}
+{{- $user = $values.podSecurityContext.runAsUser -}}
+{{- end -}}
+{{- if $values.podSecurityContext.fsGroup -}}
+{{- $group = $values.podSecurityContext.fsGroup -}}
+{{- end -}}
+{{- else if $values.env }}
+{{- if $values.env.PUID }}
+{{- $user = $values.env.PUID -}}
+{{- end -}}
+{{- if $values.env.PGID }}
+{{- $group = $values.env.PGID -}}
+{{- end -}}
+{{- end -}}
 
 apiVersion: batch/v1
 kind: Job
@@ -31,7 +49,7 @@ spec:
           - /bin/sh
           - -c
           - | {{ range $index, $hpm := .Values.hostPathMounts}}{{ if and $hpm.enabled $hpm.setPermissions}}
-            chown -R {{ if not $values.podSecurityContext }}{{ print $values.PUID }}{{ else if $values.podSecurityContext.runAsNonRoot }}{{ print $values.PUID }}{{ else if $values.podSecurityContext.runAsUser }}{{ print $values.podSecurityContext.runAsUser }}{{ else }}{{ print $values.PUID }}{{ end }}:{{ if not $values.podSecurityContext }}{{ print $values.PGID }}{{ else if $values.podSecurityContext.fsGroup }}{{ print $values.podSecurityContext.fsGroup }}{{ else }}{{ print $values.PGID }}{{ end }} {{ print $hpm.mountPath }}{{ end }}{{ end }}
+            chown -R {{ print $user }}:{{ print $group }} {{ print $hpm.mountPath }}{{ end }}{{ end }}
           #args:
           #
           #securityContext:
@@ -69,4 +87,5 @@ spec:
       {{ end }}
       {{- end -}}
 
+{{- end }}
 {{- end }}

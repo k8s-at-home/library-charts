@@ -7,17 +7,9 @@ class Test < ChartTest
   describe @@chart.name do
   
     describe 'job::permissions' do
-      it 'exists by default' do
+      it 'does not exist by default' do
         job = chart.resources(kind: "Job").first
-        assert_equal("set-mount-permissions", job["spec"]["template"]["spec"]["containers"][0]["name"])
-      end
-      it 'has no volumes by default' do
-        job = chart.resources(kind: "Job").first
-        assert_nil(job["spec"]["template"]["spec"]["volumes"])
-      end
-      it 'has no volumeMounts by default' do
-        job = chart.resources(kind: "Job").first
-        assert_nil(job["spec"]["template"]["spec"]["containers"][0]["volumeMounts"])
+        assert_nil(job)
       end
       
       it 'hostPathMounts do not affect permissions job by default' do
@@ -295,6 +287,39 @@ chown -R 999:666 /config
           podSecurityContext: {
             fsGroup: 666,
             runAsUser: 999
+          },
+          hostPathMounts: [
+          {
+                name: "data",
+                enabled: true,
+                setPermissions: true,
+                mountPath: "/data",
+                hostPath: "/tmp1"
+          },
+          {
+                name: "config",
+                enabled: true,
+                setPermissions: true,
+                mountPath: "/config",
+                hostPath: "/tmp2"
+          }
+          ]
+        }
+        chart.value values
+        job = chart.resources(kind: "Job").first
+        mainContainer = job["spec"]["template"]["spec"]["containers"][0]
+        assert_equal(results[:command], mainContainer["command"])
+      end
+      it 'outputs PUID AND PGID permissions for multiple volumes when both are set' do
+        results= {
+          command: ["/bin/sh", "-c", "chown -R 999:666 /data
+chown -R 999:666 /config
+"]
+        }
+        values = {
+          env: {
+            PGID: 666,
+            PUID: 999
           },
           hostPathMounts: [
           {
