@@ -14,7 +14,7 @@ Volumes included by the controller.
 {{- end }}
 
 {{- if .Values.additionalVolumeMounts }}
-  {{- toYaml .Values.additionalVolumeMounts | nindent 2 }}
+{{- toYaml .Values.additionalVolumeMounts | nindent 0 }}
 {{- end }}
 
 {{- if eq .Values.controllerType "statefulset"  }}
