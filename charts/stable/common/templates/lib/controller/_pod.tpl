@@ -25,7 +25,6 @@ hostname: {{ . }}
 {{- end }}
 {{- if .Values.dnsPolicy }}
  dnsPolicy: {{ .Values.dnsPolicy }}
-{{- end }}
 {{- else if .Values.hostNetwork }}
 dnsPolicy: "ClusterFirstWithHostNet"
 {{- else }}
