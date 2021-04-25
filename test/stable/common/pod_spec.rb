@@ -3,14 +3,14 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'pod::replicas' do
       it 'defaults to 1' do
         deployment = chart.resources(kind: "Deployment").first
         assert_equal(1, deployment["spec"]["replicas"])
       end
-  
+
       it 'accepts integer as value' do
         chart.value replicas: 3
         deployment = chart.resources(kind: "Deployment").first
@@ -39,7 +39,7 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         assert_equal("ClusterFirst", deployment["spec"]["template"]["spec"]["dnsPolicy"])
       end
-  
+
       it 'defaults to "ClusterFirst" when hostNetwork: false' do
         values = {
           hostNetwork: false
@@ -261,7 +261,7 @@ class Test < ChartTest
         assert_equal("1Gi", volume["emptyDir"]["sizeLimit"])
       end
     end
-    
+
     describe 'pod::hostPathMounts' do
       it 'multiple volumes' do
         values = {
@@ -292,7 +292,7 @@ class Test < ChartTest
         refute_nil(volume)
         assert_equal('/tmp2', volume["hostPath"]["path"])
       end
-      
+
       it 'emptyDir can be enabled' do
         values = {
           hostPathMounts: [

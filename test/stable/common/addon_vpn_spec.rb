@@ -3,8 +3,8 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'addon::vpn' do
       baseValues = {
         addons: {
@@ -41,7 +41,7 @@ class Test < ChartTest
             }
           }
         })
-      
+
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
         secret = chart.resources(kind: "Secret").first

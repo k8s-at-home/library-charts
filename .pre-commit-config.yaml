@@ -7,6 +7,13 @@ repos:
   - id: end-of-file-fixer
   - id: fix-byte-order-marker
   - id: mixed-line-ending
+  - id: check-merge-conflict
+  - id: check-case-conflict
+  - id: check-executables-have-shebangs
+  - id: check-docstring-first
+  - id: check-symlinks
+  - id: destroyed-symlinks
+  - id: fix-byte-order-marker
 
 - repo: local
   hooks:

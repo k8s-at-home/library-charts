@@ -3,7 +3,7 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
+
   describe @@chart.name do
     describe 'controller::type' do
       it 'defaults to "Deployment"' do
@@ -11,14 +11,14 @@ class Test < ChartTest
         assert_nil(resource('DaemonSet'))
         refute_nil(resource('Deployment'))
       end
-  
+
       it 'accepts "statefulset"' do
         chart.value controllerType: 'statefulset'
         assert_nil(resource('Deployment'))
         assert_nil(resource('DaemonSet'))
         refute_nil(resource('StatefulSet'))
       end
-  
+
       it 'accepts "daemonset"' do
         chart.value controllerType: 'daemonset'
         assert_nil(resource('Deployment'))

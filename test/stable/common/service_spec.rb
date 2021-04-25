@@ -3,8 +3,8 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'service::ports settings' do
       default_name = 'http'
       default_port = 8080
@@ -22,7 +22,7 @@ class Test < ChartTest
         assert_equal(default_port, mainContainer["ports"].first["containerPort"])
         assert_equal(default_name, mainContainer["ports"].first["name"])
       end
-  
+
       it 'port name can be overridden' do
         values = {
           service: {
