@@ -41,6 +41,10 @@ secret: {}
 env: {}
   # TZ: UTC
 
+envList: []
+  # - name: TZ
+  #   value: UTC
+
 ## Variables with values set from templates, example
 ## With a release name of: demo, the example env value will be: demo-admin
 envTpl: {}
@@ -71,7 +75,8 @@ envFrom: []
 # When using hostNetwork make sure you set dnsPolicy to ClusterFirstWithHostNet
 hostNetwork: false
 
-dnsPolicy: ClusterFirst
+# Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true.
+# dnsPolicy: ClusterFirst
 
 # Optional DNS settings, configuring the ndots option may resolve
 # nslookup issues on some Kubernetes setups.
@@ -163,6 +168,8 @@ service:
   annotations: {}
   labels: {}
 
+  ## additionalServices can be created as either a dict or a list.
+  ## In case of a dict, please use the nameSuffix as dict name
   additionalServices: []
   # - enabled: false
   #   nameSuffix: api
@@ -252,6 +259,16 @@ persistence:
     emptyDir:
       enabled: true
     mountPath: /shared
+
+# Mount a folder on the host directly to the containers
+# hostPathMounts:
+#   - name: "data"
+#     enabled: false
+#     emptyDir: false
+#     mountPath: "/data"
+#     subPath: some-subpath
+#     hostPath: ""
+#     readOnly: false
 
 additionalVolumes: []
 

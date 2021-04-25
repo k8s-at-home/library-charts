@@ -80,7 +80,7 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_nil(mainContainer["args"])
+        assert_nil(mainContainer["env"])
       end
 
       it 'set "static" environment variables' do
@@ -95,6 +95,47 @@ class Test < ChartTest
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
         assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
         assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
+      end
+      
+      it 'set "list" of "static" environment variables' do
+        values = {
+          envList: [
+          {
+              name: 'STATIC_ENV_FROM_LIST',
+              value: 'STATIC_ENV_VALUE_FROM_LIST'
+              }
+            
+          ]
+        }
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][0]["value"])
+      end
+      
+      it 'set both "list" AND "dict" of "static" environment variables' do
+        values = {
+          env: {
+            STATIC_ENV: 'value_of_env'
+          },
+          envList: [
+          {
+              name: 'STATIC_ENV_FROM_LIST',
+              value: 'STATIC_ENV_VALUE_FROM_LIST'
+              }
+            
+          ]
+        }
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][0]["name"])
+        assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][0]["value"])
+        assert_equal(values[:env].keys[0].to_s, mainContainer["env"][1]["name"])
+        assert_equal(values[:env].values[0].to_s, mainContainer["env"][1]["value"])
       end
 
       it 'set "valueFrom" environment variables' do
@@ -254,6 +295,80 @@ class Test < ChartTest
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
 
         volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "data" }
+        refute_nil(volumeMount)
+        assert_equal("mySubPath", volumeMount["subPath"])
+      end
+    end
+    
+    describe 'container::hostPathMounts' do
+      it 'supports multiple hostPathMounts' do
+        values = {
+          hostPathMounts: [
+          {
+                name: "data",
+                enabled: true,
+                mountPath: "/data",
+                hostPath: "/tmp"
+          },
+          {
+                name: "config",
+                enabled: true,
+                mountPath: "/config",
+                hostPath: "/tmp"
+          }
+          ]
+        }
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        # Check that all hostPathMounts volumes have mounts
+        values[:hostPathMounts].each { |value|
+          volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "hostpathmounts-" + value[:name].to_s }
+          refute_nil(volumeMount)
+        }
+      end
+      
+      it 'supports setting mountPath' do
+        values = {
+          hostPathMounts: [
+          {
+                name: "data",
+                enabled: true,
+                mountPath: "/data",
+                hostPath: "/tmp"
+          }
+          ]
+        }
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "hostpathmounts-data" }
+        refute_nil(volumeMount)
+        assert_equal("/data", volumeMount["mountPath"])
+      end
+
+      it 'supports setting subPath' do
+        values = {
+          hostPathMounts: [
+          {
+                name: "data",
+                enabled: true,
+                mountPath: "/data",
+                hostPath: "/tmp",
+                subPath: "mySubPath"
+          }
+          ]
+        }
+        chart.value values
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+
+        volumeMount = mainContainer["volumeMounts"].find{ |v| v["name"] == "hostpathmounts-data" }
         refute_nil(volumeMount)
         assert_equal("mySubPath", volumeMount["subPath"])
       end

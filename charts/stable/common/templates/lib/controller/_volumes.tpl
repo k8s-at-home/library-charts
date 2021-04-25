@@ -48,4 +48,24 @@ Volumes included by the controller.
 {{- if .Values.additionalVolumes }}
   {{- toYaml .Values.additionalVolumes | nindent 0 }}
 {{- end }}
+
+
+{{/*
+Creates Volumes for hostPaths which can be directly mounted to a container
+*/}}
+{{- range $name, $hpm := .Values.hostPathMounts -}}
+{{ if $hpm.enabled }}
+{{ if $hpm.name }}
+{{ $name = $hpm.name }}
+{{ end }}
+- name: hostpathmounts-{{ $name }}
+  {{ if $hpm.emptyDir }}
+  emptyDir: {}
+  {{- else -}}
+  hostPath:
+    path: {{ required "hostPath not set" $hpm.hostPath }}
+  {{ end }}
+{{ end }}
+{{- end -}}
+
 {{- end -}}

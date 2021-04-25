@@ -29,8 +29,16 @@ The main container included in the controller.
   lifecycle:
     {{- toYaml . | nindent 2 }}
   {{- end }}
-  {{- if or .Values.env .Values.envTpl .Values.envValueFrom }}
+  {{- if or .Values.envList .Values.env .Values.envTpl .Values.envValueFrom }}
   env:
+  {{- range $envList := .Values.envList }}
+  {{- if and $envList.name $envList.value }}
+  - name: {{ $envList.name }}
+    value: {{ $envList.value | quote }}
+  {{- else }}
+    {{- fail "Please specify name/value for environment variable" }}
+  {{- end }}
+  {{- end}}
   {{- range $key, $value := .Values.env }}
   - name: {{ $key }}
     value: {{ $value | quote }}
@@ -56,27 +64,9 @@ The main container included in the controller.
   {{- end }}
   {{- end }}
   {{- include "common.controller.ports" . | trim | nindent 2 }}
+  {{- with (include "common.controller.volumeMounts" . | trim) }}
   volumeMounts:
-  {{- range $index, $PVC := .Values.persistence }}
-  {{- if $PVC.enabled }}
-  - mountPath: {{ $PVC.mountPath | default (printf "/%v" $index) }}
-    name: {{ $index }}
-  {{- if $PVC.subPath }}
-    subPath: {{ $PVC.subPath }}
-  {{- end }}
-  {{- end }}
-  {{- end }}
-  {{- if .Values.additionalVolumeMounts }}
-    {{- toYaml .Values.additionalVolumeMounts | nindent 2 }}
-  {{- end }}
-  {{- if eq .Values.controllerType "statefulset"  }}
-  {{- range $index, $vct := .Values.volumeClaimTemplates }}
-  - mountPath: {{ $vct.mountPath }}
-    name: {{ $vct.name }}
-  {{- if $vct.subPath }}
-    subPath: {{ $vct.subPath }}
-  {{- end }}
-  {{- end }}
+    {{- . | nindent 2 }}
   {{- end }}
   {{- include "common.controller.probes" . | nindent 2 }}
   {{- with .Values.resources }}

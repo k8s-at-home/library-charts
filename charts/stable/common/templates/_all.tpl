@@ -42,4 +42,5 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- print "---" | nindent 0 -}}
     {{ include "common.secret" .  | nindent 0 }}
   {{- end -}}
+  {{ include "common.class.mountPermissions" .  | nindent 0 }}
 {{- end -}}
