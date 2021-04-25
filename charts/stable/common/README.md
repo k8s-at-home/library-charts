@@ -248,7 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `hostPathMounts` to mount hostPaths with a single values.yaml setting
 - Automated ownership fixing job for `hostPathMounts`
-- `envList` to use a list of environment variables in addition to the current list or template
+- `envList` to use a list of environment variables in addition to the current dict or template
 
 #### Changed
 
