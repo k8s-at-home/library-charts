@@ -13,7 +13,6 @@ repos:
   - id: check-docstring-first
   - id: check-symlinks
   - id: destroyed-symlinks
-  - id: fix-byte-order-marker
 
 - repo: local
   hooks:
