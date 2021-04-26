@@ -11,6 +11,7 @@ class Test < ChartTest
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_nil(hpa)
       end
+
       it 'can be enabled' do
         values = {
           autoscaling: {
@@ -21,6 +22,7 @@ class Test < ChartTest
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         refute_nil(hpa)
       end
+
       it 'default target is common.names.fullname ' do
         values = {
           autoscaling: {
@@ -31,6 +33,7 @@ class Test < ChartTest
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_equal("common-test",hpa["spec"]["scaleTargetRef"]["name"])
       end
+
       it 'default numer of replicas is min 1 max 3' do
         values = {
           autoscaling: {
@@ -43,6 +46,7 @@ class Test < ChartTest
         assert_equal(3,hpa["spec"]["maxReplicas"])
       end
     end
+
     describe 'hpa::customsettings' do
       it 'can override target' do
         values = {
@@ -55,6 +59,7 @@ class Test < ChartTest
         hpa = chart.resources(kind: "HorizontalPodAutoscaler").first
         assert_equal(values[:autoscaling][:target],hpa["spec"]["scaleTargetRef"]["name"])
       end
+
       it 'can change min and max replicas' do
         values = {
           autoscaling: {
@@ -68,6 +73,7 @@ class Test < ChartTest
         assert_equal(values[:autoscaling][:minReplicas],hpa["spec"]["minReplicas"])
         assert_equal(values[:autoscaling][:maxReplicas],hpa["spec"]["maxReplicas"])
       end
+
       it 'can set targetCPUUtilizationPercentage' do
         values = {
           autoscaling: {
@@ -80,6 +86,7 @@ class Test < ChartTest
         assert_equal("cpu",hpa["spec"]["metrics"][0]["resource"]["name"])
         assert_equal(values[:autoscaling][:targetCPUUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
       end
+
       it 'can set targetMemoryUtilizationPercentage' do
         values = {
           autoscaling: {
@@ -92,6 +99,7 @@ class Test < ChartTest
         assert_equal("memory",hpa["spec"]["metrics"][0]["resource"]["name"])
         assert_equal(values[:autoscaling][:targetMemoryUtilizationPercentage],hpa["spec"]["metrics"][0]["resource"]["targetAverageUtilization"])
       end
+
       it 'can set both targetCPU and targetMemoryUtilizationPercentage' do
         values = {
           autoscaling: {
