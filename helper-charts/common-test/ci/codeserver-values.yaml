@@ -13,7 +13,7 @@ ingress:
 persistence:
   config:
     enabled: true
-    emptyDir: 
+    emptyDir:
       enabled: true
     mountPath: /www/assets
 

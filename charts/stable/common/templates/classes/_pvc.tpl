@@ -1,5 +1,5 @@
 {{/*
-This template serves as a blueprint for all PersistentVolumeClaim objects that are created 
+This template serves as a blueprint for all PersistentVolumeClaim objects that are created
 within the common library.
 */}}
 {{- define "common.classes.pvc" -}}
@@ -13,7 +13,7 @@ within the common library.
 {{- if hasKey $values "nameSuffix" -}}
   {{- if not (eq $values.nameSuffix "-") -}}
     {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
-  {{ end -}}    
+  {{ end -}}
 {{ end -}}
 kind: PersistentVolumeClaim
 apiVersion: v1

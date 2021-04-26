@@ -73,7 +73,7 @@ ingress:
 persistence:
   data:
     enabled: false
-    emptyDir: 
+    emptyDir:
       enabled: false
     mountPath: /data
 ```
@@ -262,7 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- Fixed the VPN addon secret name when providing inline VPN configuration. 
+- Fixed the VPN addon secret name when providing inline VPN configuration.
 
 ### [2.3.0]
 

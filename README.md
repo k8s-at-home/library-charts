@@ -22,7 +22,7 @@ dependency on what we call the `common` library.
 
 ## Changelog
 
-To view the changelog for the common library see 
+To view the changelog for the common library see
 [here](https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common#changelog).
 
 ## Support

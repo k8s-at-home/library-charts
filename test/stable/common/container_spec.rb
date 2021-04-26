@@ -3,8 +3,8 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'container::command' do
       it 'defaults to nil' do
         deployment = chart.resources(kind: "Deployment").first
@@ -96,7 +96,7 @@ class Test < ChartTest
         assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
         assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
       end
-      
+
       it 'set "list" of "static" environment variables' do
         values = {
           envList: [
@@ -104,7 +104,7 @@ class Test < ChartTest
               name: 'STATIC_ENV_FROM_LIST',
               value: 'STATIC_ENV_VALUE_FROM_LIST'
               }
-            
+
           ]
         }
         chart.value values
@@ -114,7 +114,7 @@ class Test < ChartTest
         assert_equal(values[:envList][0][:name].to_s, mainContainer["env"][0]["name"])
         assert_equal(values[:envList][0][:value].to_s, mainContainer["env"][0]["value"])
       end
-      
+
       it 'set both "list" AND "dict" of "static" environment variables' do
         values = {
           env: {
@@ -125,7 +125,7 @@ class Test < ChartTest
               name: 'STATIC_ENV_FROM_LIST',
               value: 'STATIC_ENV_VALUE_FROM_LIST'
               }
-            
+
           ]
         }
         chart.value values
@@ -174,7 +174,7 @@ class Test < ChartTest
         assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][1]["name"])
         assert_equal("common-test-admin", mainContainer["env"][1]["value"])
       end
-      
+
       it 'set "Dynamic/Tpl" environment variables' do
         values = {
           envTpl: {
@@ -188,7 +188,7 @@ class Test < ChartTest
         assert_equal(values[:envTpl].keys[0].to_s, mainContainer["env"][0]["name"])
         assert_equal("common-test-admin", mainContainer["env"][0]["value"])
       end
-      
+
       it 'set "static" secret variables' do
         expectedSecretName = 'common-test'
         values = {
@@ -299,7 +299,7 @@ class Test < ChartTest
         assert_equal("mySubPath", volumeMount["subPath"])
       end
     end
-    
+
     describe 'container::hostPathMounts' do
       it 'supports multiple hostPathMounts' do
         values = {
@@ -329,7 +329,7 @@ class Test < ChartTest
           refute_nil(volumeMount)
         }
       end
-      
+
       it 'supports setting mountPath' do
         values = {
           hostPathMounts: [

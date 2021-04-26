@@ -3,15 +3,15 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'addon::codeserver' do
       baseValues = {
         addons: {
           codeserver: {
             enabled: true,
             volumeMounts: [
-              { 
+              {
                 name: "config",
                 mountPath: "/data/config"
               }
