@@ -23,6 +23,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         refute_nil(configmap)
       end
+
       it 'is named "portal"' do
         values = {
           portal: {
@@ -33,6 +34,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("portal", configmap["metadata"]["name"])
       end
+
       it 'uses "$node_ip" by default' do
         values = {
           portal: {
@@ -46,6 +48,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("$node_ip", configmap["data"]["host"])
       end
+
       it 'uses port "443" by default' do
         values = {
           portal: {
@@ -59,6 +62,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("443", configmap["data"]["port"])
       end
+
       it 'uses protocol "https" by default' do
         values = {
           portal: {
@@ -72,6 +76,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("https", configmap["data"]["protocol"])
       end
+
       it 'uses path "/" by default' do
         values = {
           portal: {
@@ -86,6 +91,7 @@ class Test < ChartTest
         assert_equal("/", configmap["data"]["path"])
       end
     end
+
     describe 'configmap::portal-overrides' do
       it 'ingressPort can be overridden' do
         values = {
@@ -98,6 +104,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal(values[:portal][:ingressPort], configmap["data"]["port"])
       end
+
       it 'nodePort Host can be overridden' do
         values = {
           portal: {
@@ -112,6 +119,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal(values[:portal][:host], configmap["data"]["host"])
       end
+
       it 'path  can be overridden' do
         values = {
           portal: {
@@ -127,6 +135,7 @@ class Test < ChartTest
         assert_equal(values[:portal][:path], configmap["data"]["path"])
       end
     end
+
     describe 'configmap::portal-nodePort' do
       it 'nodePort host defaults to "$node_ip"' do
         values = {
@@ -147,6 +156,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("$node_ip", configmap["data"]["host"])
       end
+
       it 'nodePort port defaults to the nodePort' do
         values = {
           portal: {
@@ -166,6 +176,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("666", configmap["data"]["port"])
       end
+
       it 'uses nodeport port protocol as protocol (HTTPS)' do
         values = {
           portal: {
@@ -186,6 +197,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal(values[:service][:port][:protocol], configmap["data"]["protocol"])
       end
+
       it 'uses nodeport port protocol as protocol (HTTP)' do
         values = {
           portal: {
@@ -207,6 +219,7 @@ class Test < ChartTest
         assert_equal(values[:service][:port][:protocol], configmap["data"]["protocol"])
       end
     end
+
     describe 'configmap::portal-Ingress' do
       it 'uses ingress host' do
         values = {
@@ -234,6 +247,7 @@ class Test < ChartTest
         configmap = chart.resources(kind: "ConfigMap").first
         assert_equal("test.domain", configmap["data"]["host"])
       end
+
       it 'uses ingress path' do
         values = {
           portal: {

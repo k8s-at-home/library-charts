@@ -64,8 +64,7 @@ data:
   host: {{ $host | quote }}
   port: {{ $port | quote }}
   path: {{ $path | quote }}
-  url: {{ ( printf "%v%v%v%v%v%v" $protocol "://" $host ":" $port $path ) | quote }}
-
+  url: {{ ( printf "%v://%v:%v%v" $protocol $host $port $path ) | quote }}
 {{- end }}
 {{- end }}
 {{- end -}}
