@@ -62,6 +62,21 @@ class Test < ChartTest
         assert_equal('test', pvc["spec"]["storageClassName"])
       end
 
+      it 'can generate TrueNAS SCALE zfs storageClass' do
+        values = {
+          persistence: {
+            config: {
+              enabled: true,
+              storageClass: "SCALE-ZFS"
+            }
+          }
+        }
+        chart.value values
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
+        refute_nil(pvc)
+        assert_equal('ix-storage-class-common-test', pvc["spec"]["storageClassName"])
+      end
+
       it 'storageClass can be set to an empty value' do
         values = {
           persistence: {

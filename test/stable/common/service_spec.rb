@@ -81,6 +81,93 @@ class Test < ChartTest
         end
         assert_match("Our charts do not support named ports for targetPort. (port name #{default_name}, targetPort #{values[:service][:port][:targetPort]})", exception.message)
       end
+
+      it 'protocol defaults to TCP' do
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("TCP", service["spec"]["ports"].first["protocol"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal("TCP", mainContainer["ports"].first["protocol"])
+      end
+
+      it 'protocol is TCP when set to TCP explicitly' do
+        values = {
+          service: {
+            port: {
+              protocol: 'TCP'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("TCP", service["spec"]["ports"].first["protocol"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal("TCP", mainContainer["ports"].first["protocol"])
+      end
+
+      it 'protocol is TCP when set to HTTP explicitly' do
+        values = {
+          service: {
+            port: {
+              protocol: 'HTTP'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("TCP", service["spec"]["ports"].first["protocol"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal("TCP", mainContainer["ports"].first["protocol"])
+      end
+
+      it 'protocol is TCP when set to HTTPS explicitly' do
+        values = {
+          service: {
+            port: {
+              protocol: 'HTTPS'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("TCP", service["spec"]["ports"].first["protocol"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal("TCP", mainContainer["ports"].first["protocol"])
+      end
+
+      it 'protocol is UDP when set to UDP explicitly' do
+        values = {
+          service: {
+            port: {
+              protocol: 'UDP'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("UDP", service["spec"]["ports"].first["protocol"])
+
+        deployment = chart.resources(kind: "Deployment").first
+        containers = deployment["spec"]["template"]["spec"]["containers"]
+        mainContainer = containers.find{ |c| c["name"] == "common-test" }
+        assert_equal("UDP", mainContainer["ports"].first["protocol"])
+      end
     end
   end
 end
