@@ -144,7 +144,7 @@ class Test < ChartTest
     end
     
     describe 'additionalIngress' do
-      baseValues = {
+      ingressValues = {
         ingress: {
           enabled: true,
           additionalIngresses: [
@@ -166,14 +166,14 @@ class Test < ChartTest
       }
 
       it 'can be specified' do
-        values = baseValues
+        values = ingressValues
         chart.value values
         additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
         refute_nil(additionalIngress)
       end
 
       it 'refers to main Service by default' do
-        values = baseValues
+        values = ingressValues
         chart.value values
         additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
         assert_equal("common-test", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
@@ -181,7 +181,7 @@ class Test < ChartTest
       end
 
       it 'custom service name / port can be set' do
-        values = baseValues.deep_merge_override({
+        values = ingressValues.deep_merge_override({
           ingress: {
             additionalIngresses: [
               {
