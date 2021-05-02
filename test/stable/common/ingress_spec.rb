@@ -142,5 +142,60 @@ class Test < ChartTest
         assert_equal(expectedHostName, ingress["spec"]["rules"][0]["host"])
       end
     end
+    
+    describe 'additionalIngress' do
+      baseValues = {
+        ingress: {
+          enabled: true,
+          additionalIngresses: [
+            {
+              enabled: true,
+              nameSuffix: "extra",
+              hosts: [
+                {
+                  paths: [
+                    {
+                      path: '/'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      it 'can be specified' do
+        values = baseValues
+        chart.value values
+        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
+        refute_nil(additionalIngress)
+      end
+
+      it 'refers to main Service by default' do
+        values = baseValues
+        chart.value values
+        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
+        assert_equal("common-test", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
+        assert_equal(8080, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
+      end
+
+      it 'custom service name / port can be set' do
+        values = baseValues.deep_merge_override({
+          ingress: {
+            additionalIngresses: [
+              {
+                serviceName: "customService",
+                servicePort: 8081
+              }
+            ]
+          }
+        })
+        chart.value values
+        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
+        assert_equal("customService", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
+        assert_equal(8081, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
+      end
+    end
   end
 end
