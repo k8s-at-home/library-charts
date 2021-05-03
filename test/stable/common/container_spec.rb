@@ -86,7 +86,8 @@ class Test < ChartTest
       it 'set "static" environment variables' do
         values = {
           env: {
-            STATIC_ENV: 'value_of_env'
+            STATIC_ENV: 'value_of_env',
+            TRUTHY_ENV: '0',
           }
         }
         chart.value values
@@ -95,6 +96,8 @@ class Test < ChartTest
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
         assert_equal(values[:env].keys[0].to_s, mainContainer["env"][0]["name"])
         assert_equal(values[:env].values[0].to_s, mainContainer["env"][0]["value"])
+        assert_equal(values[:env].keys[1].to_s, mainContainer["env"][1]["name"])
+        assert_equal(values[:env].values[1].to_s, mainContainer["env"][1]["value"])
       end
 
       it 'set "list" of "static" environment variables' do
