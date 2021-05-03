@@ -173,7 +173,7 @@ class Test < ChartTest
         assert_equal(1234, secondPath["backend"]["service"]["port"]["number"])
       end
     end
-    
+
     describe 'additionalIngress' do
       ingressValues = {
         ingress: {
