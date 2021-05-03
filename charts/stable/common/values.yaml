@@ -238,6 +238,8 @@ ingress:
   #         - path: /api
   #           # Ignored if not kubeVersion >= 1.14-0
   #           pathType: Prefix
+  #           serviceName:  # optionally target a specific service
+  #           servicePort:  # optionally target a specific service port
   #   tls: []
   #   #  - secretName: chart-example-tls
   #   #    hosts:
