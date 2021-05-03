@@ -71,12 +71,12 @@ spec:
             backend:
             {{- if eq (include "common.capabilities.ingress.apiVersion" $) "networking.k8s.io/v1" }}
               service:
-                name: {{ $svcName }}
+                name: {{ .serviceName | default $svcName }}
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ .servicePort | default $svcPort }}
             {{- else }}
-              serviceName: {{ $svcName }}
-              servicePort: {{ $svcPort }}
+              serviceName: {{ .serviceName | default $svcName }}
+              servicePort: {{ .servicePort | default $svcPort }}
             {{- end }}
           {{- end }}
   {{- end }}

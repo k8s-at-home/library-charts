@@ -141,6 +141,37 @@ class Test < ChartTest
         refute_nil(ingress)
         assert_equal(expectedHostName, ingress["spec"]["rules"][0]["host"])
       end
+
+      it 'custom service name / port can optionally be set on path level' do
+        values = {
+          ingress: {
+            enabled: true,
+            hosts: [
+              {
+                paths: [
+                  {
+                    path: '/'
+                  },
+                  {
+                    path: '/second',
+                    serviceName: 'pathService',
+                    servicePort: 1234
+                  }
+                ]
+              }
+            ]
+          }
+        }
+
+        chart.value values
+        ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
+        firstPath = ingress["spec"]["rules"][0]["http"]["paths"][0]
+        secondPath = ingress["spec"]["rules"][0]["http"]["paths"][1]
+        assert_equal("common-test", firstPath["backend"]["service"]["name"])
+        assert_equal(8080, firstPath["backend"]["service"]["port"]["number"])
+        assert_equal("pathService", secondPath["backend"]["service"]["name"])
+        assert_equal(1234, secondPath["backend"]["service"]["port"]["number"])
+      end
     end
     
     describe 'additionalIngress' do
@@ -180,7 +211,7 @@ class Test < ChartTest
         assert_equal(8080, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
       end
 
-      it 'custom service name / port can be set' do
+      it 'custom service name / port can be set on Ingress level' do
         values = ingressValues.deep_merge_override({
           ingress: {
             additionalIngresses: [
@@ -195,6 +226,39 @@ class Test < ChartTest
         additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
         assert_equal("customService", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
         assert_equal(8081, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
+      end
+
+      it 'custom service name / port can optionally be set on path level' do
+        values = ingressValues.deep_merge_override({
+          ingress: {
+            additionalIngresses: [
+              {
+                hosts: [
+                  {
+                    paths: [
+                      {
+                        path: '/'
+                      },
+                      {
+                        path: '/second',
+                        serviceName: 'pathService',
+                        servicePort: 1234
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        })
+        chart.value values
+        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
+        firstPath = additionalIngress["spec"]["rules"][0]["http"]["paths"][0]
+        secondPath = additionalIngress["spec"]["rules"][0]["http"]["paths"][1]
+        assert_equal("common-test", firstPath["backend"]["service"]["name"])
+        assert_equal(8080, firstPath["backend"]["service"]["port"]["number"])
+        assert_equal("pathService", secondPath["backend"]["service"]["name"])
+        assert_equal(1234, secondPath["backend"]["service"]["port"]["number"])
       end
     end
   end
