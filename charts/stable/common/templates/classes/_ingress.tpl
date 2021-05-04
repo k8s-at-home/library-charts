@@ -6,6 +6,11 @@ within the common library.
 {{- $ingressName := include "common.names.fullname" . -}}
 {{- $values := .Values.ingress -}}
 
+{{- $svcName := include "common.names.fullname" . -}}
+{{- $svcPort := 80 -}}
+{{- $portProtocol := "" -}}
+{{- $ingressService := $.Values.service -}}
+
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.ingress -}}
     {{- $values = . -}}
@@ -13,13 +18,45 @@ within the common library.
 {{ end -}}
 
 
+{{/*
+This code portion, generates default service settings based on the name of the ingress.
+It is complicated because it needs to fetch service information based on a decision tree.
+
+It does a few things:
+- It adds the "nameSuffix" to the name of the ingress, if available
+- It tries to find a service with the same name as the ingress
+- If a service with the same name as the ingress exists (and is enabled), it tries to use it's port, protocol and name
+- If such a service does not exist, or is disabled, it tries to use the main service
+- If no service with the same name AND no main service are found, it uses:
+   default port 80
+   default fullname as name
+   protocol ""
+
+All of these settings can also be overridden from the ingress using the following settings in values.yaml:
+- serviceName (sets the name used as backend service)
+- servicePort (sets the poprt used by the backend service)
+- portProtocol (sets the protocol used by the backend service)
+*/}}
 {{- if hasKey $values "nameSuffix" -}}
   {{- $ingressName = printf "%v-%v" $ingressName $values.nameSuffix -}}
+  {{- if not $values.servicePort }}
+    {{- $ingressService := index  $.Values.service ( $values.nameSuffix | quote ) }}
+    {{- if $ingressService.enabled }}
+      {{- $svcName := $values.serviceName | default (printf "%v-%v" $svcName $values.nameSuffix | quote ) -}}
+      {{- $svcPort = $values.servicePort | default $ingressService.port.port -}}
+      {{- $portProtocol = $ingressService.port.protocol | default "" }}
+    {{- else if $.Values.service.main.enabled }}
+      {{- $svcPort = $values.servicePort | $.Values.service.main.port.port -}}
+      {{- $portProtocol = $.Values.service.main.port.protocol | default "" -}}
+    {{ end -}}
+  {{ end -}}
+{{- else if and ( $.Values.service.main.enabled ) ( not $values.servicePort ) }}
+  {{- $svcPort = $values.servicePort | $.Values.service.main.port.port -}}
+  {{- $portProtocol =  $.Values.service.main.port.protocol | default "" -}}
 {{ end -}}
-
-
-{{- $svcName := $values.serviceName | default (include "common.names.fullname" .) -}}
-{{- $svcPort := $values.servicePort | default $.Values.service.port.port -}}
+{{- if $values.portProtocol }}
+  {{- $portProtocol = $values.portProtocol -}}
+{{- end }}
 
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
