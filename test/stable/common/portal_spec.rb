@@ -5,15 +5,13 @@ class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
 
   describe @@chart.name do
-    describe 'configmap::general' do
-      it 'does not exist by default' do
+    describe 'configmap::portal-defaults' do
+      it 'no configmap exists by default' do
         configmap = chart.resources(kind: "ConfigMap").first
         assert_nil(configmap)
       end
-    end
 
-    describe 'configmap::portal-defaults' do
-      it 'can be enabled' do
+      it 'creates configmap whe enabled' do
         values = {
           portal: {
             enabled: true
