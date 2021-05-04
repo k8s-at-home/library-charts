@@ -2,6 +2,7 @@
 
 {{- if .Values.portal }}
 {{- if .Values.portal.enabled }}
+{{- $svc := index .Values.services (keys .Values.services | first) -}}
 {{- $host := "$node_ip" }}
 {{- $port := 443 }}
 {{- $protocol := "https" }}
@@ -11,16 +12,16 @@
 {{- if hasKey .Values "ingress" }}
   {{- if .Values.ingress.enabled }}
     {{- range .Values.ingress.hosts }}
-    {{- if .hostTpl }}
-    {{ $host = ( tpl .hostTpl $ ) }}
-    {{- else if .host }}
-    {{ $host = .host }}
-    {{- else }}
-    {{ $host = "$node_ip" }}
-    {{- end }}
-    {{- if .paths }}
-    {{- $path = (first .paths).path  }}
-    {{- end }}
+      {{- if .hostTpl }}
+        {{ $host = ( tpl .hostTpl $ ) }}
+      {{- else if .host }}
+        {{ $host = .host }}
+      {{- else }}
+        {{ $host = "$node_ip" }}
+      {{- end }}
+      {{- if .paths }}
+        {{- $path = (first .paths).path  }}
+      {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -28,10 +29,10 @@
 {{- if and ( .Values.portal.ingressPort ) ( ne $host "$node_ip" ) }}
   {{- $port = .Values.portal.ingressPort }}
 {{- else  if eq $host "$node_ip" }}
-  {{- if eq .Values.service.type "NodePort" }}
-    {{- $port = .Values.service.port.nodePort }}
-    {{- if or ( eq .Values.service.port.protocol "HTTP" ) ( eq .Values.service.port.protocol "HTTPS" ) }}
-      {{- $portProtocol = .Values.service.port.protocol }}
+  {{- if eq $svc.type "NodePort" }}
+    {{- $port = $svc.port.nodePort }}
+    {{- if or ( eq $svc.port.protocol "HTTP" ) ( eq $svc.port.protocol "HTTPS" ) }}
+      {{- $portProtocol = $svc.port.protocol }}
     {{- end }}
   {{- end }}
 {{- end }}

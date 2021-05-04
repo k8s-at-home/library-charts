@@ -6,10 +6,10 @@ class Test < ChartTest
 
   describe @@chart.name do
     describe 'service::ports settings' do
-      default_name = 'http'
+      default_name = 'main'
       default_port = 8080
 
-      it 'defaults to name "http" on port 8080' do
+      it 'defaults to name "servicename" on port 8080' do
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(service)
         assert_equal(default_port, service["spec"]["ports"].first["port"])
@@ -25,61 +25,67 @@ class Test < ChartTest
 
       it 'port name can be overridden' do
         values = {
-          service: {
-            port: {
-              name: 'server'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                name: "server",
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(service)
         assert_equal(default_port, service["spec"]["ports"].first["port"])
-        assert_equal(values[:service][:port][:name], service["spec"]["ports"].first["targetPort"])
-        assert_equal(values[:service][:port][:name], service["spec"]["ports"].first["name"])
+        assert_equal(values[:services][:main][:port][:name], service["spec"]["ports"].first["targetPort"])
+        assert_equal(values[:services][:main][:port][:name], service["spec"]["ports"].first["name"])
 
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
         assert_equal(default_port, mainContainer["ports"].first["containerPort"])
-        assert_equal(values[:service][:port][:name], mainContainer["ports"].first["name"])
+        assert_equal(values[:services][:main][:port][:name], mainContainer["ports"].first["name"])
       end
 
       it 'targetPort can be overridden' do
         values = {
-          service: {
-            port: {
-              targetPort: 80
-            }
-          }
+          services: {
+            main: {
+              port: {
+                targetPort: 80,
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(service)
         assert_equal(default_port, service["spec"]["ports"].first["port"])
-        assert_equal(values[:service][:port][:targetPort], service["spec"]["ports"].first["targetPort"])
+        assert_equal(values[:services][:main][:port][:targetPort], service["spec"]["ports"].first["targetPort"])
         assert_equal(default_name, service["spec"]["ports"].first["name"])
 
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:service][:port][:targetPort], mainContainer["ports"].first["containerPort"])
+        assert_equal(values[:services][:main][:port][:targetPort], mainContainer["ports"].first["containerPort"])
         assert_equal(default_name, mainContainer["ports"].first["name"])
       end
 
       it 'targetPort cannot be a named port' do
         values = {
-          service: {
-            port: {
-              targetPort: 'test'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                targetPort: "test",
+              },
+            },
+          },
         }
         chart.value values
         exception = assert_raises HelmCompileError do
           chart.execute_helm_template!
         end
-        assert_match("Our charts do not support named ports for targetPort. (port name #{default_name}, targetPort #{values[:service][:port][:targetPort]})", exception.message)
+        assert_match("Our charts do not support named ports for targetPort. (port name #{default_name}, targetPort #{values[:services][:main][:port][:targetPort]})", exception.message)
       end
 
       it 'protocol defaults to TCP' do
@@ -95,11 +101,13 @@ class Test < ChartTest
 
       it 'protocol is TCP when set to TCP explicitly' do
         values = {
-          service: {
-            port: {
-              protocol: 'TCP'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                protocol: "TCP",
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
@@ -114,11 +122,13 @@ class Test < ChartTest
 
       it 'protocol is TCP when set to HTTP explicitly' do
         values = {
-          service: {
-            port: {
-              protocol: 'HTTP'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                protocol: "HTTP",
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
@@ -133,11 +143,13 @@ class Test < ChartTest
 
       it 'protocol is TCP when set to HTTPS explicitly' do
         values = {
-          service: {
-            port: {
-              protocol: 'HTTPS'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                protocol: "HTTPS",
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
@@ -152,11 +164,13 @@ class Test < ChartTest
 
       it 'protocol is UDP when set to UDP explicitly' do
         values = {
-          service: {
-            port: {
-              protocol: 'UDP'
-            }
-          }
+          services: {
+            main: {
+              port: {
+                protocol: "UDP",
+              },
+            },
+          },
         }
         chart.value values
         service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
@@ -176,9 +190,11 @@ class Test < ChartTest
       end
       it 'TCP port protocol does not set annotations' do
         values = {
-          service: {
-            port: {
-              protocol: 'TCP'
+          services: {
+            main: {
+              port: {
+                protocol: 'TCP'
+              }
             }
           }
         }
@@ -189,9 +205,11 @@ class Test < ChartTest
       end
       it 'HTTPS port protocol sets traefik HTTPS annotation' do
         values = {
-          service: {
-            port: {
-              protocol: 'HTTPS'
+          services: {
+            main: {
+              port: {
+                protocol: 'HTTPS'
+              }
             }
           }
         }

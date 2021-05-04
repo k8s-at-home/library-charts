@@ -35,7 +35,6 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.statefulset" . | nindent 0 }}
   {{- end -}}
   {{ include "common.classes.hpa" . | nindent 0 }}
-  {{- print "---" | nindent 0 -}}
   {{ include "common.service" . | nindent 0 }}
   {{- print "---" | nindent 0 -}}
   {{ include "common.ingress" .  | nindent 0 }}

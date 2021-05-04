@@ -3,7 +3,7 @@ This template serves as a blueprint for all Service objects that are created
 within the common library.
 */}}
 {{- define "common.classes.service" -}}
-{{- $values := .Values.service -}}
+{{- $values := index .Values.services (keys .Values.services | first) -}}
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.service -}}
     {{- $values = . -}}

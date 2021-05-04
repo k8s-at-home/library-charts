@@ -4,8 +4,6 @@ of the main Ingress and any additionalIngresses.
 */}}
 {{- define "common.ingress" -}}
   {{- if .Values.ingress.enabled -}}
-    {{- $svcPort := .Values.service.port.port -}}
-
     {{- /* Generate primary ingress */ -}}
     {{- $ingressValues := .Values.ingress -}}
     {{- $_ := set . "ObjectValues" (dict "ingress" $ingressValues) -}}

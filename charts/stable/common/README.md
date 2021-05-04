@@ -78,11 +78,12 @@ persistence:
     mountPath: /data
 ```
 
-If not using a service, set the `service.enabled` to `false`.
+If not using a service, set `service.main.enabled` to `false`.
 ```yaml
 ...
 service:
-  enabled: false
+  main:
+    enabled: false
 ...
 ```
 
@@ -218,16 +219,15 @@ helm dependency update
 | resources | object | `{}` |  |
 | secret | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.additionalPorts | list | `[]` |  |
-| service.additionalServices | list | `[]` |  |
-| service.annotations | object | `{}` |  |
-| service.enabled | bool | `true` |  |
-| service.labels | object | `{}` |  |
-| service.port.name | string | `nil` |  |
-| service.port.port | string | `nil` |  |
-| service.port.protocol | string | `"TCP"` |  |
-| service.port.targetPort | string | `nil` |  |
-| service.type | string | `"ClusterIP"` |  |
+| service.main.additionalPorts | list | `[]` |  |
+| service.main.annotations | object | `{}` |  |
+| service.main.enabled | bool | `true` |  |
+| service.main.labels | object | `{}` |  |
+| service.main.port.name | string | `nil` |  |
+| service.main.port.port | string | `nil` |  |
+| service.main.port.protocol | string | `"TCP"` |  |
+| service.main.port.targetPort | string | `nil` |  |
+| service.main.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `false` |  |
 | serviceAccount.name | string | `""` |  |
@@ -241,6 +241,13 @@ All notable changes to this application Helm chart will be documented in this fi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [3.0.0]
+
+#### Changed
+
+- Main/Default service, is now a sub-dict named `main` under `service` in Values.yaml
+- `additionalServices` are now directly placed as dicts under `service` in Values.yaml
 
 ### [2.5.0]
 
