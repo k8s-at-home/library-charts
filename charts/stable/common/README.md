@@ -68,7 +68,8 @@ service:
     port: 1880
 
 ingress:
-  enabled: false
+  main:
+    enabled: false
 
 persistence:
   data:
@@ -175,14 +176,13 @@ helm dependency update
 | fullnameOverride | string | `""` |  |
 | hostAliases | list | `[]` |  |
 | hostNetwork | bool | `false` |  |
-| ingress.additionalIngresses | list | `[]` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| ingress.hosts[0].paths[0].path | string | `"/"` |  |
-| ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
-| ingress.labels | object | `{}` |  |
-| ingress.tls | list | `[]` |  |
+| ingress.main.mainannotations | object | `{}` |  |
+| ingress.main.enabled | bool | `false` |  |
+| ingress.main.hosts[0].host | string | `"chart-example.local"` |  |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` |  |
+| ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
+| ingress.main.labels | object | `{}` |  |
+| ingress.main.tls | list | `[]` |  |
 | initContainers | list | `[]` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
@@ -241,6 +241,13 @@ All notable changes to this application Helm chart will be documented in this fi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [3.0.0]
+
+#### Changed
+
+- Moved the primary ingress from `ingress` to `ingress.main`
+- Moved the Additional Ingresses from `ingress.additionalIngresses` to `ingress.nameOfAdditionalIngress`
 
 ### [2.5.0]
 

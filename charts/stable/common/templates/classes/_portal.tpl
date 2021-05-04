@@ -8,9 +8,9 @@
 {{- $portProtocol := "" }}
 {{- $path := "/" }}
 
-{{- if hasKey .Values "ingress" }}
-  {{- if .Values.ingress.enabled }}
-    {{- range .Values.ingress.hosts }}
+{{- if hasKey .Values.ingress "main" }}
+  {{- if .Values.ingress.main.enabled }}
+    {{- range .Values.ingress.main.hosts }}
     {{- if .hostTpl }}
     {{ $host = ( tpl .hostTpl $ ) }}
     {{- else if .host }}
@@ -39,7 +39,7 @@
 {{- if and ( $portProtocol ) ( eq $host "$node_ip" ) }}
   {{- $protocol = $portProtocol }}
 {{- else if and ( ne $host "$node_ip" ) }}
-  {{- if $.Values.ingress.tls }}
+  {{- if $.Values.ingress.main.tls }}
     {{- $protocol = "https" }}
   {{- end }}
 {{- end }}

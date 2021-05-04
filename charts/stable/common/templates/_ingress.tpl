@@ -3,25 +3,19 @@ Renders the Ingress objects required by the chart by returning a concatinated li
 of the main Ingress and any additionalIngresses.
 */}}
 {{- define "common.ingress" -}}
-  {{- if .Values.ingress.enabled -}}
-    {{- $svcPort := .Values.service.port.port -}}
+    {{- /* Generate named ingresses as required */ -}}
+    {{- range $name, $ingress := .Values.ingress }}
+      {{- if $ingress.enabled -}}
+        {{- print ("---\n") | nindent 0 -}}
+        {{- $ingressValues := $ingress -}}
 
-    {{- /* Generate primary ingress */ -}}
-    {{- $ingressValues := .Values.ingress -}}
-    {{- $_ := set . "ObjectValues" (dict "ingress" $ingressValues) -}}
-    {{- include "common.classes.ingress" . }}
-
-    {{- /* Generate additional ingresses as required */ -}}
-    {{- range $index, $extraIngress := .Values.ingress.additionalIngresses }}
-      {{- if $extraIngress.enabled -}}
-        {{- print ("---") | nindent 0 -}}
-        {{- $ingressValues := $extraIngress -}}
-        {{- if not $ingressValues.nameSuffix -}}
-          {{- $_ := set $ingressValues "nameSuffix" $index -}}
+        {{/* set defaults */}}
+        {{- if and (not $ingressValues.nameSuffix) ( ne $name "main" ) -}}
+          {{- $_ := set $ingressValues "nameSuffix" $name -}}
         {{ end -}}
+
         {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
-        {{- include "common.classes.ingress" $ -}}
+        {{- include "common.classes.ingress" $ }}
       {{- end }}
     {{- end }}
-  {{- end }}
 {{- end }}
