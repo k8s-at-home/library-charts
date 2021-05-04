@@ -153,38 +153,36 @@ probes:
       failureThreshold: 30
 
 service:
-  enabled: true
-  type: ClusterIP
-  ## Specify the default port information
-  port:
+  main:
+    enabled: true
+    type: ClusterIP
+    ## Specify the default port information
     port:
-    ## name defaults to http
-    name:
-    ## Accepts: HTTP, HTTPS, TCP and UDP
-    ## HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
-    protocol: HTTP
-    ## Specify a service targetPort if you wish to differ the service port from the application port.
-    ## If targetPort is specified, this port number is used in the container definition instead of
-    ## service.port.port. Therefore named ports are not supported for this field.
-    targetPort:
-    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+      port:
+      ## name defaults to http
+      name:
+      ## Accepts: HTTP, HTTPS, TCP and UDP
+      ## HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
+      protocol: HTTP
+      ## Specify a service targetPort if you wish to differ the service port from the application port.
+      ## If targetPort is specified, this port number is used in the container definition instead of
+      ## service.port.port. Therefore named ports are not supported for this field.
+      targetPort:
+      ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+      ##
+      # nodePort:
+    additionalPorts: []
+
+    ## Provide any additional annotations which may be required. This can be used to
+    ## set the LoadBalancer service type to internal only.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
-    # nodePort:
-  additionalPorts: []
+    annotations: {}
+    labels: {}
 
-  ## Provide any additional annotations which may be required. This can be used to
-  ## set the LoadBalancer service type to internal only.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-  ##
-  annotations: {}
-  labels: {}
-
-  ## additionalServices can be created as either a dict or a list.
-  ## In case of a dict, please use the nameSuffix as dict name
-  additionalServices: []
-  # - enabled: false
-  #   nameSuffix: api
+  ## additionalServices can be created as either a dict.
+  # additionalService:
   #   type: ClusterIP
   #   # Specify the default port information
   #   port:

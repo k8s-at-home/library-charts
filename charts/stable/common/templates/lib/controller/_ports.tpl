@@ -2,49 +2,43 @@
 Ports included by the controller.
 */}}
 {{- define "common.controller.ports" -}}
-  {{- $ports := list -}}
-  {{- with .Values.service -}}
-    {{- $serviceValues := deepCopy . -}}
-    {{/* append the ports for the main service */}}
-    {{- if .enabled -}}
-      {{- $_ := set .port "name" (default "http" .port.name) -}}
-      {{- $ports = mustAppend $ports .port -}}
-      {{- range $_ := .additionalPorts -}}
-        {{/* append the additonalPorts for the main service */}}
-        {{- $ports = mustAppend $ports . -}}
-      {{- end }}
-    {{- end }}
-    {{/* append the ports for each additional service */}}
-    {{- range $_ := .additionalServices }}
-      {{- if .enabled -}}
-        {{- $_ := set .port "name" (required "Missing port.name" .port.name) -}}
-        {{- $ports = mustAppend $ports .port -}}
-        {{- range $_ := .additionalPorts -}}
-          {{/* append the additonalPorts for each additional service */}}
-          {{- $ports = mustAppend $ports . -}}
+{{- $ports := list -}}
+    {{/* append the ports for each service */}}
+    {{- if $.Values.service -}}
+      {{- range $name, $_ := $.Values.services }}
+        {{- if or ( .enabled ) ( eq $name "main" ) -}}
+          {{- if eq $name "main" -}}
+            {{- $_ := set .port "name" (default "http" .port.name) -}}
+          {{- else if kindIs "string" $name -}}
+            {{- $_ := set .port "name" (default .port.name | default $name) -}}
+            {{- else -}}
+            {{- $_ := set .port "name" (required "Missing port.name" .port.name) -}}
+          {{- end -}}
+          {{- $ports = mustAppend $ports .port -}}
+          {{- range $_ := .additionalPorts -}}
+            {{/* append the additonalPorts for each additional service */}}
+            {{- $ports = mustAppend $ports . -}}
+          {{- end }}
         {{- end }}
       {{- end }}
     {{- end }}
-  {{- end }}
 
 {{/* export/render the list of ports */}}
 {{- if $ports -}}
 ports:
 {{- range $_ := $ports }}
-- name: {{ .name }}
+{{- $protocol := "" -}}
+{{- if or ( eq .protocol "HTTP" ) ( eq .protocol "HTTPS" ) }}
+  {{- $protocol = "TCP" -}}
+{{- else }}
+  {{- $protocol = .protocol | default "TCP" -}}
+{{- end }}
+- name: {{ required "The port's 'name' is not defined" .name }}
   {{- if and .targetPort (kindIs "string" .targetPort) }}
   {{- fail (printf "Our charts do not support named ports for targetPort. (port name %s, targetPort %s)" .name .targetPort) }}
   {{- end }}
   containerPort: {{ .targetPort | default .port }}
-  {{- if .protocol }}
-  {{- if or ( eq .protocol "HTTP" ) ( eq .protocol "HTTPS" ) ( eq .protocol "TCP" ) }}
-  protocol: TCP
-  {{- else }}
-  protocol: {{ .protocol }}
-  {{- end }}
-  {{- else }}
-  protocol: TCP
-  {{- end }}
+  protocol: {{ $protocol | default "TCP" }}
 {{- end -}}
 {{- end -}}
 {{- end -}}

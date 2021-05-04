@@ -2,7 +2,7 @@
 Probes selection logic.
 */}}
 {{- define "common.controller.probes" -}}
-{{- $svcPort := .Values.service.port.name -}}
+{{- $svcPort := .Values.service.main.port.name -}}
 {{- range $probeName, $probe := .Values.probes }}
   {{- if $probe.enabled -}}
     {{- "" | nindent 0 }}

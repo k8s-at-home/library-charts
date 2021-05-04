@@ -4,8 +4,9 @@ image:
   pullPolicy: IfNotPresent
 
 service:
-  port:
-    port: 8080
+  main:
+    port:
+      port: 8080
 
 ingress:
   enabled: true
