@@ -5,7 +5,7 @@ Ports included by the controller.
 {{- $ports := list -}}
     {{/* append the ports for each service */}}
     {{- if $.Values.service -}}
-      {{- range $name, $_ := $.Values.services }}
+      {{- range $name, $_ := $.Values.service }}
         {{- if or ( .enabled ) ( eq $name "main" ) -}}
           {{- if eq $name "main" -}}
             {{- $_ := set .port "name" (default "http" .port.name) -}}

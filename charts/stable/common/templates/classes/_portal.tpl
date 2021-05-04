@@ -28,10 +28,10 @@
 {{- if and ( .Values.portal.ingressPort ) ( ne $host "$node_ip" ) }}
   {{- $port = .Values.portal.ingressPort }}
 {{- else  if eq $host "$node_ip" }}
-  {{- if eq .Values.service.type "NodePort" }}
-    {{- $port = .Values.service.port.nodePort }}
-    {{- if or ( eq .Values.service.port.protocol "HTTP" ) ( eq .Values.service.port.protocol "HTTPS" ) }}
-      {{- $portProtocol = .Values.service.port.protocol }}
+  {{- if eq .Values.service.main.type "NodePort" }}
+    {{- $port = .Values.service.main.port.nodePort }}
+    {{- if or ( eq .Values.service.main.port.protocol "HTTP" ) ( eq .Values.service.main.port.protocol "HTTPS" ) }}
+      {{- $portProtocol = .Values.service.main.port.protocol }}
     {{- end }}
   {{- end }}
 {{- end }}
