@@ -6,7 +6,7 @@ of the main Ingress and any additionalIngresses.
     {{- /* Generate named ingresses as required */ -}}
     {{- range $name, $ingress := .Values.ingress }}
       {{- if $ingress.enabled -}}
-        {{- print ("---") | nindent 0 -}}
+        {{- print ("---\n") | nindent 0 -}}
         {{- $ingressValues := $ingress -}}
 
         {{/* set defaults */}}
