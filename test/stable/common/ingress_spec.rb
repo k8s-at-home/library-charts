@@ -201,10 +201,8 @@ class Test < ChartTest
     describe 'additionalIngress' do
       ingressValues = {
         ingress: {
-          additionalIngresses: [
-            {
+          extra: {
               enabled: true,
-              nameSuffix: "extra",
               hosts: [
                 {
                   paths: [
@@ -215,8 +213,7 @@ class Test < ChartTest
                 }
               ]
             }
-          ]
-        }
+          }
       }
 
       it 'can be specified' do
@@ -237,12 +234,10 @@ class Test < ChartTest
       it 'custom service name / port can be set on Ingress level' do
         values = ingressValues.deep_merge_override({
           ingress: {
-            additionalIngresses: [
-              {
+            extra: {
                 serviceName: "customService",
                 servicePort: 8081
               }
-            ]
           }
         })
         chart.value values
@@ -254,8 +249,7 @@ class Test < ChartTest
       it 'custom service name / port can optionally be set on path level' do
         values = ingressValues.deep_merge_override({
           ingress: {
-            additionalIngresses: [
-              {
+            extra: {
                 hosts: [
                   {
                     paths: [
@@ -271,7 +265,6 @@ class Test < ChartTest
                   }
                 ]
               }
-            ]
           }
         })
         chart.value values
