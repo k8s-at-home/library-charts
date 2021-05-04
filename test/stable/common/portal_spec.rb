@@ -39,7 +39,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -53,7 +55,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -67,7 +71,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -81,7 +87,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -110,7 +118,9 @@ class Test < ChartTest
             host: "test.host"
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -125,7 +135,9 @@ class Test < ChartTest
             path: "/path"
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
@@ -141,7 +153,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           },
           service: {
             type: "NodePort",
@@ -161,7 +175,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           },
           service: {
             type: "NodePort",
@@ -181,7 +197,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           },
           service: {
             type: "NodePort",
@@ -202,7 +220,9 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           },
           service: {
             type: "NodePort",
@@ -225,19 +245,21 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: true,
-            hosts: [
-              {
-                host: "test.domain",
-                paths:
-                [
-                  {
-                    path: "/test"
-                  }
-                ]
+            main: {
+              enabled: true,
+              hosts: [
+                {
+                  host: "test.domain",
+                  paths:
+                  [
+                    {
+                      path: "/test"
+                    }
+                  ]
 
-              }
-            ]
+                }
+              ]
+            }
           }
         }
         chart.value values
@@ -252,19 +274,21 @@ class Test < ChartTest
             enabled: true
           },
           ingress: {
-            enabled: true,
-            hosts: [
-              {
-                host: "test.domain",
-                paths:
-                [
-                  {
-                    path: "/test"
-                  }
-                ]
+            main: {
+              enabled: true,
+              hosts: [
+                {
+                  host: "test.domain",
+                  paths:
+                  [
+                    {
+                      path: "/test"
+                    }
+                  ]
 
-              }
-            ]
+                }
+              ]
+            }
           }
         }
         chart.value values
