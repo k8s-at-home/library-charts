@@ -217,7 +217,12 @@ ingress:
           # pathTpl: '{{ include "common.names.fullname" . }}'
           ## Ignored if not kubeVersion >= 1.14-0
           pathType: Prefix
+  ## Gets set by TrueNAS SCALE when selecting an integrated certificate
+  # scaleCert: 1
   tls: []
+  ## Can be used to enable using the TrueNAS SCALE certificate selected above
+  #  - scaleCert: true
+  ## Use normal secret
   #  - secretName: chart-example-tls
   ## Or if you need a dynamic secretname
   #  - secretNameTpl: '{{ include "common.names.fullname" . }}-ingress'

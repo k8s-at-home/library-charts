@@ -41,8 +41,10 @@ spec:
         {{- range .hostsTpl }}
         - {{ tpl . $ | quote }}
         {{- end }}
-      {{- if or .secretNameTpl .secretName }}
-      {{- if .secretNameTpl }}
+      {{- if or .secretNameTpl .secretName .scaleCert }}
+      {{- if .scaleCert }}
+      secretName: {{ ( printf "%v-%v" $ingressName "scalecert" ) }}
+      {{- else if .secretNameTpl }}
       secretName: {{ tpl .secretNameTpl $ | quote}}
       {{- else }}
       secretName: {{ .secretName }}

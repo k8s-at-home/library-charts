@@ -11,6 +11,12 @@ of the main Ingress and any additionalIngresses.
     {{- $_ := set . "ObjectValues" (dict "ingress" $ingressValues) -}}
     {{- include "common.classes.ingress" . }}
 
+    {{- if $ingressValues.scaleCert -}}
+    {{- $_ := set $ "ObjectValues" (dict "certHolder" $ingressValues) -}}
+    {{- print ("---") | nindent 0 -}}
+    {{- include "common.scale.cert.secret" $ -}}
+    {{ end -}}
+
     {{- /* Generate additional ingresses as required */ -}}
     {{- range $index, $extraIngress := .Values.ingress.additionalIngresses }}
       {{- if $extraIngress.enabled -}}
@@ -21,6 +27,12 @@ of the main Ingress and any additionalIngresses.
         {{ end -}}
         {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
         {{- include "common.classes.ingress" $ -}}
+
+        {{- if $ingressValues.scaleCert -}}
+        {{- $_ := set $ "ObjectValues" (dict "certHolder" $ingressValues) -}}
+        {{- print ("---") | nindent 0 -}}
+        {{- include "common.scale.cert.secret" $ -}}
+        {{ end -}}
       {{- end }}
     {{- end }}
   {{- end }}
