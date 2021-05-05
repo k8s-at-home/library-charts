@@ -168,6 +168,38 @@ class Test < ChartTest
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
         assert_equal("UDP", mainContainer["ports"].first["protocol"])
       end
+
+      it 'No annotations get set by default' do
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_nil(service["metadata"]["annotations"])
+      end
+      it 'TCP port protocol does not set annotations' do
+        values = {
+          service: {
+            port: {
+              protocol: 'TCP'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_nil(service["metadata"]["annotations"])
+      end
+      it 'HTTPS port protocol sets traefik HTTPS annotation' do
+        values = {
+          service: {
+            port: {
+              protocol: 'HTTPS'
+            }
+          }
+        }
+        chart.value values
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test" }
+        refute_nil(service)
+        assert_equal("https", service["metadata"]["annotations"]["traefik.ingress.kubernetes.io/service.serversscheme"])
+      end
     end
   end
 end
