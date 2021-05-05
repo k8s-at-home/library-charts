@@ -156,6 +156,7 @@ service:
   enabled: true
   type: ClusterIP
   ## Specify the default port information
+  ## It is adviced not to mix different port protocols on the same service
   port:
     port:
     ## name defaults to http

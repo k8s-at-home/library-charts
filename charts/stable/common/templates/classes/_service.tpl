@@ -23,8 +23,11 @@ metadata:
   {{- if $values.labels }}
     {{ toYaml $values.labels | nindent 4 }}
   {{- end }}
-  {{- with $values.annotations }}
   annotations:
+  {{- if eq ( $values.port.protocol | default "" ) "HTTPS" }}
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+  {{- end }}
+  {{- with $values.annotations }}
     {{ toYaml . | nindent 4 }}
   {{- end }}
 spec:
