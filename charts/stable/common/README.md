@@ -248,6 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `Horizontal Pod Autoscaler`
 - Can now use "HTTP" or "HTTPS" as port protocol (which use TCP under-the-hood)
+- Setting the port protocol to "HTTPS" adds traefik annotation to use https towards the backend service
 - Add option to automatically generate a configmap for use with the TrueNAS SCALE UI portal-button
 - Added option to use TrueNAS SCALE default storageClass by using `SCALE-ZFS` storageClass
 - It is now possible to set the `serviceName` and `servicePort` per Ingress path
