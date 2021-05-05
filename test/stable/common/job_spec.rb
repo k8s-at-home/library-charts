@@ -3,15 +3,15 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
+
   describe @@chart.name do
-  
+
     describe 'job::permissions' do
       it 'does not exist by default' do
         job = chart.resources(kind: "Job").first
         assert_nil(job)
       end
-      
+
       it 'hostPathMounts do not affect permissions job by default' do
         values = {
           hostPathMounts: [
@@ -74,7 +74,7 @@ class Test < ChartTest
           refute_nil(volumeMount)
         }
       end
-      
+
       it 'supports setting mountPath' do
         values = {
           hostPathMounts: [
@@ -95,7 +95,7 @@ class Test < ChartTest
         refute_nil(volumeMount)
         assert_equal("/data", volumeMount["mountPath"])
       end
-      
+
       it 'could mount multiple volumes' do
         values = {
           hostPathMounts: [
@@ -127,7 +127,7 @@ class Test < ChartTest
         refute_nil(volume)
         assert_equal('/tmp2', volume["hostPath"]["path"])
       end
-      
+
       it 'emptyDir can be enabled' do
         values = {
           hostPathMounts: [
@@ -147,7 +147,7 @@ class Test < ChartTest
         refute_nil(volume)
         assert_equal(Hash.new, volume["emptyDir"])
       end
-      
+
       it 'can process default (568:568) permissions for multiple volumes' do
         results= {
           command: ["/bin/sh", "-c", "chown -R 568:568 /data
@@ -177,7 +177,7 @@ chown -R 568:568 /config
         mainContainer = job["spec"]["template"]["spec"]["containers"][0]
         assert_equal(results[:command], mainContainer["command"])
       end
-      
+
       it 'outputs default permissions with irrelevant podSecurityContext' do
         results= {
           command: ["/bin/sh", "-c", "chown -R 568:568 /data
@@ -210,7 +210,7 @@ chown -R 568:568 /config
         mainContainer = job["spec"]["template"]["spec"]["containers"][0]
         assert_equal(results[:command], mainContainer["command"])
       end
-      
+
       it 'outputs fsgroup permissions for multiple volumes when set' do
         results= {
           command: ["/bin/sh", "-c", "chown -R 568:666 /data
@@ -243,7 +243,7 @@ chown -R 568:666 /config
         mainContainer = job["spec"]["template"]["spec"]["containers"][0]
         assert_equal(results[:command], mainContainer["command"])
       end
-      
+
       it 'outputs runAsUser permissions for multiple volumes when set' do
         results= {
           command: ["/bin/sh", "-c", "chown -R 999:568 /data
@@ -276,7 +276,7 @@ chown -R 999:568 /config
         mainContainer = job["spec"]["template"]["spec"]["containers"][0]
         assert_equal(results[:command], mainContainer["command"])
       end
-      
+
       it 'outputs fsGroup AND runAsUser permissions for multiple volumes when both are set' do
         results= {
           command: ["/bin/sh", "-c", "chown -R 999:666 /data
@@ -346,5 +346,3 @@ chown -R 999:666 /config
     end
   end
 end
-
-

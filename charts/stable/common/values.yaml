@@ -23,6 +23,16 @@ fullnameOverride: ""
 # Set annotations on the pod
 podAnnotations: {}
 
+# ## Adds a Horizontal Pod Autoscaler
+# autoscaling:
+#   enabled: false
+#   ## Optional: overrides the default deploymentname
+#   target: deploymentname
+#   minReplicas: 1
+#   maxReplicas: 100
+#   targetCPUUtilizationPercentage: 80
+#   # targetMemoryUtilizationPercentage: 80
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false
@@ -146,11 +156,14 @@ service:
   enabled: true
   type: ClusterIP
   ## Specify the default port information
+  ## It is adviced not to mix different port protocols on the same service
   port:
     port:
     ## name defaults to http
     name:
-    protocol: TCP
+    ## Accepts: HTTP, HTTPS, TCP and UDP
+    ## HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
+    protocol: HTTP
     ## Specify a service targetPort if you wish to differ the service port from the application port.
     ## If targetPort is specified, this port number is used in the container definition instead of
     ## service.port.port. Therefore named ports are not supported for this field.
@@ -226,10 +239,24 @@ ingress:
   #         - path: /api
   #           # Ignored if not kubeVersion >= 1.14-0
   #           pathType: Prefix
+  #           serviceName:  # optionally target a specific service
+  #           servicePort:  # optionally target a specific service port
   #   tls: []
   #   #  - secretName: chart-example-tls
   #   #    hosts:
   #   #      - chart-example.local
+
+# ## Adds a portal configmap for use with TrueNAS SCALE
+# ## This should not be enabled on other systems than TrueNAS SCALE,
+# ## Because it requires a seperate namespace for each chart.
+# portal:
+#   enabled: false
+#   ## Override default port used for the portal button when using ingress.
+#   # ingressPort: 80
+#   ## Override hostname used for the portal button when using nodePort
+#   # host: 192.168.0.2
+#   ## Override the path used in the url
+#   # path: /example
 
 persistence:
   config:
@@ -241,6 +268,8 @@ persistence:
     ## If undefined (the default) or set to null, no storageClassName spec is
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
+    ##
+    ## If set to "SCALE-ZFS" the default provisioner for TrueNAS SCALE is used.
     ##
     # storageClass: "-"
     ##

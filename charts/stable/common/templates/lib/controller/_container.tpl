@@ -9,7 +9,7 @@ The main container included in the controller.
   {{- if kindIs "string" . }}
   command: {{ . }}
   {{- else }}
-  command: 
+  command:
   {{ toYaml . | nindent 2 }}
   {{- end }}
   {{- end }}
@@ -17,7 +17,7 @@ The main container included in the controller.
   {{- if kindIs "string" . }}
   args: {{ . }}
   {{- else }}
-  args: 
+  args:
   {{ toYaml . | nindent 2 }}
   {{- end }}
   {{- end }}

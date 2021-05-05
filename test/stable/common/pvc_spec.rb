@@ -3,8 +3,8 @@ require_relative '../../test_helper'
 
 class Test < ChartTest
   @@chart = Chart.new('helper-charts/common-test')
-  
-  describe @@chart.name do  
+
+  describe @@chart.name do
     describe 'pvc' do
       it 'nameSuffix defaults to persistence key' do
         values = {
@@ -60,6 +60,21 @@ class Test < ChartTest
         pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
         refute_nil(pvc)
         assert_equal('test', pvc["spec"]["storageClassName"])
+      end
+
+      it 'can generate TrueNAS SCALE zfs storageClass' do
+        values = {
+          persistence: {
+            config: {
+              enabled: true,
+              storageClass: "SCALE-ZFS"
+            }
+          }
+        }
+        chart.value values
+        pvc = chart.resources(kind: "PersistentVolumeClaim").find{ |s| s["metadata"]["name"] == "common-test-config" }
+        refute_nil(pvc)
+        assert_equal('ix-storage-class-common-test', pvc["spec"]["storageClassName"])
       end
 
       it 'storageClass can be set to an empty value' do

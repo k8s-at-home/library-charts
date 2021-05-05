@@ -73,7 +73,7 @@ ingress:
 persistence:
   data:
     enabled: false
-    emptyDir: 
+    emptyDir:
       enabled: false
     mountPath: /data
 ```
@@ -242,6 +242,21 @@ All notable changes to this application Helm chart will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [2.5.0]
+
+#### Added
+
+- Added `Horizontal Pod Autoscaler`
+- Can now use "HTTP" or "HTTPS" as port protocol (which use TCP under-the-hood)
+- Setting the port protocol to "HTTPS" adds traefik annotation to use https towards the backend service
+- Add option to automatically generate a configmap for use with the TrueNAS SCALE UI portal-button
+- Added option to use TrueNAS SCALE default storageClass by using `SCALE-ZFS` storageClass
+- It is now possible to set the `serviceName` and `servicePort` per Ingress path
+
+#### Changed
+
+- Port protocol gets used to determine install-notes URL (http or https)
+
 ### [2.4.0]
 
 #### Added
@@ -262,7 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- Fixed the VPN addon secret name when providing inline VPN configuration. 
+- Fixed the VPN addon secret name when providing inline VPN configuration.
 
 ### [2.3.0]
 

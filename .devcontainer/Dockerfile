@@ -4,6 +4,7 @@
 ARG VARIANT="2"
 FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
 
+ARG HELM_VERSION="3.5.4"
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY Gemfile /tmp/Gemfile
@@ -17,8 +18,14 @@ RUN \
   && \
   sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin \
   && \
-  curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | /bin/bash - \
+  curl -o /tmp/helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-$(dpkg --print-architecture).tar.gz" \
+  && tar xvzf /tmp/helm.tar.gz -C /usr/local/bin --strip-components 1 "linux-$(dpkg --print-architecture)/helm" \
+  && chmod +x /usr/local/bin/helm \
   && \
   bundle config set system 'true' \
   && bundle install --gemfile /tmp/Gemfile \
-  && rm /tmp/Gemfile
+  && \
+  rm \
+    /tmp/Gemfile \
+    /tmp/Gemfile.lock \
+    /tmp/helm.tar.gz
