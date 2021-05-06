@@ -69,8 +69,11 @@ The main container included in the controller.
     {{- . | nindent 2 }}
   {{- end }}
   {{- include "common.controller.probes" . | nindent 2 }}
-  {{- with .Values.resources }}
+
+  {{- $resources := dict "limits" ( .Values.scaleGPU | default dict ) }}
+  {{- $resources = merge $resources .Values.resources }}
   resources:
+  {{- with $resources }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end -}}
