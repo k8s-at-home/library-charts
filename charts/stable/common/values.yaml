@@ -342,6 +342,9 @@ resources: {}
 #   cpu: 100m
 #   memory: 128Mi
 
+## Used by TrueNAS SCALE to easily set add GPU's to Apps
+# scaleGPU: {}
+
 addons:
 
   # Enable running a VPN in the pod to route traffic through a VPN
