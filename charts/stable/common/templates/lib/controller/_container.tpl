@@ -27,7 +27,7 @@ The main container included in the controller.
   {{- end }}
   {{- with .Values.lifecycle }}
   lifecycle:
-    {{- toYaml . | nindent 2 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if or .Values.envList .Values.env .Values.envTpl .Values.envValueFrom }}
   env:
