@@ -15,12 +15,15 @@ RUN \
   apt-get -y install --no-install-recommends \
     libonig-dev \
     gnupg2 \
+    python3-pip \
   && \
   sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin \
   && \
   curl -o /tmp/helm.tar.gz "https://get.helm.sh/helm-v${HELM_VERSION}-linux-$(dpkg --print-architecture).tar.gz" \
   && tar xvzf /tmp/helm.tar.gz -C /usr/local/bin --strip-components 1 "linux-$(dpkg --print-architecture)/helm" \
   && chmod +x /usr/local/bin/helm \
+  && \
+  pip3 install pre-commit \
   && \
   bundle config set system 'true' \
   && bundle install --gemfile /tmp/Gemfile \

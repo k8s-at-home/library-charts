@@ -8,4 +8,5 @@ service:
     port: 8080
 
 ingress:
-  enabled: true
+  main:
+    enabled: true

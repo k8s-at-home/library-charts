@@ -6,20 +6,24 @@ class Test < ChartTest
 
   describe @@chart.name do
     describe 'ingress' do
-      it 'disabled when ingress.enabled: false' do
+      it 'disabled when ingress.main.enabled: false' do
         values = {
           ingress: {
-            enabled: false
+            main: {
+              enabled: false
+            }
           }
         }
         chart.value values
         assert_nil(resource('Ingress'))
       end
 
-      it 'enabled when ingress.enabled: true' do
+      it 'enabled when ingress.main.enabled: true' do
         values = {
           ingress: {
-            enabled: true
+            main: {
+              enabled: true
+            }
           }
         }
 
@@ -31,38 +35,42 @@ class Test < ChartTest
         expectedPath = 'common-test.path'
         values = {
           ingress: {
-            tls: [
-              {
-                hosts: [ 'hostname' ],
-                secretName: 'secret-name'
-              }
-            ]
+            main: {
+              tls: [
+                {
+                  hosts: [ 'hostname' ],
+                  secretName: 'secret-name'
+                }
+              ]
+            }
           }
         }
 
         chart.value values
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
-        assert_equal(values[:ingress][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
-        assert_equal(values[:ingress][:tls][0][:secretName], ingress["spec"]["tls"][0]["secretName"])
+        assert_equal(values[:ingress][:main][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
+        assert_equal(values[:ingress][:main][:tls][0][:secretName], ingress["spec"]["tls"][0]["secretName"])
       end
 
       it 'tls secret can be left empty' do
         expectedPath = 'common-test.path'
         values = {
           ingress: {
-            tls: [
-              {
-                hosts: [ 'hostname' ]
-              }
-            ]
+            main:{
+              tls: [
+                {
+                  hosts: [ 'hostname' ]
+                }
+              ]
+            }
           }
         }
 
         chart.value values
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
-        assert_equal(values[:ingress][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
+        assert_equal(values[:ingress][:main][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
         assert_equal(false, ingress["spec"]["tls"][0].key?("secretName"))
         assert_nil(ingress["spec"]["tls"][0]["secretName"])
       end
@@ -71,11 +79,13 @@ class Test < ChartTest
         expectedPath = 'common-test.path'
         values = {
           ingress: {
-            tls: [
-              {
-                secretNameTpl: '{{ .Release.Name }}-secret'
-              }
-            ]
+            main: {
+              tls: [
+                {
+                  secretNameTpl: '{{ .Release.Name }}-secret'
+                }
+              ]
+            }
           }
         }
 
@@ -89,15 +99,17 @@ class Test < ChartTest
         expectedPath = 'common-test.path'
         values = {
           ingress: {
-            hosts: [
-              {
-                paths: [
-                  {
-                    pathTpl: '{{ .Release.Name }}.path'
-                  }
-                ]
-              }
-            ]
+            main: {
+              hosts: [
+                {
+                  paths: [
+                    {
+                      pathTpl: '{{ .Release.Name }}.path'
+                    }
+                  ]
+                }
+              ]
+            }
           }
         }
 
@@ -110,29 +122,33 @@ class Test < ChartTest
       it 'hosts can be provided' do
         values = {
           ingress: {
-            hosts: [
-              {
-                host: 'hostname'
-              }
-            ]
+            main: {
+              hosts: [
+                {
+                  host: 'hostname'
+                }
+              ]
+            }
           }
         }
 
         chart.value values
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
-        assert_equal(values[:ingress][:hosts][0][:host], ingress["spec"]["rules"][0]["host"])
+        assert_equal(values[:ingress][:main][:hosts][0][:host], ingress["spec"]["rules"][0]["host"])
       end
 
       it 'hosts template can be provided' do
         expectedHostName = 'common-test.hostname'
         values = {
           ingress: {
-            hosts: [
-              {
-                hostTpl: '{{ .Release.Name }}.hostname'
-              }
-            ]
+            main: {
+              hosts: [
+                {
+                  hostTpl: '{{ .Release.Name }}.hostname'
+                }
+              ]
+            }
           }
         }
 
@@ -145,21 +161,23 @@ class Test < ChartTest
       it 'custom service name / port can optionally be set on path level' do
         values = {
           ingress: {
-            enabled: true,
-            hosts: [
-              {
-                paths: [
-                  {
-                    path: '/'
-                  },
-                  {
-                    path: '/second',
-                    serviceName: 'pathService',
-                    servicePort: 1234
-                  }
-                ]
-              }
-            ]
+            main: {
+              enabled: true,
+              hosts: [
+                {
+                  paths: [
+                    {
+                      path: '/'
+                    },
+                    {
+                      path: '/second',
+                      serviceName: 'pathService',
+                      servicePort: 1234
+                    }
+                  ]
+                }
+              ]
+            }
           }
         }
 
@@ -172,93 +190,24 @@ class Test < ChartTest
         assert_equal("pathService", secondPath["backend"]["service"]["name"])
         assert_equal(1234, secondPath["backend"]["service"]["port"]["number"])
       end
-    end
 
-    describe 'additionalIngress' do
-      ingressValues = {
-        ingress: {
-          enabled: true,
-          additionalIngresses: [
-            {
+      it 'multiple ingress objects can be specified' do
+        values = {
+          ingress: {
+            main: {
               enabled: true,
-              nameSuffix: "extra",
-              hosts: [
-                {
-                  paths: [
-                    {
-                      path: '/'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+            },
+            secondary: {
+              enabled: true,
+            },
+          }
         }
-      }
 
-      it 'can be specified' do
-        values = ingressValues
         chart.value values
-        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
-        refute_nil(additionalIngress)
-      end
-
-      it 'refers to main Service by default' do
-        values = ingressValues
-        chart.value values
-        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
-        assert_equal("common-test", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
-        assert_equal(8080, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
-      end
-
-      it 'custom service name / port can be set on Ingress level' do
-        values = ingressValues.deep_merge_override({
-          ingress: {
-            additionalIngresses: [
-              {
-                serviceName: "customService",
-                servicePort: 8081
-              }
-            ]
-          }
-        })
-        chart.value values
-        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
-        assert_equal("customService", additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["name"])
-        assert_equal(8081, additionalIngress["spec"]["rules"][0]["http"]["paths"][0]["backend"]["service"]["port"]["number"])
-      end
-
-      it 'custom service name / port can optionally be set on path level' do
-        values = ingressValues.deep_merge_override({
-          ingress: {
-            additionalIngresses: [
-              {
-                hosts: [
-                  {
-                    paths: [
-                      {
-                        path: '/'
-                      },
-                      {
-                        path: '/second',
-                        serviceName: 'pathService',
-                        servicePort: 1234
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        })
-        chart.value values
-        additionalIngress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-extra" }
-        firstPath = additionalIngress["spec"]["rules"][0]["http"]["paths"][0]
-        secondPath = additionalIngress["spec"]["rules"][0]["http"]["paths"][1]
-        assert_equal("common-test", firstPath["backend"]["service"]["name"])
-        assert_equal(8080, firstPath["backend"]["service"]["port"]["number"])
-        assert_equal("pathService", secondPath["backend"]["service"]["name"])
-        assert_equal(1234, secondPath["backend"]["service"]["port"]["number"])
+        ingressMain = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
+        ingressExtra = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-secondary" }
+        refute_nil(ingressMain)
+        refute_nil(ingressExtra)
       end
     end
   end

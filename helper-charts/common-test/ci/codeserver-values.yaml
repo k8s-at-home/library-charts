@@ -8,7 +8,8 @@ service:
     port: 8080
 
 ingress:
-  enabled: true
+  main:
+    enabled: true
 
 persistence:
   config:
@@ -22,7 +23,8 @@ addons:
     enabled: true
     workingDir: "/www/assets"
     ingress:
-      enabled: true
+      main:
+        enabled: true
     volumeMounts:
     - name: config
       mountPath: /www/assets
