@@ -6,7 +6,3 @@ image:
 service:
   port:
     port: 8080
-
-ingress:
-  main:
-    enabled: true

@@ -36,6 +36,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main: {
+              enabled: true,
               tls: [
                 {
                   hosts: [ 'hostname' ],
@@ -58,6 +59,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main:{
+              enabled: true,
               tls: [
                 {
                   hosts: [ 'hostname' ]
@@ -80,6 +82,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main: {
+              enabled: true,
               tls: [
                 {
                   secretNameTpl: '{{ .Release.Name }}-secret'
@@ -100,6 +103,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main: {
+              enabled: true,
               hosts: [
                 {
                   paths: [
@@ -123,6 +127,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main: {
+              enabled: true,
               hosts: [
                 {
                   host: 'hostname'
@@ -143,6 +148,7 @@ class Test < ChartTest
         values = {
           ingress: {
             main: {
+              enabled: true,
               hosts: [
                 {
                   hostTpl: '{{ .Release.Name }}.hostname'
