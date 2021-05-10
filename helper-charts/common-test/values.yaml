@@ -2,7 +2,3 @@ image:
   repository: b4bz/homer
   tag: latest
   pullPolicy: IfNotPresent
-
-service:
-  port:
-    port: 8080

@@ -9,7 +9,7 @@ Renders the Ingress objects required by the chart.
       {{- $ingressValues := $ingress -}}
 
       {{/* set defaults */}}
-      {{- if and (not $ingressValues.nameSuffix) ( ne $name "main" ) -}}
+      {{- if and (not $ingressValues.nameSuffix) (ne $name (include "common.ingress.primary" $)) -}}
         {{- $_ := set $ingressValues "nameSuffix" $name -}}
       {{ end -}}
 
@@ -18,3 +18,22 @@ Renders the Ingress objects required by the chart.
     {{- end }}
   {{- end }}
 {{- end }}
+
+{{/*
+Return the name of the primary ingress object
+*/}}
+{{- define "common.ingress.primary" -}}
+{{- $result := "" -}}
+{{- range $name, $ingress := .Values.ingress -}}
+  {{- if hasKey $ingress "primary" -}}
+  {{- if $ingress.primary -}}
+    {{- $result = $name -}}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if not $result -}}
+  {{- $result = keys .Values.ingress | first -}}
+{{- end -}}
+{{- $result -}}
+{{- end -}}

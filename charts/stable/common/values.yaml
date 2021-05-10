@@ -153,56 +153,43 @@ probes:
       failureThreshold: 30
 
 service:
-  enabled: true
-  type: ClusterIP
-  ## Specify the default port information
-  ## It is adviced not to mix different port protocols on the same service
-  port:
-    port:
-    ## name defaults to http
-    name:
-    ## Accepts: HTTP, HTTPS, TCP and UDP
-    ## HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
-    protocol: HTTP
-    ## Specify a service targetPort if you wish to differ the service port from the application port.
-    ## If targetPort is specified, this port number is used in the container definition instead of
-    ## service.port.port. Therefore named ports are not supported for this field.
-    targetPort:
-    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  main:
+    ## If not using a service, set this to false
+    enabled: true
+    ## Make this the primary service (used in probes, notes, etc...) if there is more than 1 service
+    # primary: true
+    type: ClusterIP
+    ## Specify the port information
+    ports:
+      http:
+        enabled: true
+        ## Make this the primary port (used in probes, notes, etc...) if there is more than 1 service port
+        # primary: true
+        port:
+        ## Accepts: HTTP, HTTPS, TCP and UDP
+        ## HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation
+        protocol: HTTP
+        ## Specify a service targetPort if you wish to differ the service port from the application port.
+        ## If targetPort is specified, this port number is used in the container definition instead of
+        ## service.port.port. Therefore named ports are not supported for this field.
+        targetPort:
+        ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+        ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+        ##
+        # nodePort:
+
+    ## Provide any additional annotations which may be required. This can be used to
+    ## set the LoadBalancer service type to internal only.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
-    # nodePort:
-  additionalPorts: []
-
-  ## Provide any additional annotations which may be required. This can be used to
-  ## set the LoadBalancer service type to internal only.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-  ##
-  annotations: {}
-  labels: {}
-
-  ## additionalServices can be created as either a dict or a list.
-  ## In case of a dict, please use the nameSuffix as dict name
-  additionalServices: []
-  # - enabled: false
-  #   nameSuffix: api
-  #   type: ClusterIP
-  #   # Specify the default port information
-  #   port:
-  #     port:
-  #     # name defaults to http
-  #     name:
-  #     protocol: TCP
-  #     # targetPort defaults to http
-  #     targetPort:
-  #     # nodePort:
-  #   additionalPorts: []
-  #   annotations: {}
-  #   labels: {}
+    annotations: {}
+    labels: {}
 
 ingress:
   main:
     enabled: false
+    ## Make this the primary ingress (used in notes, etc...) if there is more than 1 ingress
+    # primary: true
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
@@ -464,15 +451,16 @@ addons:
       enabled: true
       type: ClusterIP
       # Specify the default port information
-      port:
-        port: 12321
-        name: codeserver
-        protocol: TCP
-        targetPort: codeserver
-        ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-        ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-        ##
-        # nodePort:
+      ports:
+        codeserver:
+          port: 12321
+          enabled: true
+          protocol: TCP
+          targetPort: codeserver
+          ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+          ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+          ##
+          # nodePort:
 
       ## Provide any additional annotations which may be required. This can be used to
       ## set the LoadBalancer service type to internal only.

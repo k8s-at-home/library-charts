@@ -3,26 +3,11 @@ Ports included by the controller.
 */}}
 {{- define "common.controller.ports" -}}
   {{- $ports := list -}}
-  {{- with .Values.service -}}
-    {{- $serviceValues := deepCopy . -}}
-    {{/* append the ports for the main service */}}
+  {{- range .Values.service -}}
     {{- if .enabled -}}
-      {{- $_ := set .port "name" (default "http" .port.name) -}}
-      {{- $ports = mustAppend $ports .port -}}
-      {{- range $_ := .additionalPorts -}}
-        {{/* append the additonalPorts for the main service */}}
-        {{- $ports = mustAppend $ports . -}}
-      {{- end }}
-    {{- end }}
-    {{/* append the ports for each additional service */}}
-    {{- range $_ := .additionalServices }}
-      {{- if .enabled -}}
-        {{- $_ := set .port "name" (required "Missing port.name" .port.name) -}}
-        {{- $ports = mustAppend $ports .port -}}
-        {{- range $_ := .additionalPorts -}}
-          {{/* append the additonalPorts for each additional service */}}
-          {{- $ports = mustAppend $ports . -}}
-        {{- end }}
+      {{- range $name, $port := .ports -}}
+        {{- $_ := set $port "name" $name -}}
+        {{- $ports = mustAppend $ports $port -}}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -31,6 +16,7 @@ Ports included by the controller.
 {{- if $ports -}}
 ports:
 {{- range $_ := $ports }}
+{{- if .enabled }}
 - name: {{ .name }}
   {{- if and .targetPort (kindIs "string" .targetPort) }}
   {{- fail (printf "Our charts do not support named ports for targetPort. (port name %s, targetPort %s)" .name .targetPort) }}
@@ -45,6 +31,7 @@ ports:
   {{- else }}
   protocol: TCP
   {{- end }}
+{{- end}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

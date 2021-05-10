@@ -6,37 +6,48 @@ class Test < ChartTest
 
   describe @@chart.name do
     describe 'ingress' do
+      baseValues = {
+        ingress: {
+          main: {
+            enabled: true
+          }
+        },
+        service: {
+          main: {
+            ports: {
+              http: {
+                port: 8080
+              }
+            }
+          }
+        }
+      }
+
       it 'disabled when ingress.main.enabled: false' do
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
               enabled: false
             }
           }
-        }
+        })
         chart.value values
+
         assert_nil(resource('Ingress'))
       end
 
       it 'enabled when ingress.main.enabled: true' do
-        values = {
-          ingress: {
-            main: {
-              enabled: true
-            }
-          }
-        }
-
+        values = baseValues
         chart.value values
+
         refute_nil(resource('Ingress'))
       end
 
       it 'tls can be provided' do
         expectedPath = 'common-test.path'
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               tls: [
                 {
                   hosts: [ 'hostname' ],
@@ -45,9 +56,9 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(values[:ingress][:main][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
@@ -56,10 +67,9 @@ class Test < ChartTest
 
       it 'tls secret can be left empty' do
         expectedPath = 'common-test.path'
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main:{
-              enabled: true,
               tls: [
                 {
                   hosts: [ 'hostname' ]
@@ -67,9 +77,9 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(values[:ingress][:main][:tls][0][:hosts][0], ingress["spec"]["tls"][0]["hosts"][0])
@@ -79,10 +89,9 @@ class Test < ChartTest
 
       it 'tls secret template can be provided' do
         expectedPath = 'common-test.path'
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               tls: [
                 {
                   secretNameTpl: '{{ .Release.Name }}-secret'
@@ -90,9 +99,9 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal('common-test-secret', ingress["spec"]["tls"][0]["secretName"])
@@ -100,10 +109,9 @@ class Test < ChartTest
 
       it 'path template can be provided' do
         expectedPath = 'common-test.path'
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               hosts: [
                 {
                   paths: [
@@ -115,19 +123,18 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(expectedPath, ingress["spec"]["rules"][0]["http"]["paths"][0]["path"])
       end
 
       it 'hosts can be provided' do
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               hosts: [
                 {
                   host: 'hostname'
@@ -135,9 +142,9 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(values[:ingress][:main][:hosts][0][:host], ingress["spec"]["rules"][0]["host"])
@@ -145,10 +152,9 @@ class Test < ChartTest
 
       it 'hosts template can be provided' do
         expectedHostName = 'common-test.hostname'
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               hosts: [
                 {
                   hostTpl: '{{ .Release.Name }}.hostname'
@@ -156,19 +162,18 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         refute_nil(ingress)
         assert_equal(expectedHostName, ingress["spec"]["rules"][0]["host"])
       end
 
       it 'custom service name / port can optionally be set on path level' do
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
             main: {
-              enabled: true,
               hosts: [
                 {
                   paths: [
@@ -185,9 +190,9 @@ class Test < ChartTest
               ]
             }
           }
-        }
-
+        })
         chart.value values
+
         ingress = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         firstPath = ingress["spec"]["rules"][0]["http"]["paths"][0]
         secondPath = ingress["spec"]["rules"][0]["http"]["paths"][1]
@@ -198,18 +203,15 @@ class Test < ChartTest
       end
 
       it 'multiple ingress objects can be specified' do
-        values = {
+        values = baseValues.deep_merge_override({
           ingress: {
-            main: {
-              enabled: true,
-            },
             secondary: {
-              enabled: true,
-            },
+              enabled: true
+            }
           }
-        }
-
+        })
         chart.value values
+
         ingressMain = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test" }
         ingressExtra = chart.resources(kind: "Ingress").find{ |s| s["metadata"]["name"] == "common-test-secondary" }
         refute_nil(ingressMain)
