@@ -3,6 +3,12 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+service:
+  main:
+    ports:
+      http:
+        port: 8080
+
 persistence:
   config:
     enabled: true
