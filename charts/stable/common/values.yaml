@@ -167,7 +167,7 @@ service:
     # -- Enables or disables the service
     enabled: true
 
-    # -- Make this the primary service (used in probes, notes, etc...)
+    # -- Make this the primary service (used in probes, notes, etc...).
     # If there is more than 1 service, make sure that only 1 service is marked as primary.
     primary: true
 
@@ -220,7 +220,7 @@ ingress:
     # -- Enables or disables the ingress
     enabled: false
 
-    # -- Make this the primary ingress (used in probes, notes, etc...)
+    # -- Make this the primary ingress (used in probes, notes, etc...).
     # If there is more than 1 ingress, make sure that only 1 ingress is marked as primary.
     primary: true
 
@@ -241,14 +241,14 @@ ingress:
 
     ## Configure the hosts for the ingress
     hosts:
-      - # -- Host address
+      -  # -- Host address
         host: chart-example.local
         # -- A Helm template that is evaluated
         hostTpl:  # '{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domainname }}'
 
         ## Configure the hosts for the host
         paths:
-          - # -- Path
+          -  # -- Path
             path: /
             # -- A Helm template that is evaluated
             pathTpl:  # '{{ include "common.names.fullname" . }}'
