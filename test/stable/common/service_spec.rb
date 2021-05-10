@@ -69,6 +69,20 @@ class Test < ChartTest
         assert_equal('server', mainContainer["ports"].first["name"])
       end
 
+      it 'name suffix can be overridden' do
+        values = baseValues.deep_merge_override({
+          service: {
+            main: {
+              nameOverride: 'http'
+            }
+          }
+        })
+        chart.value values
+
+        service = chart.resources(kind: "Service").find{ |s| s["metadata"]["name"] == "common-test-#{values[:service][:main][:nameOverride]}" }
+        refute_nil(service)
+      end
+
       it 'targetPort can be overridden' do
         values = baseValues.deep_merge_override({
           service: {

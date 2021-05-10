@@ -10,8 +10,8 @@ within the common library.
   {{- end -}}
 {{ end -}}
 {{- $serviceName := include "common.names.fullname" . -}}
-{{- if hasKey $values "nameSuffix" -}}
-  {{- $serviceName = printf "%v-%v" $serviceName $values.nameSuffix -}}
+{{- if hasKey $values "nameOverride" -}}
+  {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
 {{ end -}}
 {{- $svcType := $values.type | default "" -}}
 {{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) -}}

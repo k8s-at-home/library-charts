@@ -8,9 +8,9 @@ Renders the Service objects required by the chart.
       {{- print ("---\n") | nindent 0 -}}
       {{- $serviceValues := $service -}}
 
-      {{/* set defaults */}}
-      {{- if and (not $serviceValues.nameSuffix) ( ne $name (include "common.service.primary" $)) -}}
-        {{- $_ := set $serviceValues "nameSuffix" $name -}}
+      {{/* set the default nameOverride to the service name */}}
+      {{- if and (not $serviceValues.nameOverride) (ne $name (include "common.service.primary" $)) -}}
+        {{- $_ := set $serviceValues "nameOverride" $name -}}
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "service" $serviceValues) -}}

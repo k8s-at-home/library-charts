@@ -9,8 +9,8 @@ Renders the Ingress objects required by the chart.
       {{- $ingressValues := $ingress -}}
 
       {{/* set defaults */}}
-      {{- if and (not $ingressValues.nameSuffix) (ne $name (include "common.ingress.primary" $)) -}}
-        {{- $_ := set $ingressValues "nameSuffix" $name -}}
+      {{- if and (not $ingressValues.nameOverride) (ne $name (include "common.ingress.primary" $)) -}}
+        {{- $_ := set $ingressValues "nameOverride" $name -}}
       {{ end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}

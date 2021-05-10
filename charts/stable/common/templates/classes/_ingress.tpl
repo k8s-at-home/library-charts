@@ -12,8 +12,8 @@ within the common library.
   {{- end -}}
 {{ end -}}
 
-{{- if hasKey $values "nameSuffix" -}}
-  {{- $ingressName = printf "%v-%v" $ingressName $values.nameSuffix -}}
+{{- if hasKey $values "nameOverride" -}}
+  {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
 {{ end -}}
 
 {{- $primaryService := get .Values.service (include "common.service.primary" .) }}
