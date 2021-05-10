@@ -23,17 +23,24 @@ Renders the Ingress objects required by the chart.
 Return the name of the primary ingress object
 */}}
 {{- define "common.ingress.primary" -}}
-{{- $result := "" -}}
-{{- range $name, $ingress := .Values.ingress -}}
-  {{- if hasKey $ingress "primary" -}}
-  {{- if $ingress.primary -}}
-    {{- $result = $name -}}
+  {{- $enabledIngresses := dict -}}
+  {{- range $name, $ingress := .Values.ingress -}}
+    {{- if $ingress.enabled -}}
+      {{- $_ := set $enabledIngresses $name . -}}
+    {{- end -}}
   {{- end -}}
-  {{- end -}}
-{{- end -}}
 
-{{- if not $result -}}
-  {{- $result = keys .Values.ingress | first -}}
-{{- end -}}
-{{- $result -}}
+  {{- $result := "" -}}
+  {{- range $name, $ingress := $enabledIngresses -}}
+    {{- if hasKey $ingress "primary" -}}
+    {{- if $ingress.primary -}}
+      {{- $result = $name -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if not $result -}}
+    {{- $result = keys $enabledIngresses | first -}}
+  {{- end -}}
+  {{- $result -}}
 {{- end -}}

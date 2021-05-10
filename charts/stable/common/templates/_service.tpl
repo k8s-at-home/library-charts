@@ -19,22 +19,28 @@ Renders the Service objects required by the chart.
   {{- end }}
 {{- end }}
 
-
 {{/*
 Return the name of the primary service object
 */}}
 {{- define "common.service.primary" -}}
-{{- $result := "" -}}
-{{- range $name, $service := .Values.service -}}
-  {{- if hasKey $service "primary" -}}
-  {{- if $service.primary -}}
-    {{- $result = $name -}}
+  {{- $enabledServices := dict -}}
+  {{- range $name, $service := .Values.service -}}
+    {{- if $service.enabled -}}
+      {{- $_ := set $enabledServices $name . -}}
+    {{- end -}}
   {{- end -}}
-  {{- end -}}
-{{- end -}}
 
-{{- if not $result -}}
-  {{- $result = keys .Values.service | first -}}
-{{- end -}}
-{{- $result -}}
+  {{- $result := "" -}}
+  {{- range $name, $service := $enabledServices -}}
+    {{- if hasKey $service "primary" -}}
+    {{- if $service.primary -}}
+      {{- $result = $name -}}
+    {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if not $result -}}
+    {{- $result = keys $enabledServices | first -}}
+  {{- end -}}
+  {{- $result -}}
 {{- end -}}

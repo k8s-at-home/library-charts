@@ -205,6 +205,10 @@ class Test < ChartTest
       it 'multiple ingress objects can be specified' do
         values = baseValues.deep_merge_override({
           ingress: {
+            main: {
+              enabled: true,
+              primary: true
+            },
             secondary: {
               enabled: true
             }
