@@ -21,6 +21,20 @@ This is a [Helm Library Chart](https://helm.sh/docs/topics/library_charts/#helm)
 
 **WARNING: THIS CHART IS NOT MEANT TO BE INSTALLED DIRECTLY**
 
+## Using this library
+
+Include this chart as a dependency in your `Chart.yaml` e.g.
+
+```yaml
+# Chart.yaml
+dependencies:
+- name: common
+  version: 3.0.0
+  repository: https://k8s-at-home.com/charts/
+```
+
+For more information, take a look at the [Docs](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
+
 ## Configuration
 
 Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
@@ -35,6 +49,17 @@ All notable changes to this application Helm chart will be documented in this fi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [3.0.0]
+
+#### Changed
+
+- Moved the primary ingress from `ingress` to `ingress.main`.
+- Multiple ingress objects can now be specified under the `ingress` key.
+
+#### Removed
+
+- Removed support for `ingress.additionalIngresses`
 
 ### [2.5.0]
 
@@ -138,6 +163,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `command` and `args` values now properly support both string and list values.
 
+[3.0.0]: #3.0.0
+[2.5.0]: #2.5.0
+[2.4.0]: #2.4.0
 [2.3.1]: #2.3.1
 [2.3.0]: #2.3.0
 [2.2.0]: #2.2.0

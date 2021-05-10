@@ -11,3 +11,19 @@ Since a lot of the {{ template "custom.repository.organization" . }} charts foll
 
 N/A
 {{- end -}}
+
+{{- define "custom.usage" }}
+## Using this library
+
+Include this chart as a dependency in your `Chart.yaml` e.g.
+
+```yaml
+# Chart.yaml
+dependencies:
+- name: common
+  version: 3.0.0
+  repository: {{ template "custom.helm.url" }}
+```
+
+For more information, take a look at the [Docs](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
+{{- end -}}

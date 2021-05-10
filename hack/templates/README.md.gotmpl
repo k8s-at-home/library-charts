@@ -37,6 +37,9 @@ This is a [Helm Library Chart](https://helm.sh/docs/topics/library_charts/#helm)
 **WARNING: THIS CHART IS NOT MEANT TO BE INSTALLED DIRECTLY**
 {{- end -}}
 
+{{- define "custom.usage" -}}
+{{- end -}}
+
 {{- define "custom.configuration.header" -}}
 ## Configuration
 {{- end -}}
@@ -77,6 +80,8 @@ Read through the [values.yaml](./values.yaml) file. It has several commented out
 {{ template "custom.dependencies" . }}
 
 {{ template "custom.install" . }}
+
+{{ template "custom.usage" . }}
 
 {{ template "custom.configuration.header" . }}
 
