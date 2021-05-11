@@ -49,92 +49,73 @@ N/A
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalContainers | list | `[]` |  |
-| additionalVolumeMounts | list | `[]` |  |
-| additionalVolumes | list | `[]` |  |
-| addons.codeserver.args[0] | string | `"--auth"` |  |
-| addons.codeserver.args[1] | string | `"none"` |  |
-| addons.codeserver.enabled | bool | `false` |  |
-| addons.codeserver.env | object | `{}` |  |
-| addons.codeserver.git.deployKey | string | `""` |  |
-| addons.codeserver.git.deployKeyBase64 | string | `""` |  |
-| addons.codeserver.git.deployKeySecret | string | `""` |  |
-| addons.codeserver.image.pullPolicy | string | `"IfNotPresent"` |  |
-| addons.codeserver.image.repository | string | `"codercom/code-server"` |  |
-| addons.codeserver.image.tag | string | `"3.9.2"` |  |
-| addons.codeserver.ingress.annotations | object | `{}` |  |
-| addons.codeserver.ingress.enabled | bool | `false` |  |
-| addons.codeserver.ingress.hosts[0].host | string | `"code.chart-example.local"` |  |
-| addons.codeserver.ingress.hosts[0].paths[0].path | string | `"/"` |  |
-| addons.codeserver.ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
-| addons.codeserver.ingress.labels | object | `{}` |  |
-| addons.codeserver.ingress.nameSuffix | string | `"codeserver"` |  |
-| addons.codeserver.ingress.tls | list | `[]` |  |
-| addons.codeserver.securityContext.runAsUser | int | `0` |  |
-| addons.codeserver.service.annotations | object | `{}` |  |
-| addons.codeserver.service.enabled | bool | `true` |  |
-| addons.codeserver.service.labels | object | `{}` |  |
-| addons.codeserver.service.ports.codeserver.enabled | bool | `true` |  |
-| addons.codeserver.service.ports.codeserver.port | int | `12321` |  |
-| addons.codeserver.service.ports.codeserver.protocol | string | `"TCP"` |  |
-| addons.codeserver.service.ports.codeserver.targetPort | string | `"codeserver"` |  |
-| addons.codeserver.service.type | string | `"ClusterIP"` |  |
-| addons.codeserver.volumeMounts | list | `[]` |  |
-| addons.codeserver.workingDir | string | `""` |  |
-| addons.promtail.args | list | `[]` |  |
-| addons.promtail.enabled | bool | `false` |  |
-| addons.promtail.env | object | `{}` |  |
-| addons.promtail.image.pullPolicy | string | `"IfNotPresent"` |  |
-| addons.promtail.image.repository | string | `"grafana/promtail"` |  |
-| addons.promtail.image.tag | string | `"2.2.0"` |  |
-| addons.promtail.logs | list | `[]` |  |
-| addons.promtail.loki | string | `""` |  |
-| addons.promtail.securityContext.runAsUser | int | `0` |  |
-| addons.promtail.volumeMounts | list | `[]` |  |
-| addons.vpn.additionalVolumeMounts | list | `[]` |  |
-| addons.vpn.configFile | string | `nil` |  |
-| addons.vpn.configFileSecret | string | `nil` |  |
-| addons.vpn.enabled | bool | `false` |  |
-| addons.vpn.env | object | `{}` |  |
-| addons.vpn.livenessProbe | object | `{}` |  |
-| addons.vpn.networkPolicy.egress | string | `nil` |  |
-| addons.vpn.networkPolicy.enabled | bool | `false` |  |
-| addons.vpn.openvpn.auth | string | `nil` |  |
-| addons.vpn.openvpn.authSecret | string | `nil` |  |
-| addons.vpn.openvpn.image.pullPolicy | string | `"IfNotPresent"` |  |
-| addons.vpn.openvpn.image.repository | string | `"dperson/openvpn-client"` |  |
-| addons.vpn.openvpn.image.tag | string | `"latest"` |  |
-| addons.vpn.scripts.down | string | `nil` |  |
-| addons.vpn.scripts.up | string | `nil` |  |
-| addons.vpn.securityContext.capabilities.add[0] | string | `"NET_ADMIN"` |  |
-| addons.vpn.securityContext.capabilities.add[1] | string | `"SYS_MODULE"` |  |
-| addons.vpn.type | string | `"openvpn"` |  |
-| addons.vpn.wireguard.image.pullPolicy | string | `"IfNotPresent"` |  |
-| addons.vpn.wireguard.image.repository | string | `"k8sathome/wireguard"` |  |
-| addons.vpn.wireguard.image.tag | string | `"1.0.20200827"` |  |
-| affinity | object | `{}` |  |
+| additionalContainers | list | `[]` | Specify any additional containers here. Yaml will be passed in to the Pod as-is. |
+| additionalVolumeMounts | list | `[]` | Specify any additional volume mounts for the main container here. |
+| additionalVolumes | list | `[]` | Specify any additional volumes here. (e.g. to mount nfs volumes directly) |
+| addons | object | See below | The common chart supports several add-ons. These can be configured under this key. |
+| addons.codeserver | object | See values.yaml | The common library supports adding a code-server add-on to access files. It can be configured under this key. For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server) |
+| addons.codeserver.args | list | `["--auth","none"]` | Set codeserver command line arguments. Consider setting --user-data-dir to a persistent location to preserve code-server setting changes |
+| addons.codeserver.enabled | bool | `false` | Enable running a code-server container in the pod  |
+| addons.codeserver.env | object | `{}` | Set any environment variables for code-server here |
+| addons.codeserver.git | object | See below | Optionally allow access a Git repository by passing in a private SSH key |
+| addons.codeserver.git.deployKey | string | `""` | Raw SSH private key |
+| addons.codeserver.git.deployKeyBase64 | string | `""` | Base64-encoded SSH private key. When both variables are set, the raw SSH key takes precedence. |
+| addons.codeserver.git.deployKeySecret | string | `""` | Existing secret containing SSH private key The chart expects it to be present under the `id_rsa` key. |
+| addons.codeserver.image.pullPolicy | string | `"IfNotPresent"` | Specify the code-server image pull policy |
+| addons.codeserver.image.repository | string | `"codercom/code-server"` | Specify the code-server image |
+| addons.codeserver.image.tag | string | `"3.9.2"` | Specify the code-server image tag |
+| addons.codeserver.ingress.enabled | bool | `false` | Enable an ingress for the code-server add-on. |
+| addons.codeserver.service.enabled | bool | `true` | Enable a service for the code-server add-on. |
+| addons.codeserver.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the code-server container. At least 1 volumeMount is required! |
+| addons.codeserver.workingDir | string | `""` | Specify the working dir that will be opened when code-server starts If not given, the app will default to the mountpah of the first specified volumeMount |
+| addons.promtail | object | See values.yaml | The common library supports adding a promtail add-on to to access logs and ship them to loki. It can be configured under this key. |
+| addons.promtail.args | list | `[]` | Set promtail command line arguments |
+| addons.promtail.enabled | bool | `false` | Enable running a promtail container in the pod  |
+| addons.promtail.env | object | `{}` | Set any environment variables for promtail here |
+| addons.promtail.image.pullPolicy | string | `"IfNotPresent"` | Specify the promtail image pull policy |
+| addons.promtail.image.repository | string | `"grafana/promtail"` | Specify the promtail image |
+| addons.promtail.image.tag | string | `"2.2.0"` | Specify the promtail image tag |
+| addons.promtail.logs | list | `[]` | The paths to logs on the volume |
+| addons.promtail.loki | string | `""` | The URL to Loki |
+| addons.promtail.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the promtail container. At least 1 volumeMount is required! |
+| addons.vpn | object | See values.yaml | The common chart supports adding a VPN add-on. It can be configured under this key. For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#wireguard-vpn) |
+| addons.vpn.configFile | string | `nil` | Provide a customized vpn configuration file to be used by the VPN. |
+| addons.vpn.configFileSecret | string | `nil` | Reference an existing secret that contains the VPN configuration file The chart expects it to be present under the `vpnConfigfile` key. |
+| addons.vpn.enabled | bool | `false` | Enable running a VPN in the pod to route traffic through a VPN |
+| addons.vpn.env | object | `{}` | All variables specified here will be added to the vpn sidecar container See the documentation of the VPN image for all config values |
+| addons.vpn.livenessProbe | object | `{}` | Optionally specify a livenessProbe, e.g. to check if the connection is still being protected by the VPN |
+| addons.vpn.openvpn | object | See below | OpenVPN specific configuration |
+| addons.vpn.openvpn.auth | string | `nil` | Credentials to connect to the VPN Service (used with -a) |
+| addons.vpn.openvpn.authSecret | string | `nil` | Optionally specify an existing secret that contains the credentials. Credentials should be stored under the `VPN_AUTH` key |
+| addons.vpn.openvpn.image.pullPolicy | string | `"IfNotPresent"` | Specify the openvpn client image pull policy |
+| addons.vpn.openvpn.image.repository | string | `"dperson/openvpn-client"` | Specify the openvpn client image |
+| addons.vpn.openvpn.image.tag | string | `"latest"` | Specify the openvpn client image tag |
+| addons.vpn.scripts | object | See values.yaml | Provide custom up/down scripts that can be used by the vpn configuration. |
+| addons.vpn.securityContext | object | See values.yaml | Set the VPN container securityContext |
+| addons.vpn.type | string | `"openvpn"` | Specify the VPN type. Valid options are openvpn or wireguard |
+| addons.vpn.wireguard | object | See below | WireGuard specific configuration |
+| addons.vpn.wireguard.image.pullPolicy | string | `"IfNotPresent"` | Specify the WireGuard image pull policy |
+| addons.vpn.wireguard.image.repository | string | `"docker pull ghcr.io/k8s-at-home/wireguard"` | Specify the WireGuard image |
+| addons.vpn.wireguard.image.tag | string | `"v1.0.20210424"` | Specify the WireGuard image tag |
+| affinity | object | `{}` | Defines affinity constraint rules. [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | args | list | `[]` | Override the args for the default container |
-| autoscaling.enabled | bool | `false` | Add a Horizontal Pod Autoscaler |
-| autoscaling.maxReplicas | string | `nil` |  |
-| autoscaling.minReplicas | string | `nil` |  |
-| autoscaling.target | string | `nil` | Optional: overrides the default deploymentname |
-| autoscaling.targetCPUUtilizationPercentage | string | `nil` |  |
-| autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
+| autoscaling | object | <disabled> | Add a Horizontal Pod Autoscaler |
 | command | list | `[]` | Override the command(s) for the default container |
 | controllerAnnotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controllerLabels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
 | controllerType | string | `"deployment"` | Set the controller type. Valid options are deployment, daemonset or statefulset |
 | dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
 | dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
-| enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [ref](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
+| enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
 | env | object | `{}` | Main environment variables. |
-| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [ref](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
+| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
 | envList | list | `[]` | Additional environment variables from a list. |
 | envTpl | object | `{}` | Environment variables with values set from Helm templates |
-| envValueFrom | object | `{}` | Variables with values from (for example) the Downward API [ref](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) |
+| envValueFrom | object | `{}` | Variables with values from (for example) the Downward API [[ref]](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) |
 | fullnameOverride | string | `""` |  |
-| hostAliases | list | `[]` |  |
+| hostAliases | list | `[]` | Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames. [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/) |
 | hostNetwork | bool | `false` | When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet` |
+| hostPathMounts | list | `[]` | Mount a path on the host to the main container. |
 | hostname | string | `nil` | Allows specifying explicit hostname setting |
 | ingress | object | See below | Configure the ingresses for the chart here. Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
 | ingress.main.annotations | object | `{}` | Provide additional annotations which may be required. |
@@ -151,41 +132,40 @@ N/A
 | ingress.main.nameOverride | string | `nil` | Override the name suffix that is used for this ingress. |
 | ingress.main.primary | bool | `true` | Make this the primary ingress (used in probes, notes, etc...). If there is more than 1 ingress, make sure that only 1 ingress is marked as primary. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress |
-| initContainers | list | `[]` |  |
+| initContainers | list | `[]` | Specify any initContainers here. Yaml will be passed in to the Pod as-is. |
 | lifecycle | object | `{}` | Configure the lifecycle for the main container |
 | nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
-| persistence.config.accessMode | string | `"ReadWriteOnce"` |  |
-| persistence.config.enabled | bool | `false` |  |
-| persistence.config.mountPath | string | `"/config"` |  |
-| persistence.config.size | string | `"1Gi"` |  |
-| persistence.config.skipuninstall | bool | `false` |  |
-| persistence.shared.emptyDir.enabled | bool | `true` |  |
-| persistence.shared.enabled | bool | `false` |  |
-| persistence.shared.mountPath | string | `"/shared"` |  |
+| nodeSelector | object | `{}` | Node selection constraint [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
+| persistence | object | See below | Configure the persistent volumes for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. |
+| persistence.config | object | See below | Default persistence for configuration files. |
+| persistence.config.accessMode | string | `"ReadWriteOnce"` | AccessMode for the persistent volume. Make sure to select an access mode that is supported by your storage provider! [[ref]](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
+| persistence.config.emptyDir.enabled | bool | `true` | Create an emptyDir volume instead of a persistent volume. [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
+| persistence.config.enabled | bool | `false` | Enables or disables the persistent volume |
+| persistence.config.existingClaim | string | `nil` | If you want to reuse an existing claim, the name of the existing PVC can be passed here. |
+| persistence.config.mountPath | string | `"/config"` | Where to mount the volume in the main container. |
+| persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
+| persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to `SCALE-ZFS`, the default provisioner for TrueNAS SCALE is used. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
+| persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
+| persistence.shared.enabled | bool | `false` | Create an emptyDir volume to share between all containers |
+| persistence.shared.mountPath | string | `"/shared"` | Where to mount the shared volume in the main container. |
 | podAnnotations | object | `{}` | Set annotations on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
 | priorityClassName | string | `nil` | Custom priority class for different treatment by the scheduler |
-| probes.liveness.custom | bool | `false` |  |
-| probes.liveness.enabled | bool | `true` |  |
-| probes.liveness.spec.failureThreshold | int | `3` |  |
-| probes.liveness.spec.initialDelaySeconds | int | `0` |  |
-| probes.liveness.spec.periodSeconds | int | `10` |  |
-| probes.liveness.spec.timeoutSeconds | int | `1` |  |
-| probes.readiness.custom | bool | `false` |  |
-| probes.readiness.enabled | bool | `true` |  |
-| probes.readiness.spec.failureThreshold | int | `3` |  |
-| probes.readiness.spec.initialDelaySeconds | int | `0` |  |
-| probes.readiness.spec.periodSeconds | int | `10` |  |
-| probes.readiness.spec.timeoutSeconds | int | `1` |  |
-| probes.startup.custom | bool | `false` |  |
-| probes.startup.enabled | bool | `true` |  |
-| probes.startup.spec.failureThreshold | int | `30` |  |
-| probes.startup.spec.initialDelaySeconds | int | `0` |  |
-| probes.startup.spec.periodSeconds | int | `5` |  |
-| probes.startup.spec.timeoutSeconds | int | `1` |  |
-| replicas | int | `1` |  |
-| resources | object | `{}` |  |
+| probes | object | See below | Probe configuration -- [[ref]](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) |
+| probes.liveness | object | See below | Liveness probe configuration |
+| probes.liveness.custom | bool | `false` | Set this to `true` if you wish to specify your own livenessProbe |
+| probes.liveness.enabled | bool | `true` | Enable the liveness probe |
+| probes.liveness.spec | object | See below | The spec field contains the values for the default livenessProbe. If you selected `custom: true`, this field holds the definition of the livenessProbe. |
+| probes.readiness | object | See below | Redainess probe configuration |
+| probes.readiness.custom | bool | `false` | Set this to `true` if you wish to specify your own readinessProbe |
+| probes.readiness.enabled | bool | `true` | Enable the readiness probe |
+| probes.readiness.spec | object | See below | The spec field contains the values for the default readinessProbe. If you selected `custom: true`, this field holds the definition of the readinessProbe. |
+| probes.startup | object | See below | Startup probe configuration |
+| probes.startup.custom | bool | `false` | Set this to `true` if you wish to specify your own startupProbe |
+| probes.startup.enabled | bool | `true` | Enable the startup probe |
+| probes.startup.spec | object | See below | The spec field contains the values for the default startupProbe. If you selected `custom: true`, this field holds the definition of the startupProbe. |
+| replicas | int | `1` | Number of desired pods |
+| resources | object | `{}` | Set the resource requests / limits for the main container. |
 | schedulerName | string | `nil` | Allows specifying a custom scheduler name |
 | secret | object | `{}` | Use this to populate a secret with the values you specify. Be aware that these values are not encrypted by default, and could therefore visible to anybody with access to the values.yaml file. |
 | securityContext | object | `{}` | Configure the Security Context for the main container |
@@ -196,7 +176,7 @@ N/A
 | service.main.nameOverride | string | `nil` | Override the name suffix that is used for this service |
 | service.main.ports | object | See below | Configure the Service port information here. Additional ports can be added by adding a dictionary key similar to the 'http' service. |
 | service.main.ports.http.enabled | bool | `true` | Enables or disables the port |
-| service.main.ports.http.nodePort | string | `nil` | Specify the nodePort value for the LoadBalancer and NodePort service types. [ref](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| service.main.ports.http.nodePort | string | `nil` | Specify the nodePort value for the LoadBalancer and NodePort service types. [[ref]](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | service.main.ports.http.port | string | `nil` | The port number |
 | service.main.ports.http.primary | bool | `true` | Make this the primary port (used in probes, notes, etc...) If there is more than 1 service, make sure that only 1 port is marked as primary. |
 | service.main.ports.http.protocol | string | `"HTTP"` | Port protocol. Support values are `HTTP`, `HTTPS`, `TCP` and `UDP`. HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation |
@@ -206,9 +186,9 @@ N/A
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| strategy.type | string | `"RollingUpdate"` | Set the controller upgrade strategy For Deployments, valid values are Recreate and RollingUpdate. For StatefulSets, valid values are OnDelete and RollingUpdate. DaemonSets ignore this. |
-| tolerations | list | `[]` |  |
-| volumeClaimTemplates | list | `[]` |  |
+| strategy | object | RollingUpdate | Set the controller upgrade strategy For Deployments, valid values are Recreate and RollingUpdate. For StatefulSets, valid values are OnDelete and RollingUpdate. DaemonSets ignore this. |
+| tolerations | list | `[]` | Specify taint tolerations [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) |
+| volumeClaimTemplates | list | `[]` | Used in conjunction with `controllerType: statefulset` to create individual disks for each instance. |
 
 ## Changelog
 
