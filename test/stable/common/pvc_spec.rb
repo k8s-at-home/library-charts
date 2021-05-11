@@ -24,7 +24,7 @@ class Test < ChartTest
           persistence: {
             config: {
               enabled: true,
-              nameSuffix: 'customSuffix'
+              nameOverride: 'customSuffix'
             }
           }
         }
@@ -38,7 +38,7 @@ class Test < ChartTest
           persistence: {
             config: {
               enabled: true,
-              nameSuffix: '-'
+              nameOverride: '-'
             }
           }
         }

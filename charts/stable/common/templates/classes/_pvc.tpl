@@ -10,9 +10,9 @@ within the common library.
   {{- end -}}
 {{ end -}}
 {{- $pvcName := include "common.names.fullname" . -}}
-{{- if hasKey $values "nameSuffix" -}}
-  {{- if not (eq $values.nameSuffix "-") -}}
-    {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- if not (eq $values.nameOverride "-") -}}
+    {{- $pvcName = printf "%v-%v" $pvcName $values.nameOverride -}}
   {{ end -}}
 {{ end -}}
 

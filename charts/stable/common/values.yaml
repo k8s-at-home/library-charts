@@ -312,10 +312,13 @@ persistence:
     # -- Where to mount the volume in the main container.
     mountPath: /config
 
+    # -- Override the name suffix that is used for this volume.
+    nameOverride:
+
     emptyDir:
       # -- Create an emptyDir volume instead of a persistent volume.
       # [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
-      enabled: true
+      enabled: false
 
     # -- Storage Class for the config volume.
     # If set to `-`, dynamic provisioning is disabled.

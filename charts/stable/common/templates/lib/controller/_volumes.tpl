@@ -32,9 +32,9 @@ Volumes included by the controller.
   {{- else -}}
   {{- /* Otherwise refer to the PVC name */}}
   {{- $pvcName := (include "common.names.fullname" $) -}}
-  {{- if $persistence.nameSuffix -}}
-    {{- if not (eq $persistence.nameSuffix "-") -}}
-      {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameSuffix) -}}
+  {{- if $persistence.nameOverride -}}
+    {{- if not (eq $persistence.nameOverride "-") -}}
+      {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameOverride) -}}
     {{- end -}}
   {{- else -}}
     {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $index) -}}

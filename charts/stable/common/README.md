@@ -55,7 +55,7 @@ N/A
 | addons | object | See below | The common chart supports several add-ons. These can be configured under this key. |
 | addons.codeserver | object | See values.yaml | The common library supports adding a code-server add-on to access files. It can be configured under this key. For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server) |
 | addons.codeserver.args | list | `["--auth","none"]` | Set codeserver command line arguments. Consider setting --user-data-dir to a persistent location to preserve code-server setting changes |
-| addons.codeserver.enabled | bool | `false` | Enable running a code-server container in the pod  |
+| addons.codeserver.enabled | bool | `false` | Enable running a code-server container in the pod |
 | addons.codeserver.env | object | `{}` | Set any environment variables for code-server here |
 | addons.codeserver.git | object | See below | Optionally allow access a Git repository by passing in a private SSH key |
 | addons.codeserver.git.deployKey | string | `""` | Raw SSH private key |
@@ -70,7 +70,7 @@ N/A
 | addons.codeserver.workingDir | string | `""` | Specify the working dir that will be opened when code-server starts If not given, the app will default to the mountpah of the first specified volumeMount |
 | addons.promtail | object | See values.yaml | The common library supports adding a promtail add-on to to access logs and ship them to loki. It can be configured under this key. |
 | addons.promtail.args | list | `[]` | Set promtail command line arguments |
-| addons.promtail.enabled | bool | `false` | Enable running a promtail container in the pod  |
+| addons.promtail.enabled | bool | `false` | Enable running a promtail container in the pod |
 | addons.promtail.env | object | `{}` | Set any environment variables for promtail here |
 | addons.promtail.image.pullPolicy | string | `"IfNotPresent"` | Specify the promtail image pull policy |
 | addons.promtail.image.repository | string | `"grafana/promtail"` | Specify the promtail image |
@@ -139,10 +139,11 @@ N/A
 | persistence | object | See below | Configure the persistent volumes for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. |
 | persistence.config | object | See below | Default persistence for configuration files. |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` | AccessMode for the persistent volume. Make sure to select an access mode that is supported by your storage provider! [[ref]](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
-| persistence.config.emptyDir.enabled | bool | `true` | Create an emptyDir volume instead of a persistent volume. [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
+| persistence.config.emptyDir.enabled | bool | `false` | Create an emptyDir volume instead of a persistent volume. [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
 | persistence.config.enabled | bool | `false` | Enables or disables the persistent volume |
 | persistence.config.existingClaim | string | `nil` | If you want to reuse an existing claim, the name of the existing PVC can be passed here. |
 | persistence.config.mountPath | string | `"/config"` | Where to mount the volume in the main container. |
+| persistence.config.nameOverride | string | `nil` | Override the name suffix that is used for this volume. |
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to `SCALE-ZFS`, the default provisioner for TrueNAS SCALE is used. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
@@ -217,7 +218,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- Cleaned up YAML document separators (`---`)
+- Cleaned up YAML document separators (`---`).
+- Fixed indenting of the `lifecycle` field.
 
 #### Removed
 
