@@ -164,7 +164,7 @@ class Test < ChartTest
           persistence: {
             config: {
               enabled: true,
-              nameSuffix: "test",
+              nameOverride: "test",
               emptyDir: {
                 enabled: false
               }
@@ -184,7 +184,7 @@ class Test < ChartTest
           persistence: {
             config: {
               enabled: true,
-              nameSuffix: "-",
+              nameOverride: "-",
               emptyDir: {
                 enabled: false
               }
