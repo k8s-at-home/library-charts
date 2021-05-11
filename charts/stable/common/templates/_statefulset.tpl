@@ -20,6 +20,9 @@ metadata:
 spec:
   replicas: {{ .Values.replicas }}
   {{- with .Values.strategy }}
+  {{- if and (ne .type "OnDelete") (ne .type "RollingUpdate") }}
+    {{- fail (printf "Not a valid strategy type for StatefulSet (%s)" .type) }}
+  {{- end }}
   updateStrategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}

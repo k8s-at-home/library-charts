@@ -20,6 +20,9 @@ metadata:
 spec:
   replicas: {{ .Values.replicas }}
   {{- with .Values.strategy }}
+  {{- if and (ne .type "Recreate") (ne .type "RollingUpdate") }}
+    {{- fail (printf "Not a valid strategy type for Deployment (%s)" .type) }}
+  {{- end }}
   strategy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
