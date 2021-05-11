@@ -5,7 +5,6 @@ Renders the Service objects required by the chart.
   {{- /* Generate named services as required */ -}}
   {{- range $name, $service := .Values.service }}
     {{- if $service.enabled -}}
-      {{- print ("---\n") | nindent 0 -}}
       {{- $serviceValues := $service -}}
 
       {{/* set the default nameOverride to the service name */}}
@@ -32,10 +31,8 @@ Return the name of the primary service object
 
   {{- $result := "" -}}
   {{- range $name, $service := $enabledServices -}}
-    {{- if hasKey $service "primary" -}}
-    {{- if $service.primary -}}
+    {{- if and (hasKey $service "primary") $service.primary -}}
       {{- $result = $name -}}
-    {{- end -}}
     {{- end -}}
   {{- end -}}
 

@@ -137,7 +137,12 @@ class Test < ChartTest
             main: {
               hosts: [
                 {
-                  host: 'hostname'
+                  host: 'hostname',
+                  paths: [
+                    {
+                      path: "/"
+                    }
+                  ]
                 }
               ]
             }
@@ -157,7 +162,12 @@ class Test < ChartTest
             main: {
               hosts: [
                 {
-                  hostTpl: '{{ .Release.Name }}.hostname'
+                  hostTpl: '{{ .Release.Name }}.hostname',
+                  paths: [
+                    {
+                      path: "/"
+                    }
+                  ]
                 }
               ]
             }

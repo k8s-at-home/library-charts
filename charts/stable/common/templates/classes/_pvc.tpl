@@ -15,6 +15,8 @@ within the common library.
     {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
   {{ end -}}
 {{ end -}}
+
+{{- print ("---\n") | nindent 0 -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

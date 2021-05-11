@@ -9,13 +9,15 @@ within the common library.
     {{- $values = . -}}
   {{- end -}}
 {{ end -}}
+
 {{- $serviceName := include "common.names.fullname" . -}}
-{{- if hasKey $values "nameOverride" -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
   {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
 {{ end -}}
 {{- $svcType := $values.type | default "" -}}
 {{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) -}}
 
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: v1
 kind: Service
 metadata:

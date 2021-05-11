@@ -9,12 +9,14 @@ Return the name of the primary port for a given Service object.
     {{- end -}}
   {{- end -}}
 
+  {{- if eq 0 (len $enabledPorts) }}
+    {{- fail (printf "No ports are enabled for service \"%s\"!" .serviceName) }}
+  {{- end }}
+
   {{- $result := "" -}}
   {{- range $name, $port := $enabledPorts -}}
-    {{- if hasKey $port "primary" -}}
-    {{- if $port.primary -}}
+    {{- if and (hasKey $port "primary") $port.primary -}}
       {{- $result = $name -}}
-    {{- end -}}
     {{- end -}}
   {{- end -}}
 

@@ -115,10 +115,11 @@ N/A
 | affinity | object | `{}` |  |
 | args | list | `[]` | Override the args for the default container |
 | autoscaling.enabled | bool | `false` | Add a Horizontal Pod Autoscaler |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
+| autoscaling.maxReplicas | string | `nil` |  |
+| autoscaling.minReplicas | string | `nil` |  |
 | autoscaling.target | string | `nil` | Optional: overrides the default deploymentname |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| autoscaling.targetCPUUtilizationPercentage | string | `nil` |  |
+| autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
 | command | list | `[]` | Override the command(s) for the default container |
 | controllerAnnotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controllerLabels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
@@ -139,9 +140,9 @@ N/A
 | ingress.main.annotations | object | `{}` | Provide additional annotations which may be required. |
 | ingress.main.enabled | bool | `false` | Enables or disables the ingress |
 | ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address |
-| ingress.main.hosts[0].hostTpl | string | `nil` | A Helm template that is evaluated |
+| ingress.main.hosts[0].hostTpl | string | `nil` | A Helm template that is evaluated for the `host` field. |
 | ingress.main.hosts[0].paths[0].path | string | `"/"` | Path |
-| ingress.main.hosts[0].paths[0].pathTpl | string | `nil` | A Helm template that is evaluated |
+| ingress.main.hosts[0].paths[0].pathTpl | string | `nil` | A Helm template that is evaluated for the `path` field. |
 | ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` | Ignored if not kubeVersion >= 1.14-0 |
 | ingress.main.hosts[0].paths[0].serviceName | string | `nil` | Overrides the service name reference for this path |
 | ingress.main.hosts[0].paths[0].servicePort | string | `nil` | Overrides the service port reference for this path |
@@ -211,17 +212,32 @@ N/A
 
 ## Changelog
 
-All notable changes to this application Helm chart will be documented in this file but does not include changes from our common library. To read those click [here](../common/README.md).
+All notable changes to this library Helm chart will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### [3.0.0]
 
+#### Added
+
+- It is now possible to flag an ingress / service / port as primary. This will then be used
+  by default in the chart notes, probes, etc.
+- Individual ports can now be enabled / disabled.
+- Annotated the values.yaml to better describe what fields do. This is also reflected in the [README.md](README.md) file.
+
 #### Changed
 
+- Probes are now automatically disabled (except for custom defined probes) when no service is enabled.
 - Moved the primary ingress from `ingress` to `ingress.main`.
+- Moved the primary service from `service` to `service.main`.
 - Multiple ingress objects can now be specified under the `ingress` key.
+- Multiple service objects can now be specified under the `ingress` key.
+- `nameSuffix` has been renamed to `nameOverride`.
+
+#### Fixed
+
+- Cleaned up YAML document separators (`---`)
 
 #### Removed
 

@@ -12,7 +12,7 @@ within the common library.
   {{- end -}}
 {{ end -}}
 
-{{- if hasKey $values "nameOverride" -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
   {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
 {{ end -}}
 
@@ -20,6 +20,8 @@ within the common library.
 {{- $svcName := $values.serviceName | default (include "common.names.fullname" .) -}}
 {{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
 {{- $svcPort := $values.servicePort | default $primaryPort.port -}}
+
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:

@@ -15,14 +15,12 @@ It will include / inject the required templates based on the given values.
   {{/* Include the configmap if not empty */}}
   {{- $configmap := include "common.addon.vpn.configmap" . -}}
   {{- if $configmap -}}
-    {{- print "---" | nindent 0 -}}
     {{- $configmap | nindent 0 -}}
   {{- end -}}
 
   {{/* Include the secret if not empty */}}
   {{- $secret := include "common.addon.vpn.secret" . -}}
   {{- if $secret -}}
-    {{- print "---" | nindent 0 -}}
     {{- $secret | nindent 0 -}}
   {{- end -}}
 
@@ -43,7 +41,6 @@ It will include / inject the required templates based on the given values.
   {{/* Include the networkpolicy if not empty */}}
   {{- $networkpolicy := include "common.addon.vpn.networkpolicy" . -}}
   {{- if $networkpolicy -}}
-    {{- print "---" | nindent 0 -}}
     {{- $networkpolicy | nindent 0 -}}
   {{- end -}}
 {{- end -}}

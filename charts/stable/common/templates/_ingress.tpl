@@ -5,7 +5,6 @@ Renders the Ingress objects required by the chart.
   {{- /* Generate named ingresses as required */ -}}
   {{- range $name, $ingress := .Values.ingress }}
     {{- if $ingress.enabled -}}
-      {{- print ("---\n") | nindent 0 -}}
       {{- $ingressValues := $ingress -}}
 
       {{/* set defaults */}}
@@ -32,10 +31,8 @@ Return the name of the primary ingress object
 
   {{- $result := "" -}}
   {{- range $name, $ingress := $enabledIngresses -}}
-    {{- if hasKey $ingress "primary" -}}
-    {{- if $ingress.primary -}}
+    {{- if and (hasKey $ingress "primary") $ingress.primary -}}
       {{- $result = $name -}}
-    {{- end -}}
     {{- end -}}
   {{- end -}}
 

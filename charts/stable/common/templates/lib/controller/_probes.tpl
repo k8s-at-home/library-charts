@@ -3,7 +3,10 @@ Probes selection logic.
 */}}
 {{- define "common.controller.probes" -}}
 {{- $primaryService := get .Values.service (include "common.service.primary" .) -}}
-{{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
+{{- $primaryPort := "" -}}
+{{- if $primaryService -}}
+  {{- $primaryPort = get $primaryService.ports (include "common.classes.service.ports.primary" (dict "serviceName" (include "common.service.primary" .) "values" $primaryService)) -}}
+{{- end -}}
 
 {{- range $probeName, $probe := .Values.probes }}
   {{- if $probe.enabled -}}
@@ -12,15 +15,13 @@ Probes selection logic.
     {{- if $probe.custom -}}
       {{- $probe.spec | toYaml | nindent 2 }}
     {{- else }}
-      {{- if $primaryService -}}
-        {{- if $primaryService.enabled -}}
-          {{- "tcpSocket:" | nindent 2 }}
-            {{- printf "port: %v" $primaryPort.port  | nindent 4 }}
-          {{- printf "initialDelaySeconds: %v" $probe.spec.initialDelaySeconds  | nindent 2 }}
-          {{- printf "failureThreshold: %v" $probe.spec.failureThreshold  | nindent 2 }}
-          {{- printf "timeoutSeconds: %v" $probe.spec.timeoutSeconds  | nindent 2 }}
-          {{- printf "periodSeconds: %v" $probe.spec.periodSeconds | nindent 2 }}
-        {{- end }}
+      {{- if and $primaryService $primaryPort -}}
+        {{- "tcpSocket:" | nindent 2 }}
+          {{- printf "port: %v" $primaryPort.port  | nindent 4 }}
+        {{- printf "initialDelaySeconds: %v" $probe.spec.initialDelaySeconds  | nindent 2 }}
+        {{- printf "failureThreshold: %v" $probe.spec.failureThreshold  | nindent 2 }}
+        {{- printf "timeoutSeconds: %v" $probe.spec.timeoutSeconds  | nindent 2 }}
+        {{- printf "periodSeconds: %v" $probe.spec.periodSeconds | nindent 2 }}
       {{- end }}
     {{- end }}
   {{- end }}

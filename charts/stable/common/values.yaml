@@ -31,10 +31,10 @@ autoscaling:
   enabled: false
   # -- Optional: overrides the default deploymentname
   target:  # deploymentname
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  minReplicas:  # 1
+  maxReplicas:  # 100
+  targetCPUUtilizationPercentage:  # 80
+  targetMemoryUtilizationPercentage:  # 80
 
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -243,14 +243,14 @@ ingress:
     hosts:
       -  # -- Host address
         host: chart-example.local
-        # -- A Helm template that is evaluated
+        # -- A Helm template that is evaluated for the `host` field.
         hostTpl:  # '{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domainname }}'
 
         ## Configure the hosts for the host
         paths:
           -  # -- Path
             path: /
-            # -- A Helm template that is evaluated
+            # -- A Helm template that is evaluated for the `path` field.
             pathTpl:  # '{{ include "common.names.fullname" . }}'
             # -- Ignored if not kubeVersion >= 1.14-0
             pathType: Prefix

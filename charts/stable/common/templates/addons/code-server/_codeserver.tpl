@@ -14,7 +14,6 @@ It will include / inject the required templates based on the given values.
   {{/* Include the deployKeySecret if not empty */}}
   {{- $secret := include "common.addon.codeserver.deployKeySecret" . -}}
   {{- if $secret -}}
-    {{- print "---" | nindent 0 -}}
     {{- $secret | nindent 0 -}}
   {{- end -}}
 
@@ -27,7 +26,6 @@ It will include / inject the required templates based on the given values.
 
   {{/* Add the code-server service */}}
   {{- if .Values.addons.codeserver.service.enabled -}}
-    {{- print ("---") | nindent 0 -}}
     {{- $serviceValues := .Values.addons.codeserver.service -}}
     {{- if not $serviceValues.nameOverride -}}
         {{- $_ := set $serviceValues "nameOverride" "codeserver" -}}
@@ -39,7 +37,6 @@ It will include / inject the required templates based on the given values.
 
   {{/* Add the code-server ingress */}}
   {{- if .Values.addons.codeserver.ingress.enabled -}}
-    {{- print ("---") | nindent 0 -}}
     {{- $ingressValues := .Values.addons.codeserver.ingress -}}
     {{- if not $ingressValues.nameOverride -}}
         {{- $_ := set $ingressValues "nameOverride" "codeserver" -}}
