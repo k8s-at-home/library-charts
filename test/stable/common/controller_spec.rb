@@ -13,14 +13,14 @@ class Test < ChartTest
       end
 
       it 'accepts "statefulset"' do
-        chart.value controllerType: 'statefulset'
+        chart.value controller.type: 'statefulset'
         assert_nil(resource('Deployment'))
         assert_nil(resource('DaemonSet'))
         refute_nil(resource('StatefulSet'))
       end
 
       it 'accepts "daemonset"' do
-        chart.value controllerType: 'daemonset'
+        chart.value controller.type: 'daemonset'
         assert_nil(resource('Deployment'))
         assert_nil(resource('StatefulSet'))
         refute_nil(resource('DaemonSet'))
@@ -29,14 +29,16 @@ class Test < ChartTest
 
     describe 'controller::statefulset::volumeClaimTemplates' do
       it 'volumeClaimTemplates should be empty by default' do
-        chart.value controllerType: 'statefulset'
+        chart.value controller.type: 'statefulset'
         statefulset = chart.resources(kind: "StatefulSet").first
         assert_nil(statefulset['spec']['volumeClaimTemplates'])
       end
 
       it 'can set values for volumeClaimTemplates' do
         values = {
-          controllerType: 'statefulset',
+          controller: {
+              type: 'statefulset',
+          },
           volumeClaimTemplates: [
             {
               name: 'storage',

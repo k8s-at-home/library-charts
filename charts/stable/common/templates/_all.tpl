@@ -27,14 +27,14 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.serviceAccount" . }}
   {{- end -}}
 
-  {{- if eq .Values.controllerType "deployment" }}
+  {{- if eq .Values.controller.type "deployment" }}
     {{- include "common.deployment" . | nindent 0 }}
-  {{ else if eq .Values.controllerType "daemonset" }}
+  {{ else if eq .Values.controller.type "daemonset" }}
     {{- include "common.daemonset" . | nindent 0 }}
-  {{ else if eq .Values.controllerType "statefulset"  }}
+  {{ else if eq .Values.controller.type "statefulset"  }}
     {{- include "common.statefulset" . | nindent 0 }}
   {{ else }}
-    {{- fail (printf "Not a valid controllerType (%s)" .Values.controllerType) }}
+    {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) }}
   {{- end -}}
 
   {{ include "common.classes.hpa" . | nindent 0 }}
