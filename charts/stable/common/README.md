@@ -224,6 +224,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Removed
 
 - Removed support for `ingress.additionalIngresses`
+- Removed support for `ingress.additionalServices`
 
 ### [2.5.0]
 
