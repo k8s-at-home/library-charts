@@ -9,11 +9,15 @@ within the common library.
     {{- $values = . -}}
   {{- end -}}
 {{ end -}}
+
 {{- $serviceName := include "common.names.fullname" . -}}
-{{- if hasKey $values "nameSuffix" -}}
-  {{- $serviceName = printf "%v-%v" $serviceName $values.nameSuffix -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
 {{ end -}}
 {{- $svcType := $values.type | default "" -}}
+{{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) -}}
+
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,7 +28,7 @@ metadata:
     {{ toYaml $values.labels | nindent 4 }}
   {{- end }}
   annotations:
-  {{- if eq ( $values.port.protocol | default "" ) "HTTPS" }}
+  {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
   {{- end }}
   {{- with $values.annotations }}
@@ -65,7 +69,26 @@ spec:
   {{- if $values.publishNotReadyAddresses }}
   publishNotReadyAddresses: {{ $values.publishNotReadyAddresses }}
   {{- end }}
-  {{- include "common.classes.service.ports" (dict "svcType" $svcType "values" $values ) | trim | nindent 2 }}
+  ports:
+  {{- range $name, $port := $values.ports }}
+  {{- if $port.enabled }}
+  - port: {{ $port.port }}
+    targetPort: {{ $port.targetPort | default $name }}
+    {{- if $port.protocol }}
+    {{- if or ( eq $port.protocol "HTTP" ) ( eq $port.protocol "HTTPS" ) ( eq $port.protocol "TCP" ) }}
+    protocol: TCP
+    {{- else }}
+    protocol: {{ $port.protocol }}
+    {{- end }}
+    {{- else }}
+    protocol: TCP
+    {{- end }}
+    name: {{ $name }}
+    {{- if (and (eq $svcType "NodePort") (not (empty $port.nodePort))) }}
+    nodePort: {{ $port.nodePort }}
+    {{ end }}
+  {{- end }}
+  {{- end }}
   selector:
     {{- include "common.labels.selectorLabels" . | nindent 4 }}
 {{- end }}

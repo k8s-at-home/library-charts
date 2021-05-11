@@ -1,14 +1,10 @@
 # common
 
-![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
-**WARNING: THIS CHART IS NOT MEANT TO BE INSTALLED DIRECTLY**
-
-This is a [Helm Library Chart](https://helm.sh/docs/topics/library_charts/#helm). It's purpose is for grouping common logic between the k8s@home charts.
-
-Since a lot of charts follow the same pattern this library was built to reduce maintenance cost between the charts that use it and try achieve a goal of being DRY.
+Since a lot of the k8s-at-home charts follow a similar pattern, this library was built to reduce maintenance cost between the charts that use it and try achieve a goal of being DRY.
 
 ## Requirements
 
@@ -19,13 +15,13 @@ Kubernetes: `>=1.16.0-0`
 | Repository | Name | Version |
 |------------|------|---------|
 
-## Configuration
+## Installing the Chart
 
-Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
+This is a [Helm Library Chart](https://helm.sh/docs/topics/library_charts/#helm).
 
-## Creating a new chart
+**WARNING: THIS CHART IS NOT MEANT TO BE INSTALLED DIRECTLY**
 
-First be sure to checkout the many charts that already use this like [qBittorrent](https://github.com/k8s-at-home/charts/tree/master/charts/qbittorrent/), [node-red](https://github.com/k8s-at-home/charts/tree/master/charts/node-red/) or the many others in this repository.
+## Using this library
 
 Include this chart as a dependency in your `Chart.yaml` e.g.
 
@@ -33,77 +29,23 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: common
-  version: 2.0.0
-  repository: https://library-charts.k8s-at-home.com
-```
-Write a `values.yaml` with some basic defaults you want to present to the user e.g.
-
-```yaml
-#
-# IMPORTANT NOTE
-#
-# This chart inherits from our common library chart. You can check the default values/options here:
-# https://github.com/k8s-at-home/library-charts/tree/main/stable/common/values.yaml
-#
-
-image:
-  repository: nodered/node-red
-  pullPolicy: IfNotPresent
-  tag: 1.2.5
-
-strategy:
-  type: Recreate
-
-# See more environment variables in the node-red documentation
-# https://nodered.org/docs/getting-started/docker
-env: {}
-  # TZ:
-  # NODE_OPTIONS:
-  # NODE_RED_ENABLE_PROJECTS:
-  # NODE_RED_ENABLE_SAFE_MODE:
-  # FLOWS:
-
-service:
-  port:
-    port: 1880
-
-ingress:
-  enabled: false
-
-persistence:
-  data:
-    enabled: false
-    emptyDir:
-      enabled: false
-    mountPath: /data
+  version: 3.0.0
+  repository: https://k8s-at-home.com/charts/
 ```
 
-If not using a service, set the `service.enabled` to `false`.
-```yaml
-...
-service:
-  enabled: false
-...
-```
+For more information, take a look at the [Docs](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
 
-Add files to the `templates` folder.
-```yaml
-# templates/common.yaml
-{{ include "common.all . }}
+## Configuration
 
-# templates/NOTES.txt
-{{ include "common.notes.defaultNotes" . }}
-```
+Read through the [values.yaml](./values.yaml) file. It has several commented out suggested values.
 
-If testing locally make sure you update the dependencies with:
+## Custom configuration
 
-```bash
-helm dependency update
-```
+N/A
 
 ## Values
 
-**Important**: When deploying an application Helm chart you can add more values from our common library chart [here](https://github.com/k8s-at-home/library-charts/tree/main/stable/common/)
+**Important**: When deploying an application Helm chart you can add more values from our common library chart [here](https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common)
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -119,7 +61,7 @@ helm dependency update
 | addons.codeserver.git.deployKeySecret | string | `""` |  |
 | addons.codeserver.image.pullPolicy | string | `"IfNotPresent"` |  |
 | addons.codeserver.image.repository | string | `"codercom/code-server"` |  |
-| addons.codeserver.image.tag | string | `"3.7.4"` |  |
+| addons.codeserver.image.tag | string | `"3.9.2"` |  |
 | addons.codeserver.ingress.annotations | object | `{}` |  |
 | addons.codeserver.ingress.enabled | bool | `false` |  |
 | addons.codeserver.ingress.hosts[0].host | string | `"code.chart-example.local"` |  |
@@ -132,13 +74,23 @@ helm dependency update
 | addons.codeserver.service.annotations | object | `{}` |  |
 | addons.codeserver.service.enabled | bool | `true` |  |
 | addons.codeserver.service.labels | object | `{}` |  |
-| addons.codeserver.service.port.name | string | `"codeserver"` |  |
-| addons.codeserver.service.port.port | int | `12321` |  |
-| addons.codeserver.service.port.protocol | string | `"TCP"` |  |
-| addons.codeserver.service.port.targetPort | string | `"codeserver"` |  |
+| addons.codeserver.service.ports.codeserver.enabled | bool | `true` |  |
+| addons.codeserver.service.ports.codeserver.port | int | `12321` |  |
+| addons.codeserver.service.ports.codeserver.protocol | string | `"TCP"` |  |
+| addons.codeserver.service.ports.codeserver.targetPort | string | `"codeserver"` |  |
 | addons.codeserver.service.type | string | `"ClusterIP"` |  |
 | addons.codeserver.volumeMounts | list | `[]` |  |
 | addons.codeserver.workingDir | string | `""` |  |
+| addons.promtail.args | list | `[]` |  |
+| addons.promtail.enabled | bool | `false` |  |
+| addons.promtail.env | object | `{}` |  |
+| addons.promtail.image.pullPolicy | string | `"IfNotPresent"` |  |
+| addons.promtail.image.repository | string | `"grafana/promtail"` |  |
+| addons.promtail.image.tag | string | `"2.2.0"` |  |
+| addons.promtail.logs | list | `[]` |  |
+| addons.promtail.loki | string | `""` |  |
+| addons.promtail.securityContext.runAsUser | int | `0` |  |
+| addons.promtail.volumeMounts | list | `[]` |  |
 | addons.vpn.additionalVolumeMounts | list | `[]` |  |
 | addons.vpn.configFile | string | `nil` |  |
 | addons.vpn.configFileSecret | string | `nil` |  |
@@ -161,29 +113,46 @@ helm dependency update
 | addons.vpn.wireguard.image.repository | string | `"k8sathome/wireguard"` |  |
 | addons.vpn.wireguard.image.tag | string | `"1.0.20200827"` |  |
 | affinity | object | `{}` |  |
-| args | list | `[]` |  |
-| command | list | `[]` |  |
-| controllerAnnotations | object | `{}` |  |
-| controllerLabels | object | `{}` |  |
-| controllerType | string | `"deployment"` |  |
-| dnsPolicy | string | `"ClusterFirst"` |  |
-| enableServiceLinks | bool | `true` |  |
-| env | object | `{}` |  |
-| envFrom | list | `[]` |  |
-| envTpl | object | `{}` |  |
-| envValueFrom | object | `{}` |  |
+| args | list | `[]` | Override the args for the default container |
+| autoscaling.enabled | bool | `false` | Add a Horizontal Pod Autoscaler |
+| autoscaling.maxReplicas | string | `nil` |  |
+| autoscaling.minReplicas | string | `nil` |  |
+| autoscaling.target | string | `nil` | Optional: overrides the default deploymentname |
+| autoscaling.targetCPUUtilizationPercentage | string | `nil` |  |
+| autoscaling.targetMemoryUtilizationPercentage | string | `nil` |  |
+| command | list | `[]` | Override the command(s) for the default container |
+| controllerAnnotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
+| controllerLabels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
+| controllerType | string | `"deployment"` | Set the controller type. Valid options are deployment, daemonset or statefulset |
+| dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
+| dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
+| enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [ref](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
+| env | object | `{}` | Main environment variables. |
+| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [ref](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
+| envList | list | `[]` | Additional environment variables from a list. |
+| envTpl | object | `{}` | Environment variables with values set from Helm templates |
+| envValueFrom | object | `{}` | Variables with values from (for example) the Downward API [ref](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) |
 | fullnameOverride | string | `""` |  |
 | hostAliases | list | `[]` |  |
-| hostNetwork | bool | `false` |  |
-| ingress.additionalIngresses | list | `[]` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| ingress.hosts[0].paths[0].path | string | `"/"` |  |
-| ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
-| ingress.labels | object | `{}` |  |
-| ingress.tls | list | `[]` |  |
+| hostNetwork | bool | `false` | When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet` |
+| hostname | string | `nil` | Allows specifying explicit hostname setting |
+| ingress | object | See below | Configure the ingresses for the chart here. Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
+| ingress.main.annotations | object | `{}` | Provide additional annotations which may be required. |
+| ingress.main.enabled | bool | `false` | Enables or disables the ingress |
+| ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address |
+| ingress.main.hosts[0].hostTpl | string | `nil` | A Helm template that is evaluated for the `host` field. |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path |
+| ingress.main.hosts[0].paths[0].pathTpl | string | `nil` | A Helm template that is evaluated for the `path` field. |
+| ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` | Ignored if not kubeVersion >= 1.14-0 |
+| ingress.main.hosts[0].paths[0].serviceName | string | `nil` | Overrides the service name reference for this path |
+| ingress.main.hosts[0].paths[0].servicePort | string | `nil` | Overrides the service port reference for this path |
+| ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for this ingress. Requires Kubernetes >=1.19 |
+| ingress.main.labels | object | `{}` | Provide additional labels which may be required. |
+| ingress.main.nameOverride | string | `nil` | Override the name suffix that is used for this ingress. |
+| ingress.main.primary | bool | `true` | Make this the primary ingress (used in probes, notes, etc...). If there is more than 1 ingress, make sure that only 1 ingress is marked as primary. |
+| ingress.main.tls | list | `[]` | Configure TLS for the ingress |
 | initContainers | list | `[]` |  |
+| lifecycle | object | `{}` | Configure the lifecycle for the main container |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` |  |
@@ -194,8 +163,9 @@ helm dependency update
 | persistence.shared.emptyDir.enabled | bool | `true` |  |
 | persistence.shared.enabled | bool | `false` |  |
 | persistence.shared.mountPath | string | `"/shared"` |  |
-| podAnnotations | object | `{}` |  |
-| podSecurityContext | object | `{}` |  |
+| podAnnotations | object | `{}` | Set annotations on the pod |
+| podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
+| priorityClassName | string | `nil` | Custom priority class for different treatment by the scheduler |
 | probes.liveness.custom | bool | `false` |  |
 | probes.liveness.enabled | bool | `true` |  |
 | probes.liveness.spec.failureThreshold | int | `3` |  |
@@ -216,31 +186,62 @@ helm dependency update
 | probes.startup.spec.timeoutSeconds | int | `1` |  |
 | replicas | int | `1` |  |
 | resources | object | `{}` |  |
-| secret | object | `{}` |  |
-| securityContext | object | `{}` |  |
-| service.additionalPorts | list | `[]` |  |
-| service.additionalServices | list | `[]` |  |
-| service.annotations | object | `{}` |  |
-| service.enabled | bool | `true` |  |
-| service.labels | object | `{}` |  |
-| service.port.name | string | `nil` |  |
-| service.port.port | string | `nil` |  |
-| service.port.protocol | string | `"TCP"` |  |
-| service.port.targetPort | string | `nil` |  |
-| service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.create | bool | `false` |  |
-| serviceAccount.name | string | `""` |  |
-| strategy.type | string | `"RollingUpdate"` |  |
+| schedulerName | string | `nil` | Allows specifying a custom scheduler name |
+| secret | object | `{}` | Use this to populate a secret with the values you specify. Be aware that these values are not encrypted by default, and could therefore visible to anybody with access to the values.yaml file. |
+| securityContext | object | `{}` | Configure the Security Context for the main container |
+| service | object | See below | Configure the services for the chart here. Additional services can be added by adding a dictionary key similar to the 'main' service. |
+| service.main.annotations | object | `{}` | Provide additional annotations which may be required. |
+| service.main.enabled | bool | `true` | Enables or disables the service |
+| service.main.labels | object | `{}` | Provide additional labels which may be required. |
+| service.main.nameOverride | string | `nil` | Override the name suffix that is used for this service |
+| service.main.ports | object | See below | Configure the Service port information here. Additional ports can be added by adding a dictionary key similar to the 'http' service. |
+| service.main.ports.http.enabled | bool | `true` | Enables or disables the port |
+| service.main.ports.http.nodePort | string | `nil` | Specify the nodePort value for the LoadBalancer and NodePort service types. [ref](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| service.main.ports.http.port | string | `nil` | The port number |
+| service.main.ports.http.primary | bool | `true` | Make this the primary port (used in probes, notes, etc...) If there is more than 1 service, make sure that only 1 port is marked as primary. |
+| service.main.ports.http.protocol | string | `"HTTP"` | Port protocol. Support values are `HTTP`, `HTTPS`, `TCP` and `UDP`. HTTPS and HTTPS spawn a TCP service and get used for internal URL and name generation |
+| service.main.ports.http.targetPort | string | `nil` | Specify a service targetPort if you wish to differ the service port from the application port. If `targetPort` is specified, this port number is used in the container definition instead of the `port` value. Therefore named ports are not supported for this field. |
+| service.main.primary | bool | `true` | Make this the primary service (used in probes, notes, etc...). If there is more than 1 service, make sure that only 1 service is marked as primary. |
+| service.main.type | string | `"ClusterIP"` | Set the service type |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| strategy.type | string | `"RollingUpdate"` | Set the controller upgrade strategy For Deployments, valid values are Recreate and RollingUpdate. For StatefulSets, valid values are OnDelete and RollingUpdate. DaemonSets ignore this. |
 | tolerations | list | `[]` |  |
 | volumeClaimTemplates | list | `[]` |  |
 
 ## Changelog
 
-All notable changes to this application Helm chart will be documented in this file but does not include changes from our common library. To read those click [here](../common/README.md).
+All notable changes to this library Helm chart will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [3.0.0]
+
+#### Added
+
+- It is now possible to flag an ingress / service / port as primary. This will then be used
+  by default in the chart notes, probes, etc.
+- Individual ports can now be enabled / disabled.
+- Annotated the values.yaml to better describe what fields do. This is also reflected in the [README.md](README.md) file.
+
+#### Changed
+
+- Probes are now automatically disabled (except for custom defined probes) when no service is enabled.
+- Moved the primary ingress from `ingress` to `ingress.main`.
+- Moved the primary service from `service` to `service.main`.
+- Multiple ingress objects can now be specified under the `ingress` key.
+- Multiple service objects can now be specified under the `ingress` key.
+- `nameSuffix` has been renamed to `nameOverride`.
+
+#### Fixed
+
+- Cleaned up YAML document separators (`---`)
+
+#### Removed
+
+- Removed support for `ingress.additionalIngresses`
 
 ### [2.5.0]
 
@@ -344,6 +345,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `command` and `args` values now properly support both string and list values.
 
+[3.0.0]: #3.0.0
+[2.5.0]: #2.5.0
+[2.4.0]: #2.4.0
 [2.3.1]: #2.3.1
 [2.3.0]: #2.3.0
 [2.2.0]: #2.2.0
@@ -354,7 +358,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Support
 
-- See the [Docs](http://docs.k8s-at-home.com).
-- Open an [issue](https://github.com/k8s-at-home/library-charts/issues/new/choose)
+- See the [Docs](https://docs.k8s-at-home.com/our-helm-charts/getting-started/)
+- Open an [issue](https://github.com/k8s-at-home/charts/issues/new/choose)
 - Ask a [question](https://github.com/k8s-at-home/organization/discussions)
 - Join our [Discord](https://discord.gg/sTMX7Vh) community
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

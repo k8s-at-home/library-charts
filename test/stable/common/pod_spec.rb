@@ -105,24 +105,24 @@ class Test < ChartTest
       it 'multiple volumes' do
         values = {
           persistence: {
-              cache: {
-                enabled: true,
-                emptyDir: {
-                  enabled: true
-                }
-              },
-              config: {
-                enabled: true,
-                existingClaim: "configClaim",
-                emptyDir: {
-                  enabled: false
-                }
-              },
-              data: {
-                enabled: true,
-                existingClaim: "dataClaim"
+            cache: {
+              enabled: true,
+              emptyDir: {
+                enabled: true
               }
+            },
+            config: {
+              enabled: true,
+              existingClaim: "configClaim",
+              emptyDir: {
+                enabled: false
+              }
+            },
+            data: {
+              enabled: true,
+              existingClaim: "dataClaim"
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -143,13 +143,13 @@ class Test < ChartTest
       it 'default nameSuffix' do
         values = {
           persistence: {
-              config: {
-                enabled: true,
-                emptyDir: {
-                  enabled: false
-                }
+            config: {
+              enabled: true,
+              emptyDir: {
+                enabled: false
               }
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -162,14 +162,14 @@ class Test < ChartTest
       it 'custom nameSuffix' do
         values = {
           persistence: {
-              config: {
-                enabled: true,
-                nameSuffix: "test",
-                emptyDir: {
-                  enabled: false
-                }
+            config: {
+              enabled: true,
+              nameSuffix: "test",
+              emptyDir: {
+                enabled: false
               }
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -182,14 +182,14 @@ class Test < ChartTest
       it 'no nameSuffix' do
         values = {
           persistence: {
-              config: {
-                enabled: true,
-                nameSuffix: "-",
-                emptyDir: {
-                  enabled: false
-                }
+            config: {
+              enabled: true,
+              nameSuffix: "-",
+              emptyDir: {
+                enabled: false
               }
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -204,13 +204,13 @@ class Test < ChartTest
       it 'can be configured' do
         values = {
           persistence: {
-              config: {
-                enabled: true,
-                emptyDir: {
-                  enabled: true
-                }
+            config: {
+              enabled: true,
+              emptyDir: {
+                enabled: true
               }
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -223,14 +223,14 @@ class Test < ChartTest
       it 'medium can be configured' do
         values = {
           persistence: {
-              config: {
+            config: {
+              enabled: true,
+              emptyDir: {
                 enabled: true,
-                emptyDir: {
-                  enabled: true,
-                  medium: "memory"
-                }
+                medium: "memory"
               }
             }
+          }
         }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
@@ -243,16 +243,16 @@ class Test < ChartTest
       it 'sizeLimit can be configured' do
         values = {
           persistence: {
-              config: {
+            config: {
+              enabled: true,
+              emptyDir: {
                 enabled: true,
-                emptyDir: {
-                  enabled: true,
-                  medium: "memory",
-                  sizeLimit: "1Gi"
-                }
+                medium: "memory",
+                sizeLimit: "1Gi"
               }
             }
-        }
+          }
+      }
         chart.value values
         deployment = chart.resources(kind: "Deployment").first
         volumes = deployment["spec"]["template"]["spec"]["volumes"]
@@ -266,18 +266,18 @@ class Test < ChartTest
       it 'multiple volumes' do
         values = {
           hostPathMounts: [
-          {
-                name: "data",
-                enabled: true,
-                mountPath: "/data",
-                hostPath: "/tmp1"
-          },
-          {
-                name: "config",
-                enabled: true,
-                mountPath: "/config",
-                hostPath: "/tmp2"
-          }
+            {
+              name: "data",
+              enabled: true,
+              mountPath: "/data",
+              hostPath: "/tmp1"
+            },
+            {
+              name: "config",
+              enabled: true,
+              mountPath: "/config",
+              hostPath: "/tmp2"
+            }
           ]
         }
         chart.value values
@@ -296,12 +296,12 @@ class Test < ChartTest
       it 'emptyDir can be enabled' do
         values = {
           hostPathMounts: [
-          {
-                name: "data",
-                enabled: true,
-                emptyDir: true,
-                mountPath: "/data"
-          }
+            {
+              name: "data",
+              enabled: true,
+              emptyDir: true,
+              mountPath: "/data"
+            }
           ]
         }
         chart.value values

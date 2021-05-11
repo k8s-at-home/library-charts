@@ -22,27 +22,32 @@ Main entrypoint for the common library chart. It will render all underlying temp
 
   {{- /* Build the templates */ -}}
   {{- include "common.pvc" . }}
-  {{- print "---" | nindent 0 -}}
+
   {{- if .Values.serviceAccount.create -}}
     {{- include "common.serviceAccount" . }}
-    {{- print "---" | nindent 0 -}}
   {{- end -}}
+
   {{- if eq .Values.controllerType "deployment" }}
     {{- include "common.deployment" . | nindent 0 }}
   {{ else if eq .Values.controllerType "daemonset" }}
     {{- include "common.daemonset" . | nindent 0 }}
   {{ else if eq .Values.controllerType "statefulset"  }}
     {{- include "common.statefulset" . | nindent 0 }}
+  {{ else }}
+    {{- fail (printf "Not a valid controllerType (%s)" .Values.controllerType) }}
   {{- end -}}
+
   {{ include "common.classes.hpa" . | nindent 0 }}
-  {{- print "---" | nindent 0 -}}
+
   {{ include "common.service" . | nindent 0 }}
-  {{- print "---" | nindent 0 -}}
+
   {{ include "common.ingress" .  | nindent 0 }}
+
   {{- if .Values.secret -}}
-    {{- print "---" | nindent 0 -}}
     {{ include "common.secret" .  | nindent 0 }}
   {{- end -}}
+
   {{ include "common.class.mountPermissions" .  | nindent 0 }}
+
   {{ include "common.classes.portal" .  | nindent 0 }}
 {{- end -}}

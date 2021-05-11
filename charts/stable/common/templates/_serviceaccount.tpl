@@ -2,6 +2,7 @@
 The ServiceAccount object to be created.
 */}}
 {{- define "common.serviceAccount" -}}
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:

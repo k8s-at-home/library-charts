@@ -2,24 +2,28 @@
 
 {{- if .Values.portal }}
 {{- if .Values.portal.enabled }}
+{{- $primaryService := get .Values.service (include "common.service.primary" .) }}
+{{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
+
 {{- $host := "$node_ip" }}
 {{- $port := 443 }}
 {{- $protocol := "https" }}
 {{- $portProtocol := "" }}
 {{- $path := "/" }}
 
-{{- if hasKey .Values "ingress" }}
-  {{- if .Values.ingress.enabled }}
-    {{- range .Values.ingress.hosts }}
+{{- $primaryIngress := get .Values.ingress (include "common.ingress.primary" .) }}
+{{- if $primaryIngress }}
+  {{- if $primaryIngress.enabled }}
+    {{- range $primaryIngress.hosts }}
     {{- if .hostTpl }}
-    {{ $host = ( tpl .hostTpl $ ) }}
+      {{- $host = ( tpl .hostTpl $ ) }}
     {{- else if .host }}
-    {{ $host = .host }}
+      {{- $host = .host }}
     {{- else }}
-    {{ $host = "$node_ip" }}
+      {{- $host = "$node_ip" }}
     {{- end }}
     {{- if .paths }}
-    {{- $path = (first .paths).path  }}
+      {{- $path = (first .paths).path  }}
     {{- end }}
     {{- end }}
   {{- end }}
@@ -28,10 +32,10 @@
 {{- if and ( .Values.portal.ingressPort ) ( ne $host "$node_ip" ) }}
   {{- $port = .Values.portal.ingressPort }}
 {{- else  if eq $host "$node_ip" }}
-  {{- if eq .Values.service.type "NodePort" }}
-    {{- $port = .Values.service.port.nodePort }}
-    {{- if or ( eq .Values.service.port.protocol "HTTP" ) ( eq .Values.service.port.protocol "HTTPS" ) }}
-      {{- $portProtocol = .Values.service.port.protocol }}
+  {{- if eq $primaryService.type "NodePort" }}
+    {{- $port = $primaryPort.nodePort }}
+    {{- if or ( eq $primaryPort.protocol "HTTP" ) ( eq $primaryPort.protocol "HTTPS" ) }}
+      {{- $portProtocol = $primaryPort.protocol }}
     {{- end }}
   {{- end }}
 {{- end }}
@@ -39,7 +43,7 @@
 {{- if and ( $portProtocol ) ( eq $host "$node_ip" ) }}
   {{- $protocol = $portProtocol }}
 {{- else if and ( ne $host "$node_ip" ) }}
-  {{- if $.Values.ingress.tls }}
+  {{- if $.Values.ingress.main.tls }}
     {{- $protocol = "https" }}
   {{- end }}
 {{- end }}

@@ -20,15 +20,15 @@ env:
 {{- end }}
 {{- end }}
 ports:
-- name: {{ .Values.addons.codeserver.service.port.name }}
-  containerPort: {{ .Values.addons.codeserver.service.port.port }}
+- name: codeserver
+  containerPort: {{ .Values.addons.codeserver.service.ports.codeserver.port }}
   protocol: TCP
 args:
 {{- range .Values.addons.codeserver.args }}
 - {{ . | quote }}
 {{- end }}
 - "--port"
-- "{{ .Values.addons.codeserver.service.port.port }}"
+- "{{ .Values.addons.codeserver.service.ports.codeserver.port }}"
 - {{ .Values.addons.codeserver.workingDir | default (first .Values.addons.codeserver.volumeMounts).mountPath }}
 volumeMounts:
 {{- with .Values.addons.codeserver.volumeMounts }}

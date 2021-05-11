@@ -3,6 +3,7 @@ This template serves as the blueprint for the StatefulSet objects that are creat
 within the common library.
 */}}
 {{- define "common.statefulset" -}}
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
 kind: StatefulSet
 metadata:

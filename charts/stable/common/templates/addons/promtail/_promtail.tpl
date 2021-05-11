@@ -14,7 +14,6 @@ It will include / inject the required templates based on the given values.
   {{/* Include the configmap if not empty */}}
   {{- $configmap := include "common.addon.promtail.configmap" . -}}
   {{- if $configmap -}}
-    {{- print "---" | nindent 0 -}}
     {{- $configmap | nindent 0 -}}
   {{- end -}}
 

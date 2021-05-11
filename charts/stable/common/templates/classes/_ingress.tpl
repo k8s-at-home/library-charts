@@ -5,16 +5,23 @@ within the common library.
 {{- define "common.classes.ingress" -}}
 {{- $ingressName := include "common.names.fullname" . -}}
 {{- $values := .Values.ingress -}}
+
 {{- if hasKey . "ObjectValues" -}}
   {{- with .ObjectValues.ingress -}}
     {{- $values = . -}}
   {{- end -}}
 {{ end -}}
-{{- if hasKey $values "nameSuffix" -}}
-  {{- $ingressName = printf "%v-%v" $ingressName $values.nameSuffix -}}
+
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
 {{ end -}}
+
+{{- $primaryService := get .Values.service (include "common.service.primary" .) }}
 {{- $svcName := $values.serviceName | default (include "common.names.fullname" .) -}}
-{{- $svcPort := $values.servicePort | default $.Values.service.port.port -}}
+{{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
+{{- $svcPort := $values.servicePort | default $primaryPort.port -}}
+
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
 metadata:

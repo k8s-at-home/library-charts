@@ -2,6 +2,7 @@
 The Secret object to be created.
 */}}
 {{- define "common.secret" -}}
+{{- print ("---\n") | nindent 0 -}}
 apiVersion: v1
 kind: Secret
 metadata:
