@@ -3,7 +3,7 @@ This template serves as a blueprint for horizontal pod autoscaler objects that a
 using the common library.
 */}}
 {{- define "common.classes.hpa" -}}
-  {{- if .Values.autoscaling.enabled }}
+  {{- if .Values.autoscaling.enabled -}}
     {{- print "---" | nindent 0 -}}
     {{- $hpaName := include "common.names.fullname" . -}}
     {{- $targetName := include "common.names.fullname" . -}}
@@ -33,5 +33,5 @@ spec:
         name: memory
         targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
-  {{- end }}
-{{- end 0}}
+  {{- end -}}
+{{- end -}}

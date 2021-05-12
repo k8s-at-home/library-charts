@@ -20,7 +20,7 @@ within the common library.
   {{- $name := $values.serviceName | default (include "common.names.fullname" .) -}}
   {{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
   {{- $port := $values.servicePort | default $primaryPort.port -}}
-  {{- $isStable := include "common.capabilities.ingress.isStable" -}}
+  {{- $isStable := include "common.capabilities.ingress.isStable" . -}}
   {{- print ("---\n") | nindent 0 -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
