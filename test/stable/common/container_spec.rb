@@ -21,7 +21,7 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:command], mainContainer["command"])
+        assert_equal([values[:command]], mainContainer["command"])
       end
 
       it 'accepts a list of strings' do
@@ -55,7 +55,7 @@ class Test < ChartTest
         deployment = chart.resources(kind: "Deployment").first
         containers = deployment["spec"]["template"]["spec"]["containers"]
         mainContainer = containers.find{ |c| c["name"] == "common-test" }
-        assert_equal(values[:args], mainContainer["args"])
+        assert_equal([values[:args]], mainContainer["args"])
       end
 
       it 'accepts a list of strings' do
