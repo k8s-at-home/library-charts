@@ -38,19 +38,17 @@
     - name: {{ quote $name }}
       {{- if kindIs "map" $value -}}
         {{- if hasKey $value "value" }}
-          {{- if or (kindIs "string" $value.value) (kindIs "float64" $value.value) (kindIs "int64" $value.value) }}
             {{- $value = $value.value -}}
-          {{- else }}
-            {{- $value = tpl $value.value $ | quote }}
-          {{- end }}
         {{- else if hasKey $value "valueFrom" }}
-      valueFrom:
-          {{- tpl $value.valueFrom $ | nindent 8 }}
+          {{- toYaml $value | nindent 6 }}
         {{- else }}
-          {{- fail "invalid env var format" }}
+          {{- dict "valueFrom" $value | toYaml | nindent 6 }}
         {{- end }}
       {{- end }}
       {{- if not (kindIs "map" $value) }}
+        {{- if kindIs "string" $value }}
+          {{- $value = tpl $value $ }}
+        {{- end }}
       value: {{ quote $value }}
       {{- end }}
     {{- end }}

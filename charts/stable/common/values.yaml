@@ -30,17 +30,17 @@ controller:
   revisionHistoryLimit: 3
 
 image:
+  # -- image repository
   repository:
+  # -- image tag
   tag:
+  # -- image pull policy
   pullPolicy:
 
 # -- Override the command(s) for the default container
 command: []
 # -- Override the args for the default container
 args: []
-
-nameOverride: ""
-fullnameOverride: ""
 
 # -- Set annotations on the pod
 podAnnotations: {}
