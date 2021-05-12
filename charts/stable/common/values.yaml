@@ -274,7 +274,7 @@ ingress:
               # -- Overrides the service port reference for this path
               port:
 
-    # -- Configure TLS for the ingress. Both secretName and hosts are template enabled.
+    # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
