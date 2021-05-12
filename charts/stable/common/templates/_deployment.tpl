@@ -3,7 +3,7 @@ This template serves as the blueprint for the Deployment objects that are create
 within the common library.
 */}}
 {{- define "common.deployment" -}}
-  {{- print ("---\n") | nindent 0 -}}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

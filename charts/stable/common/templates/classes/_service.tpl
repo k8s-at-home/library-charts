@@ -17,7 +17,7 @@ within the common library.
 {{- $svcType := $values.type | default "" -}}
 {{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) -}}
 
-{{- print ("---\n") | nindent 0 -}}
+---
 apiVersion: v1
 kind: Service
 metadata:

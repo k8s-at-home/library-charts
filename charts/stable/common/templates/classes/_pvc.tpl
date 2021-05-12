@@ -16,7 +16,7 @@ within the common library.
   {{ end -}}
 {{ end -}}
 
-{{- print ("---\n") | nindent 0 -}}
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
