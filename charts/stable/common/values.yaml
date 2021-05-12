@@ -9,9 +9,9 @@ controller:
   # Valid options are deployment, daemonset or statefulset
   type: deployment
   # -- Set annotations on the deployment/statefulset/daemonset
-  annotations: { }
+  annotations: {}
   # -- Set labels on the deployment/statefulset/daemonset
-  labels: { }
+  labels: {}
   # -- Number of desired pods
   replicas: 1
   # -- Set the controller upgrade strategy
