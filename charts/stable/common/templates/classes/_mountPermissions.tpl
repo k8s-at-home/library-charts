@@ -5,10 +5,16 @@ before chart installation.
 {{- define "common.class.mountPermissions" -}}
   {{- if .Values.hostPathMounts -}}
     {{- $jobName := include "common.names.fullname" . -}}
-    {{- $user := dig "PUID" 568 (default dict .Values.env) -}}
+    {{- $user := 568 -}}
+    {{- if .Values.env -}}
+      {{- $user = dig "PUID" $user .Values.env -}}
+    {{- end -}}
     {{- $user = dig "runAsUser" $user .Values.podSecurityContext -}}
-    {{- $group := dig "PGID" 568 (default dict .Values.env) -}}
-    {{- $user = dig "fsGroup" $user .Values.podSecurityContext -}}
+    {{- $group := 568 -}}
+    {{- if and .Values.env -}}
+      {{- $group = dig "PGID" $group .Values.env -}}
+    {{- end -}}
+    {{- $group = dig "fsGroup" $group .Values.podSecurityContext -}}
     {{- $hostPathMounts := dict -}}
     {{- range $name, $mount := .Values.hostPathMounts -}}
       {{- if and $mount.enabled $mount.setPermissions -}}
@@ -40,7 +46,7 @@ spec:
             - -c
             - |
               {{- range $_, $hpm := $hostPathMounts }}
-              chown -R {{ printf "%s:%s %s" $user $group $hpm.mountPath }}
+              chown -R {{ printf "%d:%d %s" (int $user) (int $group) $hpm.mountPath }}
               {{- end }}
           volumeMounts:
             {{- range $name, $hpm := $hostPathMounts }}

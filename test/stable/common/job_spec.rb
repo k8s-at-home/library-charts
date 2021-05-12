@@ -150,8 +150,8 @@ class Test < ChartTest
 
       it 'can process default (568:568) permissions for multiple volumes' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 568:568 /data
-chown -R 568:568 /config
+          command: ["/bin/sh", "-c", "chown -R 568:568 /config
+chown -R 568:568 /data
 "]
         }
         values = {
@@ -180,8 +180,8 @@ chown -R 568:568 /config
 
       it 'outputs default permissions with irrelevant podSecurityContext' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 568:568 /data
-chown -R 568:568 /config
+          command: ["/bin/sh", "-c", "chown -R 568:568 /config
+chown -R 568:568 /data
 "]
         }
         values = {
@@ -213,8 +213,8 @@ chown -R 568:568 /config
 
       it 'outputs fsgroup permissions for multiple volumes when set' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 568:666 /data
-chown -R 568:666 /config
+          command: ["/bin/sh", "-c", "chown -R 568:666 /config
+chown -R 568:666 /data
 "]
         }
         values = {
@@ -246,8 +246,8 @@ chown -R 568:666 /config
 
       it 'outputs runAsUser permissions for multiple volumes when set' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 999:568 /data
-chown -R 999:568 /config
+          command: ["/bin/sh", "-c", "chown -R 999:568 /config
+chown -R 999:568 /data
 "]
         }
         values = {
@@ -279,8 +279,8 @@ chown -R 999:568 /config
 
       it 'outputs fsGroup AND runAsUser permissions for multiple volumes when both are set' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 999:666 /data
-chown -R 999:666 /config
+          command: ["/bin/sh", "-c", "chown -R 999:666 /config
+chown -R 999:666 /data
 "]
         }
         values = {
@@ -312,8 +312,8 @@ chown -R 999:666 /config
       end
       it 'outputs PUID AND PGID permissions for multiple volumes when both are set' do
         results= {
-          command: ["/bin/sh", "-c", "chown -R 999:666 /data
-chown -R 999:666 /config
+          command: ["/bin/sh", "-c", "chown -R 999:666 /config
+chown -R 999:666 /data
 "]
         }
         values = {
