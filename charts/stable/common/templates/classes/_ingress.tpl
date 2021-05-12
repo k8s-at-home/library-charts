@@ -17,9 +17,8 @@ within the common library.
   {{- end -}}
 
   {{- $primaryService := get .Values.service (include "common.service.primary" .) }}
-  {{- $name := $values.serviceName | default (include "common.names.fullname" .) -}}
   {{- $primaryPort := get $primaryService.ports (include "common.classes.service.ports.primary" (dict "values" $primaryService)) -}}
-  {{- $port := $values.servicePort | default $primaryPort.port -}}
+  {{- $name := include "common.names.name" . -}}
   {{- $isStable := include "common.capabilities.ingress.isStable" . -}}
   {{- print ("---\n") | nindent 0 -}}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
@@ -41,7 +40,7 @@ spec:
     {{- range $values.tls }}
     - hosts:
         {{- range .hosts }}
-        - {{ tpl . $ | quote }}}
+        - {{ tpl . $ | quote }}
         {{- end }}
       {{- if .secretName }}
       secretName: {{ tpl .secretName $ | quote}}
@@ -54,6 +53,12 @@ spec:
       http:
         paths:
           {{- range .paths }}
+          {{- $service := $name -}}
+          {{- $port := $primaryPort.port -}}
+          {{- if .service -}}
+            {{- $service = default $name .service.name -}}
+            {{- $port = default $primaryPort.port .service.port -}}
+          {{- end }}
           - path: {{ tpl .path $ | quote }}
             {{- if $isStable }}
             pathType: {{ default "Prefix" .pathType }}
@@ -61,12 +66,12 @@ spec:
             backend:
               {{- if $isStable }}
               service:
-                name: {{ default $name .service.name }}
+                name: {{ $service }}
                 port:
-                  number: {{ default $port .service.port }}
+                  number: {{ $port }}
               {{- else }}
-              serviceName: {{ default $name .service.name }}
-              servicePort: {{ default $port .service.port }}
+              serviceName: {{ $service }}
+              servicePort: {{ $port }}
               {{- end }}
           {{- end }}
   {{- end }}
