@@ -13,14 +13,14 @@ class Test < ChartTest
       end
 
       it 'accepts "statefulset"' do
-        chart.value controller.type: 'statefulset'
+        chart.value controller['type']: 'statefulset'
         assert_nil(resource('Deployment'))
         assert_nil(resource('DaemonSet'))
         refute_nil(resource('StatefulSet'))
       end
 
       it 'accepts "daemonset"' do
-        chart.value controller.type: 'daemonset'
+        chart.value controller['type']: 'daemonset'
         assert_nil(resource('Deployment'))
         assert_nil(resource('StatefulSet'))
         refute_nil(resource('DaemonSet'))
@@ -36,7 +36,7 @@ class Test < ChartTest
 
       it 'can set values for volumeClaimTemplates' do
         values = {
-          controller: {
+          controller = {
               type: 'statefulset',
           },
           volumeClaimTemplates: [
