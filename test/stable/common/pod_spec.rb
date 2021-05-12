@@ -12,7 +12,12 @@ class Test < ChartTest
       end
 
       it 'accepts integer as value' do
-        chart.value replicas: 3
+        values = {
+          controller: {
+            replicas: 3
+          }
+        }
+        chart.value values
         deployment = chart.resources(kind: "Deployment").first
         assert_equal(3, deployment["spec"]["replicas"])
       end

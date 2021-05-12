@@ -5,9 +5,9 @@ before chart installation.
 {{- define "common.class.mountPermissions" -}}
   {{- if .Values.hostPathMounts -}}
     {{- $jobName := include "common.names.fullname" . -}}
-    {{- $user := dig "PUID" 568 .Values.env -}}
+    {{- $user := dig "PUID" 568 (default dict .Values.env) -}}
     {{- $user = dig "runAsUser" $user .Values.podSecurityContext -}}
-    {{- $group := dig "PGID" 568 .Values.env -}}
+    {{- $group := dig "PGID" 568 (default dict .Values.env) -}}
     {{- $user = dig "fsGroup" $user .Values.podSecurityContext -}}
     {{- $hostPathMounts := dict -}}
     {{- range $name, $mount := .Values.hostPathMounts -}}
