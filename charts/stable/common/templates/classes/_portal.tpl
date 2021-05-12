@@ -55,9 +55,7 @@
 {{- if and ( .Values.portal.path ) }}
   {{- $path = .Values.portal.path }}
 {{- end }}
-
-{{- print "---" | nindent 0 -}}
-
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -1,7 +1,7 @@
 {{/*
 The ServiceAccount object to be created.
 */}}
-{{- define "common.serviceAccount" -}}
+{{- define "common.serviceAccount" }}
 ---
 apiVersion: v1
 kind: ServiceAccount

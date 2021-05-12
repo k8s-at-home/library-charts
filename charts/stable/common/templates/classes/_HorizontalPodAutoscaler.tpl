@@ -4,9 +4,9 @@ using the common library.
 */}}
 {{- define "common.classes.hpa" -}}
   {{- if .Values.autoscaling.enabled -}}
-    {{- print "---" | nindent 0 -}}
     {{- $hpaName := include "common.names.fullname" . -}}
-    {{- $targetName := include "common.names.fullname" . -}}
+    {{- $targetName := include "common.names.fullname" . }}
+---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:

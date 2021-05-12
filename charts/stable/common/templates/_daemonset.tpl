@@ -2,7 +2,7 @@
 This template serves as the blueprint for the DaemonSet objects that are created
 within the common library.
 */}}
-{{- define "common.daemonset" -}}
+{{- define "common.daemonset" }}
 ---
 apiVersion: apps/v1
 kind: DaemonSet

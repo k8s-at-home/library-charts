@@ -2,7 +2,7 @@
 This template serves as the blueprint for the StatefulSet objects that are created
 within the common library.
 */}}
-{{- define "common.statefulset" -}}
+{{- define "common.statefulset" }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet

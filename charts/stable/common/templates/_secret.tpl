@@ -1,7 +1,7 @@
 {{/*
 The Secret object to be created.
 */}}
-{{- define "common.secret" -}}
+{{- define "common.secret" }}
 ---
 apiVersion: v1
 kind: Secret

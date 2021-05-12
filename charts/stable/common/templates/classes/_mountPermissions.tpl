@@ -21,8 +21,8 @@ before chart installation.
         {{- $name = default $name $mount.name -}}
         {{- $_ := set $hostPathMounts $name $mount -}}
       {{- end -}}
-    {{- end -}}
-    {{- print "---" | nindent 0 -}}
+    {{- end }}
+---
 apiVersion: batch/v1
 kind: Job
 metadata:

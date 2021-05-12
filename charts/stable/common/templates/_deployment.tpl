@@ -2,7 +2,7 @@
 This template serves as the blueprint for the Deployment objects that are created
 within the common library.
 */}}
-{{- define "common.deployment" -}}
+{{- define "common.deployment" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
