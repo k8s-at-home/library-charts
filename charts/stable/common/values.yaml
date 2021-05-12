@@ -271,34 +271,25 @@ ingress:
 
     ## Configure the hosts for the ingress
     hosts:
-      -  # -- Host address
+      -  # -- Host address. Template enabled.
         host: chart-example.local
-        # -- A Helm template that is evaluated for the `host` field.
-        hostTpl:  # '{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domainname }}'
-
-        ## Configure the hosts for the host
+        ## Configure the paths for the host
         paths:
-          -  # -- Path
+          -  # -- Path. Template enabled.
             path: /
-            # -- A Helm template that is evaluated for the `path` field.
-            pathTpl:  # '{{ include "common.names.fullname" . }}'
             # -- Ignored if not kubeVersion >= 1.14-0
             pathType: Prefix
-            # -- Overrides the service name reference for this path
-            serviceName:
-            # -- Overrides the service port reference for this path
-            servicePort:
+            service:
+              # -- Overrides the service name reference for this path
+              name:
+              # -- Overrides the service port reference for this path
+              port:
 
-    # -- Configure TLS for the ingress
+    # -- Configure TLS for the ingress. Both secretName and hosts are template enabled.
     tls: []
     #  - secretName: chart-example-tls
-    ## Or if you need a dynamic secretname
-    #  - secretNameTpl: '{{ include "common.names.fullname" . }}-ingress'
     #    hosts:
     #      - chart-example.local
-    ## Or a tpl that is evaluated
-    #    hostsTpl:
-    #      - '{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.ingress.domainname }}'
 
 ## Adds a portal configmap for use with TrueNAS SCALE
 ## This should not be enabled on other systems than TrueNAS SCALE because it requires a seperate namespace for each chart.

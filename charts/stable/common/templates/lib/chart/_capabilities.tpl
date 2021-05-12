@@ -13,5 +13,7 @@
 
 {{/* Check Ingress stability */}}
 {{- define "common.capabilities.ingress.isStable" -}}
-  {{- eq (include "common.capabilities.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+  {{- if eq (include "common.capabilities.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+    {{- true -}}
+  {{- end -}}
 {{- end -}}

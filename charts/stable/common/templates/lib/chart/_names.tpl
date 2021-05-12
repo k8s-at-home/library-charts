@@ -44,7 +44,7 @@ If release name contains chart name it will be used as a full name.
     {{- print "DaemonSet" -}}
   {{- else if eq .Values.controller.type "statefulset"  -}}
     {{- print "StatefulSet" -}}
-  {{ else }}
-    {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) }}
+  {{- else -}}
+    {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) -}}
   {{- end -}}
 {{- end -}}
