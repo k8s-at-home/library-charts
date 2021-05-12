@@ -346,4 +346,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open an [issue](https://github.com/k8s-at-home/charts/issues/new/choose)
 - Ask a [question](https://github.com/k8s-at-home/organization/discussions)
 - Join our [Discord](https://discord.gg/sTMX7Vh) community
-
