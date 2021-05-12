@@ -112,11 +112,7 @@ N/A
 | dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
 | dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
 | enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
-| env | object | `{}` | Main environment variables. |
-| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
-| envList | list | `[]` | Additional environment variables from a list. |
-| envTpl | object | `{}` | Environment variables with values set from Helm templates |
-| envValueFrom | object | `{}` | Variables with values from (for example) the Downward API [[ref]](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) |
+| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      envFrom:        ... D) - name: TZ      value: UTC E) - name: TZ      value: '{{ .Release.Name }}' |
 | fullnameOverride | string | `""` |  |
 | global.fullnameOverride | string | `nil` | Set the entire name definition |
 | global.nameOverride | string | `nil` | Set an override for the prefix of the fullname |
@@ -124,21 +120,22 @@ N/A
 | hostNetwork | bool | `false` | When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet` |
 | hostPathMounts | list | `[]` | Mount a path on the host to the main container. |
 | hostname | string | `nil` | Allows specifying explicit hostname setting |
+| image.pullPolicy | string | `nil` |  |
+| image.repository | string | `nil` |  |
+| image.tag | string | `nil` |  |
 | ingress | object | See below | Configure the ingresses for the chart here. Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
 | ingress.main.annotations | object | `{}` | Provide additional annotations which may be required. |
 | ingress.main.enabled | bool | `false` | Enables or disables the ingress |
-| ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address |
-| ingress.main.hosts[0].hostTpl | string | `nil` | A Helm template that is evaluated for the `host` field. |
-| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path |
-| ingress.main.hosts[0].paths[0].pathTpl | string | `nil` | A Helm template that is evaluated for the `path` field. |
+| ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address. Template enabled. |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path. Template enabled. |
 | ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` | Ignored if not kubeVersion >= 1.14-0 |
-| ingress.main.hosts[0].paths[0].serviceName | string | `nil` | Overrides the service name reference for this path |
-| ingress.main.hosts[0].paths[0].servicePort | string | `nil` | Overrides the service port reference for this path |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Overrides the service name reference for this path |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Overrides the service port reference for this path |
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for this ingress. Requires Kubernetes >=1.19 |
 | ingress.main.labels | object | `{}` | Provide additional labels which may be required. |
 | ingress.main.nameOverride | string | `nil` | Override the name suffix that is used for this ingress. |
 | ingress.main.primary | bool | `true` | Make this the primary ingress (used in probes, notes, etc...). If there is more than 1 ingress, make sure that only 1 ingress is marked as primary. |
-| ingress.main.tls | list | `[]` | Configure TLS for the ingress |
+| ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts are template enabled. |
 | initContainers | list | `[]` | Specify any initContainers here. Yaml will be passed in to the Pod as-is. |
 | lifecycle | object | `{}` | Configure the lifecycle for the main container |
 | nameOverride | string | `""` |  |

@@ -1,25 +1,23 @@
-{{- /*
-The main container included in the controller.
-*/ -}}
+{{- /* The main container included in the controller */ -}}
 {{- define "common.controller.mainContainer" -}}
 - name: {{ include "common.names.fullname" . }}
-  image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+  image: {{ printf "%s:%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tag) | quote }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   {{- with .Values.command }}
-  {{- if kindIs "string" . }}
-  command: {{ . }}
-  {{- else }}
   command:
-  {{ toYaml . | nindent 2 }}
-  {{- end }}
+    {{- if kindIs "string" . }}
+    - {{ . }}
+    {{- else }}
+      {{ toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- with .Values.args }}
-  {{- if kindIs "string" . }}
-  args: {{ . }}
-  {{- else }}
   args:
-  {{ toYaml . | nindent 2 }}
-  {{- end }}
+    {{- if kindIs "string" . }}
+    - {{ . }}
+    {{- else }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- with .Values.securityContext }}
   securityContext:
@@ -29,46 +27,50 @@ The main container included in the controller.
   lifecycle:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if or .Values.envList .Values.env .Values.envTpl .Values.envValueFrom }}
+  {{- with .Values.env }}
   env:
-  {{- range $envList := .Values.envList }}
-  {{- if and $envList.name $envList.value }}
-  - name: {{ $envList.name }}
-    value: {{ $envList.value | quote }}
-  {{- else }}
-    {{- fail "Please specify name/value for environment variable" }}
-  {{- end }}
-  {{- end}}
-  {{- range $key, $value := .Values.env }}
-  - name: {{ $key }}
-    value: {{ $value | quote }}
-  {{- end }}
-  {{- range $key, $value := .Values.envTpl }}
-  - name: {{ $key }}
-    value: {{ tpl $value $ | quote }}
-  {{- end }}
-  {{- range $key, $value := .Values.envValueFrom }}
-  - name: {{ $key }}
-    valueFrom:
-      {{- $value | toYaml | nindent 6 }}
-  {{- end }}
+    {{- range $k, $v := . }}
+      {{- $name := $k }}
+      {{- $value := $v }}
+      {{- if kindIs "int" $name }}
+        {{- $name = required "environment variables as a list of maps require a name field" $value.name }}
+      {{- end }}
+    - name: {{ quote $name }}
+      {{- if kindIs "map" $value -}}
+        {{- if hasKey $value "value" }}
+          {{- if or (kindIs "string" $value.value) (kindIs "float64" $value.value) (kindIs "int64" $value.value) }}
+            {{- $value = $value.value -}}
+          {{- else }}
+            {{- $value = tpl $value.value $ | quote }}
+          {{- end }}
+        {{- else if hasKey $value "valueFrom" }}
+      valueFrom:
+          {{- tpl $value.valueFrom $ | nindent 8 }}
+        {{- else }}
+          {{- fail "invalid env var format" }}
+        {{- end }}
+      {{- end }}
+      {{- if not (kindIs "map" $value) }}
+      value: {{ quote $value }}
+      {{- end }}
+    {{- end }}
   {{- end }}
   {{- if or .Values.envFrom .Values.secret }}
   envFrom:
-  {{- with .Values.envFrom }}
-    {{- toYaml . | nindent 2 }}
-  {{- end }}
-  {{- if or .Values.secret }}
-  - secretRef:
-      name: {{ include "common.names.fullname" . }}
-  {{- end }}
+    {{- with .Values.envFrom }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if .Values.secret }}
+    - secretRef:
+        name: {{ include "common.names.fullname" . }}
+    {{- end }}
   {{- end }}
   {{- include "common.controller.ports" . | trim | nindent 2 }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}
   volumeMounts:
-    {{- . | nindent 2 }}
+    {{ nindent 4 . }}
   {{- end }}
-  {{- include "common.controller.probes" . | nindent 2 }}
+  {{- include "common.controller.probes" . | trim | nindent 2 }}
   {{- with .Values.resources }}
   resources:
     {{- toYaml . | nindent 4 }}

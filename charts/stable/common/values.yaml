@@ -29,6 +29,11 @@ controller:
   # -- ReplicaSet revision history limit
   revisionHistoryLimit: 3
 
+image:
+  repository:
+  tag:
+  pullPolicy:
+
 # -- Override the command(s) for the default container
 command: []
 # -- Override the args for the default container
@@ -67,34 +72,18 @@ serviceAccount:
 secret: {}
   # PASSWORD: my-password
 
-# -- Main environment variables.
-env: {}
-  # TZ: UTC
-
-# -- Additional environment variables from a list.
-envList: []
-  # - name: TZ
-  #   value: UTC
-
-# -- Environment variables with values set from Helm templates
-## With a release name of: demo, the example env value will be: demo-admin
-envTpl: {}
-  # TEMPLATE_VALUE: "{{ .Release.Name }}-admin"
-
-# -- Variables with values from (for example) the Downward API
-# [[ref]](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/)
-envValueFrom: {}
-  # NODE_NAME:
-  #   fieldRef:
-  #     fieldPath: spec.nodeName
-
-# -- Environment variables that can be loaded from Secrets or ConfigMaps.
-# [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables)
-envFrom: []
-# - configMapRef:
-#     name: config-map-name
-# - secretRef:
-#     name: secret-name
+# -- Main environment variables. Template enabled.
+# Syntax options:
+# A) TZ: UTC
+# B) PASSWD: '{{ .Release.Name }}'
+# C) PASSWD:
+#      envFrom:
+#        ...
+# D) - name: TZ
+#      value: UTC
+# E) - name: TZ
+#      value: '{{ .Release.Name }}'
+env:
 
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
