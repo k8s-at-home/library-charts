@@ -1,6 +1,7 @@
 package helmchart
 
 import (
+    "io"
     "strings"
 
     "github.com/Jeffail/gabs"
@@ -45,7 +46,7 @@ func (c *HelmChart) UpdateDependencies() error {
         if err := action.CheckDependencies(chartRequested, req); err != nil {
             if client.DependencyUpdate {
                 man := &downloader.Manager{
-                    Out:        nil,
+                    Out:        io.Discard,
                     ChartPath:  c.ChartPath,
                     Keyring:    client.ChartPathOptions.Keyring,
                     SkipUpdate: false,
