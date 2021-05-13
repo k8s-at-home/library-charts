@@ -80,7 +80,6 @@ N/A
 | addons.promtail.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the promtail container. At least 1 volumeMount is required! |
 | addons.vpn | object | See values.yaml | The common chart supports adding a VPN add-on. It can be configured under this key. For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#wireguard-vpn) |
 | addons.vpn.configFile | string | `nil` | Provide a customized vpn configuration file to be used by the VPN. |
-| addons.vpn.configFileSecret | string | `nil` | Reference an existing secret that contains the VPN configuration file The chart expects it to be present under the `vpnConfigfile` key. |
 | addons.vpn.enabled | bool | `false` | Enable running a VPN in the pod to route traffic through a VPN |
 | addons.vpn.env | object | `{}` | All variables specified here will be added to the vpn sidecar container See the documentation of the VPN image for all config values |
 | addons.vpn.livenessProbe | object | `{}` | Optionally specify a livenessProbe, e.g. to check if the connection is still being protected by the VPN |
@@ -101,40 +100,43 @@ N/A
 | args | list | `[]` | Override the args for the default container |
 | autoscaling | object | <disabled> | Add a Horizontal Pod Autoscaler |
 | command | list | `[]` | Override the command(s) for the default container |
-| controllerAnnotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
-| controllerLabels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
-| controllerType | string | `"deployment"` | Set the controller type. Valid options are deployment, daemonset or statefulset |
+| controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
+| controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
+| controller.replicas | int | `1` | Number of desired pods |
+| controller.revisionHistoryLimit | int | `3` | ReplicaSet revision history limit |
+| controller.rollingUpdate.partition | string | `nil` | Set statefulset RollingUpdate partition |
+| controller.rollingUpdate.surge | string | `nil` | Set deployment RollingUpdate max surge |
+| controller.rollingUpdate.unavailable | string | `nil` | Set deployment RollingUpdate max unavailable |
+| controller.strategy | string | `nil` | Set the controller upgrade strategy For Deployments, valid values are Recreate (default) and RollingUpdate. For StatefulSets, valid values are OnDelete and RollingUpdate (default). DaemonSets ignore this. |
+| controller.type | string | `"deployment"` | Set the controller type. Valid options are deployment, daemonset or statefulset |
 | dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
 | dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
 | enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
-| env | object | `{}` | Main environment variables. |
-| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
-| envList | list | `[]` | Additional environment variables from a list. |
-| envTpl | object | `{}` | Environment variables with values set from Helm templates |
-| envValueFrom | object | `{}` | Variables with values from (for example) the Downward API [[ref]](https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/) |
-| fullnameOverride | string | `""` |  |
+| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      envFrom:        ... D) - name: TZ      value: UTC E) - name: TZ      value: '{{ .Release.Name }}' |
+| global.fullnameOverride | string | `nil` | Set the entire name definition |
+| global.nameOverride | string | `nil` | Set an override for the prefix of the fullname |
 | hostAliases | list | `[]` | Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames. [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/) |
 | hostNetwork | bool | `false` | When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet` |
 | hostPathMounts | list | `[]` | Mount a path on the host to the main container. |
 | hostname | string | `nil` | Allows specifying explicit hostname setting |
+| image.pullPolicy | string | `nil` | image pull policy |
+| image.repository | string | `nil` | image repository |
+| image.tag | string | `nil` | image tag |
 | ingress | object | See below | Configure the ingresses for the chart here. Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
 | ingress.main.annotations | object | `{}` | Provide additional annotations which may be required. |
 | ingress.main.enabled | bool | `false` | Enables or disables the ingress |
-| ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address |
-| ingress.main.hosts[0].hostTpl | string | `nil` | A Helm template that is evaluated for the `host` field. |
-| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path |
-| ingress.main.hosts[0].paths[0].pathTpl | string | `nil` | A Helm template that is evaluated for the `path` field. |
+| ingress.main.hosts[0].host | string | `"chart-example.local"` | Host address. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path.  Helm template can be passed. |
 | ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` | Ignored if not kubeVersion >= 1.14-0 |
-| ingress.main.hosts[0].paths[0].serviceName | string | `nil` | Overrides the service name reference for this path |
-| ingress.main.hosts[0].paths[0].servicePort | string | `nil` | Overrides the service port reference for this path |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Overrides the service name reference for this path |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Overrides the service port reference for this path |
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for this ingress. Requires Kubernetes >=1.19 |
 | ingress.main.labels | object | `{}` | Provide additional labels which may be required. |
 | ingress.main.nameOverride | string | `nil` | Override the name suffix that is used for this ingress. |
 | ingress.main.primary | bool | `true` | Make this the primary ingress (used in probes, notes, etc...). If there is more than 1 ingress, make sure that only 1 ingress is marked as primary. |
-| ingress.main.tls | list | `[]` | Configure TLS for the ingress |
+| ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | list | `[]` | Specify any initContainers here. Yaml will be passed in to the Pod as-is. |
 | lifecycle | object | `{}` | Configure the lifecycle for the main container |
-| nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node selection constraint [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
 | persistence | object | See below | Configure the persistent volumes for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. |
 | persistence.config | object | See below | Default persistence for configuration files. |
@@ -165,7 +167,6 @@ N/A
 | probes.startup.custom | bool | `false` | Set this to `true` if you wish to specify your own startupProbe |
 | probes.startup.enabled | bool | `true` | Enable the startup probe |
 | probes.startup.spec | object | See below | The spec field contains the values for the default startupProbe. If you selected `custom: true`, this field holds the definition of the startupProbe. |
-| replicas | int | `1` | Number of desired pods |
 | resources | object | `{}` | Set the resource requests / limits for the main container. |
 | schedulerName | string | `nil` | Allows specifying a custom scheduler name |
 | secret | object | `{}` | Use this to populate a secret with the values you specify. Be aware that these values are not encrypted by default, and could therefore visible to anybody with access to the values.yaml file. |
@@ -187,9 +188,8 @@ N/A
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| strategy | object | RollingUpdate | Set the controller upgrade strategy For Deployments, valid values are Recreate and RollingUpdate. For StatefulSets, valid values are OnDelete and RollingUpdate. DaemonSets ignore this. |
 | tolerations | list | `[]` | Specify taint tolerations [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) |
-| volumeClaimTemplates | list | `[]` | Used in conjunction with `controllerType: statefulset` to create individual disks for each instance. |
+| volumeClaimTemplates | list | `[]` | Used in conjunction with `controller.type: statefulset` to create individual disks for each instance. |
 
 ## Changelog
 
@@ -345,6 +345,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open an [issue](https://github.com/k8s-at-home/charts/issues/new/choose)
 - Ask a [question](https://github.com/k8s-at-home/organization/discussions)
 - Join our [Discord](https://discord.gg/sTMX7Vh) community
-
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

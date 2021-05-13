@@ -3,7 +3,7 @@ The promtail config to be included.
 */}}
 {{- define "common.addon.promtail.configmap" -}}
 {{- if .Values.addons.promtail.enabled }}
-{{- print ("---\n") | nindent 0 -}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:

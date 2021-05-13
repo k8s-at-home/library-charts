@@ -1,6 +1,4 @@
-{{/*
-Renders the Ingress objects required by the chart.
-*/}}
+{{/* Renders the Ingress objects required by the chart */}}
 {{- define "common.ingress" -}}
   {{- /* Generate named ingresses as required */ -}}
   {{- range $name, $ingress := .Values.ingress }}
@@ -10,7 +8,7 @@ Renders the Ingress objects required by the chart.
       {{/* set defaults */}}
       {{- if and (not $ingressValues.nameOverride) (ne $name (include "common.ingress.primary" $)) -}}
         {{- $_ := set $ingressValues "nameOverride" $name -}}
-      {{ end -}}
+      {{- end -}}
 
       {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
       {{- include "common.classes.ingress" $ }}
@@ -18,9 +16,7 @@ Renders the Ingress objects required by the chart.
   {{- end }}
 {{- end }}
 
-{{/*
-Return the name of the primary ingress object
-*/}}
+{{/* Return the name of the primary ingress object */}}
 {{- define "common.ingress.primary" -}}
   {{- $enabledIngresses := dict -}}
   {{- range $name, $ingress := .Values.ingress -}}

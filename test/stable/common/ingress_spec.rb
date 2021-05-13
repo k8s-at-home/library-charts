@@ -94,7 +94,7 @@ class Test < ChartTest
             main: {
               tls: [
                 {
-                  secretNameTpl: '{{ .Release.Name }}-secret'
+                  secretName: '{{ .Release.Name }}-secret'
                 }
               ]
             }
@@ -114,9 +114,10 @@ class Test < ChartTest
             main: {
               hosts: [
                 {
+                  host: 'test.local',
                   paths: [
                     {
-                      pathTpl: '{{ .Release.Name }}.path'
+                      path: '{{ .Release.Name }}.path'
                     }
                   ]
                 }
@@ -162,7 +163,7 @@ class Test < ChartTest
             main: {
               hosts: [
                 {
-                  hostTpl: '{{ .Release.Name }}.hostname',
+                  host: '{{ .Release.Name }}.hostname',
                   paths: [
                     {
                       path: "/"
@@ -186,14 +187,17 @@ class Test < ChartTest
             main: {
               hosts: [
                 {
+                  host: 'test.local',
                   paths: [
                     {
                       path: '/'
                     },
                     {
                       path: '/second',
-                      serviceName: 'pathService',
-                      servicePort: 1234
+                      service: {
+                        name: 'pathService',
+                        port: 1234
+                      }
                     }
                   ]
                 }

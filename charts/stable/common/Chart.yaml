@@ -5,13 +5,15 @@ type: library
 version: 3.0.0
 kubeVersion: ">=1.16.0-0"
 keywords:
-- k8s-at-home
-- common
+  - k8s-at-home
+  - common
 home: https://github.com/k8s-at-home/library-charts/tree/main/stable/common
 maintainers:
-- name: bjw-s
-  email: me@bjw-s.dev
-- name: onedr0p
-  email: devin.kray@gmail.com
-- name: nicholaswilde
-  email: ncwilde43@gmail.com
+  - name: bjw-s
+    email: me@bjw-s.dev
+  - name: onedr0p
+    email: devin.kray@gmail.com
+  - name: nicholaswilde
+    email: ncwilde43@gmail.com
+  - name: dirtycajunrice
+    email: nick@cajun.pro

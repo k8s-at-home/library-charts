@@ -15,9 +15,8 @@ within the common library.
   {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
 {{ end -}}
 {{- $svcType := $values.type | default "" -}}
-{{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) -}}
-
-{{- print ("---\n") | nindent 0 -}}
+{{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) }}
+---
 apiVersion: v1
 kind: Service
 metadata:

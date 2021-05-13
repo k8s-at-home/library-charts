@@ -3,7 +3,7 @@ The OpenVPN config secret to be included.
 */}}
 {{- define "common.addon.vpn.secret" -}}
 {{- if and .Values.addons.vpn.configFile (not .Values.addons.vpn.configFileSecret) }}
-{{- print ("---\n") | nindent 0 -}}
+---
 apiVersion: v1
 kind: Secret
 metadata:
