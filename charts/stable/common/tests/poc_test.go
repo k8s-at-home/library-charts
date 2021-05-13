@@ -9,11 +9,12 @@ import (
 
 type CommonPoCTestSuite struct {
     suite.Suite
-    CommonTestChartPath string
+    Chart helmchart.HelmChart
 }
 
-func (suite *CommonPoCTestSuite) SetupTest() {
-    suite.CommonTestChartPath = "../../../../helper-charts/common-test"
+func (suite *CommonPoCTestSuite) SetupSuite() {
+    suite.Chart = helmchart.New("helmChart", "../../../../helper-charts/common-test")
+    suite.Chart.UpdateDependencies()
 }
 
 // We need this function to kick off the test suite, otherwise
@@ -24,20 +25,36 @@ func TestCommonPoC(t *testing.T) {
 
 func (suite *CommonPoCTestSuite) TestExample() {
     assert := suite.Require()
-    chart := helmchart.New("helmChart", suite.CommonTestChartPath)
 
-    err := chart.Template(
-        "default",
+    err := suite.Chart.Render(
+        nil,
+        nil,
+    )
+    if err != nil {
+        panic(err.Error())
+    }
+
+    serviceManifest := suite.Chart.GetManifest("Service", "common-test")
+    assert.NotEmpty(serviceManifest)
+    assert.Equal(serviceManifest.Path("spec.type").Data(), "ClusterIP")
+}
+
+func (suite *CommonPoCTestSuite) TestExample2() {
+    assert := suite.Require()
+
+    err := suite.Chart.Render(
         nil,
         []string{
             "ingress.main.enabled=true",
+            "ingress.secondary.enabled=true",
         },
     )
     if err != nil {
         panic(err.Error())
     }
 
-    serviceManifest := chart.GetManifest("Service", "common-test")
-    assert.NotEmpty(serviceManifest)
-    assert.Equal(serviceManifest.Path("spec.type").Data(), "ClusterIP")
+    ingressMainManifest := suite.Chart.GetManifest("Ingress", "common-test")
+    ingressSecondaryManifest := suite.Chart.GetManifest("Ingress", "common-test-secondary")
+    assert.NotEmpty(ingressMainManifest)
+    assert.NotEmpty(ingressSecondaryManifest)
 }
