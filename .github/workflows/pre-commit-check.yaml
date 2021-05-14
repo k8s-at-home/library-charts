@@ -21,15 +21,7 @@ jobs:
         list-files: shell
         filters: |
           addedOrModified:
-            - added|modified: '.devcontainer/**'
-            - added|modified: '.github/**'
-            - added|modified: '.taskfiles/**'
-            - added|modified: '.vscode/**'
-            - added|modified: 'charts/**'
-            - added|modified: 'hack/**'
-            - added|modified: 'helper-charts/**'
-            - added|modified: 'pkg/**'
-            - added|modified: 'test/**'
+            - added|modified: '**'
 
     # run only if changed files were detected
     - name: Run against changes

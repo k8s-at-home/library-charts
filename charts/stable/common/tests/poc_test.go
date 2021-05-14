@@ -36,7 +36,7 @@ func (suite *CommonPoCTestSuite) TestExample() {
 
     serviceManifest := suite.Chart.GetManifest("Service", "common-test")
     assert.NotEmpty(serviceManifest)
-    assert.Equal(serviceManifest.Path("spec.type").Data(), "ClusterIP")
+    assert.Equal(serviceManifest.GetKey(".spec.type"), "ClusterIP")
 }
 
 func (suite *CommonPoCTestSuite) TestExample2() {

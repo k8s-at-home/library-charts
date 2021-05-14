@@ -1,10 +1,12 @@
 package helmchart
 
 import (
+    "errors"
     "io"
     "strings"
 
-    "github.com/Jeffail/gabs"
+    "github.com/vmware-labs/yaml-jsonpath/pkg/yamlpath"
+    "gopkg.in/yaml.v3"
     "helm.sh/helm/v3/pkg/action"
     "helm.sh/helm/v3/pkg/chart/loader"
     "helm.sh/helm/v3/pkg/cli"
@@ -12,7 +14,6 @@ import (
     "helm.sh/helm/v3/pkg/downloader"
     "helm.sh/helm/v3/pkg/getter"
     "helm.sh/helm/v3/pkg/releaseutil"
-    "sigs.k8s.io/yaml"
 )
 
 var settings *cli.EnvSettings
@@ -20,7 +21,28 @@ var settings *cli.EnvSettings
 type HelmChart struct {
     Name      string
     ChartPath string
-    Manifests map[string]map[string]*gabs.Container
+    Manifests map[string]map[string]Manifest
+}
+
+type Manifest yaml.Node
+
+func (m Manifest) GetKey(path string) string {
+    yamlNode := yaml.Node(m)
+    yp, _ := yamlpath.NewPath(path)
+    results, err := yp.Find(&yamlNode)
+    if err != nil {
+        return ""
+    }
+
+    if len(results) < 1 {
+        return ""
+    }
+
+    if len(results) > 1 {
+        return ""
+    }
+
+    return results[0].Value
 }
 
 func New(name string, chartPath string) HelmChart {
@@ -86,39 +108,39 @@ func (c *HelmChart) Render(valueFilePaths, overrideValues []string) error {
         return err
     }
 
-    manifests := make(map[string]map[string]*gabs.Container)
+    manifests := make(map[string]map[string]Manifest)
     for _, manifest := range releaseutil.SplitManifests(release.Manifest) {
-        jsonBytes, err := yaml.YAMLToJSON([]byte(manifest))
-        if err != nil {
+        var parsedYaml yaml.Node
+        if err := yaml.Unmarshal([]byte(manifest), &parsedYaml); err != nil {
             return err
         }
 
-        parsedJson, err := gabs.ParseJSON(jsonBytes)
-        if err != nil {
-            return err
-        }
+        yamlManifest := Manifest(parsedYaml)
+        kind := strings.ToLower(yamlManifest.GetKey(".kind"))
+        name := strings.ToLower(yamlManifest.GetKey(".metadata.name"))
 
-        kind := strings.ToLower(parsedJson.Path("kind").Data().(string))
-        name := strings.ToLower(parsedJson.Path("metadata.name").Data().(string))
+        if kind == "" || name == "" {
+            return errors.New("invalid manifest")
+        }
 
         data, ok := manifests[kind]
         if !ok {
-            data = make(map[string]*gabs.Container)
+            data = make(map[string]Manifest)
             manifests[kind] = data
         }
-        data[name] = parsedJson
+        data[name] = yamlManifest
     }
 
     c.Manifests = manifests
     return nil
 }
 
-func (c *HelmChart) GetManifest(kind string, name string) (manifest *gabs.Container) {
+func (c *HelmChart) GetManifest(kind string, name string) *Manifest {
     manifest, ok := c.Manifests[strings.ToLower(kind)][strings.ToLower(name)]
     if !ok {
         return nil
     }
-    return manifest
+    return &manifest
 }
 
 func defaultClient(name, namespace string) *action.Install {
