@@ -76,19 +76,27 @@ func (c *HelmChart) UpdateDependencies() error {
     return nil
 }
 
-func (c *HelmChart) Render(valueFilePaths, overrideValues []string) error {
+func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues *string) error {
     settings = cli.New()
     client := defaultClient(c.Name, settings.Namespace())
 
     p := getter.All(&cli.EnvSettings{})
     valueOpts := &v.Options{
         ValueFiles: valueFilePaths,
-        Values:     overrideValues,
+        Values:     stringValues,
     }
 
     values, err := valueOpts.MergeValues(p)
     if err != nil {
         return err
+    }
+
+    if !(rawYamlValues == nil) {
+        currentMap := map[string]interface{}{}
+        if err := yaml.Unmarshal([]byte(*rawYamlValues), &currentMap); err != nil {
+            panic(err)
+        }
+        values = mergeMaps(currentMap, values)
     }
 
     chartRequested, err := loader.Load(c.ChartPath)
@@ -150,4 +158,23 @@ func defaultClient(name, namespace string) *action.Install {
     client.DependencyUpdate = true
 
     return client
+}
+
+func mergeMaps(a, b map[string]interface{}) map[string]interface{} {
+    out := make(map[string]interface{}, len(a))
+    for k, v := range a {
+        out[k] = v
+    }
+    for k, v := range b {
+        if v, ok := v.(map[string]interface{}); ok {
+            if bv, ok := out[k]; ok {
+                if bv, ok := bv.(map[string]interface{}); ok {
+                    out[k] = mergeMaps(bv, v)
+                    continue
+                }
+            }
+        }
+        out[k] = v
+    }
+    return out
 }
