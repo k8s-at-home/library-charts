@@ -36,7 +36,7 @@ func (suite *CommonPoCTestSuite) TestExample() {
 
     serviceManifest := suite.Chart.GetManifest("Service", "common-test")
     assert.NotEmpty(serviceManifest)
-    assert.Equal(serviceManifest.GetKey(".spec.type"), "ClusterIP")
+    assert.Equal("ClusterIP", serviceManifest.GetKey(".spec.type"))
 }
 
 func (suite *CommonPoCTestSuite) TestExample2() {
@@ -57,4 +57,20 @@ func (suite *CommonPoCTestSuite) TestExample2() {
     ingressSecondaryManifest := suite.Chart.GetManifest("Ingress", "common-test-secondary")
     assert.NotEmpty(ingressMainManifest)
     assert.NotEmpty(ingressSecondaryManifest)
+}
+
+func (suite *CommonPoCTestSuite) TestExample3() {
+    assert := suite.Require()
+
+    err := suite.Chart.Render(
+        nil,
+        nil,
+    )
+    if err != nil {
+        panic(err.Error())
+    }
+
+    deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+    assert.NotEmpty(deploymentManifest)
+    assert.Equal("1", deploymentManifest.GetKey(".spec.replicas"))
 }
