@@ -36,7 +36,7 @@ func (suite *CommonPoCTestSuite) TestExample() {
 
     serviceManifest := suite.Chart.GetManifest("Service", "common-test")
     assert.NotEmpty(serviceManifest)
-    assert.Equal("ClusterIP", serviceManifest.GetKey(".spec.type"))
+    assert.Equal("ClusterIP", serviceManifest.GetKey("spec.type"))
 }
 
 func (suite *CommonPoCTestSuite) TestExample2() {
@@ -72,5 +72,5 @@ func (suite *CommonPoCTestSuite) TestExample3() {
 
     deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
     assert.NotEmpty(deploymentManifest)
-    assert.Equal("1", deploymentManifest.GetKey(".spec.replicas"))
+    assert.EqualValues(1, deploymentManifest.GetKey("spec.replicas"))
 }

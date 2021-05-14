@@ -3,10 +3,10 @@ module github.com/k8s-at-home/library-charts
 go 1.16
 
 require (
+    github.com/Jeffail/gabs v1.4.0
     github.com/stretchr/testify v1.7.0
-    github.com/vmware-labs/yaml-jsonpath v0.2.0
-    gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
     helm.sh/helm/v3 v3.5.4
+    sigs.k8s.io/yaml v1.2.0
 )
 
 replace (
