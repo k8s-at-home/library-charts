@@ -26,9 +26,15 @@ type HelmChart struct {
 
 type Manifest gabs.Container
 
-func (m *Manifest) GetKey(path string) interface{} {
-    manifest := gabs.Container(*m)
-    result := manifest.Path(path).Data()
+func (m *Manifest) GetContainer(path string) *gabs.Container {
+    container := gabs.Container(*m)
+    result := container.Path(path)
+    return result
+}
+
+func (m *Manifest) GetKeyData(path string) interface{} {
+    container := m.GetContainer(path)
+    result := container.Data()
     return result
 }
 
@@ -107,8 +113,8 @@ func (c *HelmChart) Render(valueFilePaths, overrideValues []string) error {
         }
         jsonManifest := Manifest(*jsonParsed)
 
-        kind := strings.ToLower(jsonManifest.GetKey("kind").(string))
-        name := strings.ToLower(jsonManifest.GetKey("metadata.name").(string))
+        kind := strings.ToLower(jsonManifest.GetKeyData("kind").(string))
+        name := strings.ToLower(jsonManifest.GetKeyData("metadata.name").(string))
 
         if kind == "" || name == "" {
             return errors.New("invalid manifest")
