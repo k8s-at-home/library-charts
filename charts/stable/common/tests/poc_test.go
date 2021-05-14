@@ -24,53 +24,40 @@ func TestCommonPoC(t *testing.T) {
 }
 
 func (suite *CommonPoCTestSuite) TestExample() {
-    assert := suite.Require()
-
-    err := suite.Chart.Render(
-        nil,
-        nil,
-    )
+    err := suite.Chart.Render(nil, nil)
     if err != nil {
         panic(err.Error())
     }
 
     serviceManifest := suite.Chart.GetManifest("Service", "common-test")
-    assert.NotEmpty(serviceManifest)
-    assert.Equal("ClusterIP", serviceManifest.GetKey("spec.type"))
+    suite.Assertions.NotEmpty(serviceManifest)
+    suite.Assertions.Equal("ClusterIP", serviceManifest.GetKey("spec.type"))
 }
 
 func (suite *CommonPoCTestSuite) TestExample2() {
-    assert := suite.Require()
+    values := []string{
+        "ingress.main.enabled=true",
+        "ingress.secondary.enabled=true",
+    }
 
-    err := suite.Chart.Render(
-        nil,
-        []string{
-            "ingress.main.enabled=true",
-            "ingress.secondary.enabled=true",
-        },
-    )
+    err := suite.Chart.Render(nil, values)
     if err != nil {
         panic(err.Error())
     }
 
     ingressMainManifest := suite.Chart.GetManifest("Ingress", "common-test")
     ingressSecondaryManifest := suite.Chart.GetManifest("Ingress", "common-test-secondary")
-    assert.NotEmpty(ingressMainManifest)
-    assert.NotEmpty(ingressSecondaryManifest)
+    suite.Assertions.NotEmpty(ingressMainManifest)
+    suite.Assertions.NotEmpty(ingressSecondaryManifest)
 }
 
 func (suite *CommonPoCTestSuite) TestExample3() {
-    assert := suite.Require()
-
-    err := suite.Chart.Render(
-        nil,
-        nil,
-    )
+    err := suite.Chart.Render(nil, nil)
     if err != nil {
         panic(err.Error())
     }
 
     deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-    assert.NotEmpty(deploymentManifest)
-    assert.EqualValues(1, deploymentManifest.GetKey("spec.replicas"))
+    suite.Assertions.NotEmpty(deploymentManifest)
+    suite.Assertions.EqualValues(1, deploymentManifest.GetKey("spec.replicas"))
 }
