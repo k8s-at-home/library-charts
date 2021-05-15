@@ -3,17 +3,17 @@ package common
 import (
     "testing"
 
-    helmchart "github.com/k8s-at-home/library-charts/pkg/helmunit"
+    "github.com/k8s-at-home/library-charts/test/helmunit"
     "github.com/stretchr/testify/suite"
 )
 
 type PodTestSuite struct {
     suite.Suite
-    Chart helmchart.HelmChart
+    Chart helmunit.HelmChart
 }
 
 func (suite *PodTestSuite) SetupSuite() {
-    suite.Chart = helmchart.New("common-test", "../../../../helper-charts/common-test")
+    suite.Chart = helmunit.New("common-test", "../../../../helper-charts/common-test")
     suite.Chart.UpdateDependencies()
 }
 
