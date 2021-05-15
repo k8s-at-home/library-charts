@@ -21,21 +21,7 @@ var settings *cli.EnvSettings
 type HelmChart struct {
     Name      string
     ChartPath string
-    Manifests map[string]map[string]Manifest
-}
-
-type Manifest gabs.Container
-
-func (m *Manifest) GetContainer(path string) *gabs.Container {
-    container := gabs.Container(*m)
-    result := container.Path(path)
-    return result
-}
-
-func (m *Manifest) GetKeyData(path string) interface{} {
-    container := m.GetContainer(path)
-    result := container.Data()
-    return result
+    Manifests map[string]map[string]gabs.Container
 }
 
 func New(name string, chartPath string) HelmChart {
@@ -109,7 +95,7 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
         return err
     }
 
-    manifests := make(map[string]map[string]Manifest)
+    manifests := make(map[string]map[string]gabs.Container)
     for _, manifest := range releaseutil.SplitManifests(release.Manifest) {
         jsonBytes, err := yaml.YAMLToJSON([]byte(manifest))
         if err != nil {
@@ -119,10 +105,10 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
         if err != nil {
             return err
         }
-        jsonManifest := Manifest(*jsonParsed)
+        jsonManifest := jsonParsed
 
-        kind := strings.ToLower(jsonManifest.GetKeyData("kind").(string))
-        name := strings.ToLower(jsonManifest.GetKeyData("metadata.name").(string))
+        kind := strings.ToLower(jsonManifest.Path("kind").Data().(string))
+        name := strings.ToLower(jsonManifest.Path("metadata.name").Data().(string))
 
         if kind == "" || name == "" {
             return errors.New("invalid manifest")
@@ -130,17 +116,17 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
 
         data, ok := manifests[kind]
         if !ok {
-            data = make(map[string]Manifest)
+            data = make(map[string]gabs.Container)
             manifests[kind] = data
         }
-        data[name] = jsonManifest
+        data[name] = *jsonManifest
     }
 
     c.Manifests = manifests
     return nil
 }
 
-func (c *HelmChart) GetManifest(kind string, name string) *Manifest {
+func (c *HelmChart) GetManifest(kind string, name string) *gabs.Container {
     manifest, ok := c.Manifests[strings.ToLower(kind)][strings.ToLower(name)]
     if !ok {
         return nil

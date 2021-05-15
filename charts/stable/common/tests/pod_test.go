@@ -40,7 +40,7 @@ func (suite *PodTestSuite) TestReplicas() {
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.GetKeyData("spec.replicas"))
+            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.replicas").Data())
         })
     }
 }
@@ -63,7 +63,7 @@ func (suite *PodTestSuite) TestHostNetwork() {
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.GetKeyData("spec.template.spec.hostNetwork"))
+            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.template.spec.hostNetwork").Data())
         })
     }
 }
@@ -87,7 +87,7 @@ func (suite *PodTestSuite) TestDnsPolicy() {
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.GetKeyData("spec.template.spec.dnsPolicy"))
+            suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.template.spec.dnsPolicy").Data())
         })
     }
 }
@@ -108,7 +108,7 @@ func (suite *PodTestSuite) TestAdditionalContainers() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            containers := deploymentManifest.GetContainer("spec.template.spec.containers")
+            containers := deploymentManifest.Path("spec.template.spec.containers")
             suite.Assertions.Contains(containers.Search("name").Data(), tc.expectedContainer)
         })
     }
@@ -144,7 +144,7 @@ func (suite *PodTestSuite) TestPersistenceItems() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            volumes := deploymentManifest.GetContainer("spec.template.spec.volumes")
+            volumes := deploymentManifest.Path("spec.template.spec.volumes")
 
             if tc.expectedVolumes == nil {
                 suite.Assertions.EqualValues(nil, volumes.Data())
@@ -196,12 +196,12 @@ func (suite *PodTestSuite) TestPersistenceClaimNames() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            volumes, _ := deploymentManifest.GetContainer("spec.template.spec.volumes").Children()
+            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
 
             for _, volume := range volumes {
                 volumeName := volume.Path("name").Data().(string)
                 if volumeName == tc.volumeToTest {
-                    suite.Assertions.EqualValues(tc.expectedClaimName, volume.Path("persistentVolumeClaim.claimName").Data().(string))
+                    suite.Assertions.EqualValues(tc.expectedClaimName, volume.Path("persistentVolumeClaim.claimName").Data())
                     break
                 }
             }
@@ -234,7 +234,7 @@ func (suite *PodTestSuite) TestPersistenceEmptyDir() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            volumes, _ := deploymentManifest.GetContainer("spec.template.spec.volumes").Children()
+            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
             volume := volumes[0]
             suite.Assertions.NotEmpty(volume.Data())
 
@@ -281,7 +281,7 @@ func (suite *PodTestSuite) TestHostPathVolumes() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            volumes := deploymentManifest.GetContainer("spec.template.spec.volumes")
+            volumes := deploymentManifest.Path("spec.template.spec.volumes")
 
             if tc.expectedVolumes == nil {
                 suite.Assertions.EqualValues(nil, volumes.Data())
@@ -325,7 +325,7 @@ func (suite *PodTestSuite) TestHostPathVolumePaths() {
             }
 
             deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
-            volumes, _ := deploymentManifest.GetContainer("spec.template.spec.volumes").Children()
+            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
 
             for _, volume := range volumes {
                 volumeName := volume.Path("name").Data().(string)
