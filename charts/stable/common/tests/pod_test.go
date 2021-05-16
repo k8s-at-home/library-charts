@@ -333,13 +333,71 @@ func (suite *PodTestSuite) TestHostPathVolumePaths() {
                     if tc.expectedPath == "" {
                         suite.Assertions.Nil(volume.Path("hostPath.path"))
                     } else {
-                        suite.Assertions.EqualValues(tc.expectedPath, volume.Path("hostPath.path").Data().(string))
+                        suite.Assertions.EqualValues(tc.expectedPath, volume.Path("hostPath.path").Data())
                     }
 
                     if tc.emptyDir == false {
                         suite.Assertions.Nil(volume.Path("emptyDir"))
                     } else {
                         suite.Assertions.NotNil(volume.Path("emptyDir"))
+                    }
+                    break
+                }
+            }
+        })
+    }
+}
+
+func (suite *PodTestSuite) TestVolumeClaimTemplates() {
+    values := `
+        volumeClaimTemplates:
+          - name: 'storage'
+            accessMode: 'ReadWriteOnce'
+            size: '10Gi'
+            storageClass: 'storage'
+    `
+    tests := map[string]struct {
+        values                   []string
+        volumeClaimToTest        string
+        expectedAccessMode       string
+        expectedSize             string
+        expectedStorageClassName string
+    }{
+        "StatefulSet": {values: []string{"controller.type=statefulset"}, volumeClaimToTest: "storage", expectedAccessMode: "ReadWriteOnce", expectedSize: "10Gi", expectedStorageClassName: "storage"},
+    }
+    for name, tc := range tests {
+        suite.Suite.Run(name, func() {
+            err := suite.Chart.Render(nil, tc.values, &values)
+            if err != nil {
+                suite.FailNow(err.Error())
+            }
+
+            controllerManifest := suite.Chart.GetManifest("StatefulSet", "common-test")
+            suite.Assertions.NotEmpty(controllerManifest)
+
+            volumeClaimTemplates, _ := controllerManifest.Path("spec.volumeClaimTemplates").Children()
+            suite.Assertions.NotEmpty(volumeClaimTemplates)
+
+            for _, volumeClaimTemplate := range volumeClaimTemplates {
+                volumeClaimName := volumeClaimTemplate.Path("metadata.name").Data()
+                if volumeClaimName == tc.volumeClaimToTest {
+                    if tc.expectedAccessMode == "" {
+                        suite.Assertions.Empty(controllerManifest)
+                    } else {
+                        accessModes, _ := volumeClaimTemplate.Path("spec.accessModes").Children()
+                        suite.Assertions.EqualValues(tc.expectedAccessMode, accessModes[0].Data())
+                    }
+
+                    if tc.expectedSize == "" {
+                        suite.Assertions.Empty(controllerManifest)
+                    } else {
+                        suite.Assertions.EqualValues(tc.expectedSize, volumeClaimTemplate.Path("spec.resources.requests.storage").Data())
+                    }
+
+                    if tc.expectedStorageClassName == "" {
+                        suite.Assertions.Empty(controllerManifest)
+                    } else {
+                        suite.Assertions.EqualValues(tc.expectedStorageClassName, volumeClaimTemplate.Path("spec.storageClassName").Data())
                     }
                     break
                 }

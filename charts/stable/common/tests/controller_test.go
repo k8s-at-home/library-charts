@@ -46,11 +46,14 @@ func (suite *ControllerTestSuite) TestTypes() {
                 suite.FailNow(err.Error())
             }
 
-            keys := []string{}
-            for k := range suite.Chart.Manifests {
-                keys = append(keys, k)
+            manifest := suite.Chart.GetManifest(tc.expectedController, "common-test")
+            suite.Assertions.NotEmpty(manifest)
+
+            types := map[string]interface{}{"deployment": nil, "statefulset": nil, "daemonset": nil}
+            delete(types, tc.expectedController)
+            for k := range types {
+                suite.Assertions.Empty(suite.Chart.GetManifest(k, "common-test"))
             }
-            suite.Assertions.Contains(keys, tc.expectedController)
         })
     }
 }
