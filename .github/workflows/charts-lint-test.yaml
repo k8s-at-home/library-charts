@@ -76,7 +76,7 @@ jobs:
 
     - name: Run tests
       run: |
-        go test ./charts/.../tests -json > test.json
+        go test ./charts/.../tests -json | tee test.json
 
     - name: Annotate tests
       if: always()
