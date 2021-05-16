@@ -70,9 +70,19 @@ jobs:
         path: ${{ steps.go-cache-paths.outputs.go-build }}
         key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
 
+    - name: Download modules
+      run: |
+        go mod download
+
     - name: Run tests
       run: |
-        go test ./charts/.../tests -v
+        go test ./charts/.../tests -json > test.json
+
+    - name: Annotate tests
+      if: always()
+      uses: guyarb/golang-test-annotations@v0.3.0
+      with:
+        test-results: test.json
 
   install:
     if: "!contains(github.event.head_commit.message, '[ci-skip]')"
