@@ -29,6 +29,7 @@ func New(name string, chartPath string) HelmChart {
     h := HelmChart{
         Name:      name,
         ChartPath: chartPath,
+        Manifests: make(map[string]map[string]gabs.Container),
     }
     return h
 }
@@ -60,6 +61,29 @@ func (c *HelmChart) UpdateDependencies() error {
             }
         }
     }
+    return nil
+}
+
+func (c *HelmChart) AddManifest(yamlInput []byte) error {
+    jsonManifest, err := yamlToJson(yamlInput)
+    if err != nil {
+        return err
+    }
+
+    kind := strings.ToLower(jsonManifest.Path("kind").Data().(string))
+    name := strings.ToLower(jsonManifest.Path("metadata.name").Data().(string))
+
+    if kind == "" || name == "" {
+        return errors.New("invalid manifest")
+    }
+
+    data, ok := c.Manifests[kind]
+    if !ok {
+        data = make(map[string]gabs.Container)
+        c.Manifests[kind] = data
+    }
+    data[name] = *jsonManifest
+
     return nil
 }
 
@@ -98,34 +122,20 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
         return err
     }
 
-    manifests := make(map[string]map[string]gabs.Container)
     for _, manifest := range releaseutil.SplitManifests(release.Manifest) {
-        jsonBytes, err := yaml.YAMLToJSON([]byte(manifest))
+        err := c.AddManifest([]byte(manifest))
         if err != nil {
             return err
         }
-        jsonParsed, err := gabs.ParseJSON(jsonBytes)
-        if err != nil {
-            return err
-        }
-        jsonManifest := jsonParsed
-
-        kind := strings.ToLower(jsonManifest.Path("kind").Data().(string))
-        name := strings.ToLower(jsonManifest.Path("metadata.name").Data().(string))
-
-        if kind == "" || name == "" {
-            return errors.New("invalid manifest")
-        }
-
-        data, ok := manifests[kind]
-        if !ok {
-            data = make(map[string]gabs.Container)
-            manifests[kind] = data
-        }
-        data[name] = *jsonManifest
     }
 
-    c.Manifests = manifests
+    for _, manifest := range release.Hooks {
+        err := c.AddManifest([]byte(manifest.Manifest))
+        if err != nil {
+            return err
+        }
+    }
+
     return nil
 }
 
