@@ -22,6 +22,7 @@ type HelmChart struct {
     Name      string
     ChartPath string
     Manifests map[string]map[string]gabs.Container
+    Values    map[string]interface{}
 }
 
 func New(name string, chartPath string) HelmChart {
@@ -84,6 +85,8 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
         }
         values = mergeMaps(currentMap, values)
     }
+
+    c.Values = values
 
     chartRequested, err := loader.Load(c.ChartPath)
     if err != nil {
