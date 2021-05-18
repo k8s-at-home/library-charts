@@ -81,7 +81,7 @@ func (suite *IngressTestSuite) TestValues() {
                 suite.FailNow(err.Error())
             }
 
-            ingressManifest := suite.Chart.GetManifest("Ingress", "common-test")
+            ingressManifest := suite.Chart.Manifests.Get("Ingress", "common-test")
             if tc.expectedIngress {
                 suite.Assertions.NotEmpty(ingressManifest)
 
@@ -131,7 +131,7 @@ func (suite *IngressTestSuite) TestPathServices() {
                 suite.FailNow(err.Error())
             }
 
-            ingressManifest := suite.Chart.GetManifest("Ingress", "common-test")
+            ingressManifest := suite.Chart.Manifests.Get("Ingress", "common-test")
             suite.Assertions.NotEmpty(ingressManifest)
 
             ingressRules, _ := ingressManifest.Path("spec.rules").Children()
@@ -201,7 +201,7 @@ func (suite *IngressTestSuite) TestTLS() {
                 suite.FailNow(err.Error())
             }
 
-            ingressManifest := suite.Chart.GetManifest("Ingress", "common-test")
+            ingressManifest := suite.Chart.Manifests.Get("Ingress", "common-test")
 
             if tc.expectedTLS {
                 suite.Assertions.NotEmpty(ingressManifest.Path("spec.tls").Data())

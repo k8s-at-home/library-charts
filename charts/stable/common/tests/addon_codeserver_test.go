@@ -48,7 +48,7 @@ func (suite *AddonCodeserverTestSuite) TestContainer() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
 
@@ -87,14 +87,14 @@ func (suite *AddonCodeserverTestSuite) TestDeployKey() {
                 suite.FailNow(err.Error())
             }
 
-            secretManifest := suite.Chart.GetManifest("Secret", tc.expectedSecretName)
+            secretManifest := suite.Chart.Manifests.Get("Secret", tc.expectedSecretName)
             if tc.expectSecret {
                 suite.Assertions.NotEmpty(secretManifest)
             } else {
                 suite.Assertions.Empty(secretManifest)
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
 
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()

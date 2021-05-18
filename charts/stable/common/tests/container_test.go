@@ -39,7 +39,7 @@ func (suite *ContainerTestSuite) TestCommand() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerCommand := containers[0].Path("command")
@@ -74,7 +74,7 @@ func (suite *ContainerTestSuite) TestArgs() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerArgs := containers[0].Path("args")
@@ -130,7 +130,7 @@ func (suite *ContainerTestSuite) TestEnv() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerEnv := containers[0].Path("env")
@@ -173,14 +173,14 @@ func (suite *ContainerTestSuite) TestEnvFrom() {
                 suite.FailNow(err.Error())
             }
 
-            secretManifest := suite.Chart.GetManifest("Secret", tc.expectedSecretName)
+            secretManifest := suite.Chart.Manifests.Get("Secret", tc.expectedSecretName)
             if tc.expectSecret {
                 suite.Assertions.NotEmpty(secretManifest)
             } else {
                 suite.Assertions.Empty(secretManifest)
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
 
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
@@ -215,7 +215,7 @@ func (suite *ContainerTestSuite) TestPorts() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerPorts, _ := containers[0].Path("ports").Children()
@@ -269,7 +269,7 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerVolumeMounts, _ := containers[0].Path("volumeMounts").Children()
@@ -321,7 +321,7 @@ func (suite *ContainerTestSuite) TestPersistenceHostpathMounts() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
             containerVolumeMounts, _ := containers[0].Path("volumeMounts").Children()

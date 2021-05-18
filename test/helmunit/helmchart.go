@@ -1,11 +1,8 @@
 package helmunit
 
 import (
-    "errors"
     "io"
-    "strings"
 
-    "github.com/Jeffail/gabs"
     "helm.sh/helm/v3/pkg/action"
     "helm.sh/helm/v3/pkg/chart/loader"
     "helm.sh/helm/v3/pkg/cli"
@@ -21,7 +18,9 @@ var settings *cli.EnvSettings
 type HelmChart struct {
     Name      string
     ChartPath string
-    Manifests map[string]map[string]gabs.Container
+    Manifests manifestCollection
+    Hooks     manifestCollection
+    Notes     string
     Values    map[string]interface{}
 }
 
@@ -29,7 +28,8 @@ func New(name string, chartPath string) HelmChart {
     h := HelmChart{
         Name:      name,
         ChartPath: chartPath,
-        Manifests: make(map[string]map[string]gabs.Container),
+        Manifests: make(manifestCollection),
+        Hooks:     make(manifestCollection),
     }
     return h
 }
@@ -64,32 +64,11 @@ func (c *HelmChart) UpdateDependencies() error {
     return nil
 }
 
-func (c *HelmChart) AddManifest(yamlInput []byte) error {
-    jsonManifest, err := yamlToJson(yamlInput)
-    if err != nil {
-        return err
-    }
-
-    kind := strings.ToLower(jsonManifest.Path("kind").Data().(string))
-    name := strings.ToLower(jsonManifest.Path("metadata.name").Data().(string))
-
-    if kind == "" || name == "" {
-        return errors.New("invalid manifest")
-    }
-
-    data, ok := c.Manifests[kind]
-    if !ok {
-        data = make(map[string]gabs.Container)
-        c.Manifests[kind] = data
-    }
-    data[name] = *jsonManifest
-
-    return nil
-}
-
 func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues *string) error {
     settings = cli.New()
     client := defaultClient(c.Name, settings.Namespace())
+    c.Manifests.Initialize()
+    c.Hooks.Initialize()
 
     p := getter.All(&cli.EnvSettings{})
     valueOpts := &v.Options{
@@ -123,28 +102,22 @@ func (c *HelmChart) Render(valueFilePaths, stringValues []string, rawYamlValues 
     }
 
     for _, manifest := range releaseutil.SplitManifests(release.Manifest) {
-        err := c.AddManifest([]byte(manifest))
+        err := c.Manifests.Add([]byte(manifest))
         if err != nil {
             return err
         }
     }
 
     for _, manifest := range release.Hooks {
-        err := c.AddManifest([]byte(manifest.Manifest))
+        err := c.Hooks.Add([]byte(manifest.Manifest))
         if err != nil {
             return err
         }
     }
 
-    return nil
-}
+    c.Notes = release.Info.Notes
 
-func (c *HelmChart) GetManifest(kind string, name string) *gabs.Container {
-    manifest, ok := c.Manifests[strings.ToLower(kind)][strings.ToLower(name)]
-    if !ok {
-        return nil
-    }
-    return &manifest
+    return nil
 }
 
 func defaultClient(name, namespace string) *action.Install {

@@ -52,7 +52,7 @@ func (suite *HorizontalPodAutoscalerTestSuite) TestValues() {
                 suite.FailNow(err.Error())
             }
 
-            manifest := suite.Chart.GetManifest("HorizontalPodAutoscaler", "common-test")
+            manifest := suite.Chart.Manifests.Get("HorizontalPodAutoscaler", "common-test")
             if tc.expectedHorizontalPodAutoscaler {
                 suite.Assertions.NotEmpty(manifest)
                 suite.Assertions.EqualValues(tc.expectedTarget, manifest.Path("spec.scaleTargetRef.name").Data())
@@ -91,7 +91,7 @@ func (suite *HorizontalPodAutoscalerTestSuite) TestMetrics() {
                 suite.FailNow(err.Error())
             }
 
-            manifest := suite.Chart.GetManifest("HorizontalPodAutoscaler", "common-test")
+            manifest := suite.Chart.Manifests.Get("HorizontalPodAutoscaler", "common-test")
             suite.Assertions.NotEmpty(manifest)
 
             manifestMetrics, _ := manifest.Path("spec.metrics").Children()

@@ -39,7 +39,7 @@ func (suite *PersistenceVolumeClaimTestSuite) TestName() {
                 suite.FailNow(err.Error())
             }
 
-            pvcManifest := suite.Chart.GetManifest("PersistentVolumeClaim", tc.expectedName)
+            pvcManifest := suite.Chart.Manifests.Get("PersistentVolumeClaim", tc.expectedName)
             suite.Assertions.NotEmpty(pvcManifest)
         })
     }
@@ -62,7 +62,7 @@ func (suite *PersistenceVolumeClaimTestSuite) TestStorageClass() {
                 suite.FailNow(err.Error())
             }
 
-            pvcManifest := suite.Chart.GetManifest("PersistentVolumeClaim", "common-test-config")
+            pvcManifest := suite.Chart.Manifests.Get("PersistentVolumeClaim", "common-test-config")
             suite.Assertions.NotEmpty(pvcManifest)
 
             if tc.expectedStorageClass == "-" {

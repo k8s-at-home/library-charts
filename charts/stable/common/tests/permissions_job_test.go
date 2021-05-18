@@ -51,7 +51,7 @@ func (suite *PermissionsJobTestSuite) TestPresence() {
                 suite.FailNow(err.Error())
             }
 
-            jobManifest := suite.Chart.GetManifest("Job", "common-test-auto-permissions")
+            jobManifest := suite.Chart.Hooks.Get("Job", "common-test-auto-permissions")
             if tc.expectedJob {
                 suite.Assertions.NotEmpty(jobManifest)
             } else {

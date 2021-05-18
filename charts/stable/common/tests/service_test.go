@@ -39,7 +39,7 @@ func (suite *ServiceTestSuite) TestServiceName() {
                 suite.FailNow(err.Error())
             }
 
-            serviceManifest := suite.Chart.GetManifest("Service", tc.expectedName)
+            serviceManifest := suite.Chart.Manifests.Get("Service", tc.expectedName)
             suite.Assertions.NotEmpty(serviceManifest)
         })
     }
@@ -68,7 +68,7 @@ func (suite *ServiceTestSuite) TestPortNames() {
                 suite.FailNow(err.Error())
             }
 
-            serviceManifest := suite.Chart.GetManifest("Service", "common-test")
+            serviceManifest := suite.Chart.Manifests.Get("Service", "common-test")
             suite.Assertions.NotEmpty(serviceManifest)
             servicePorts, _ := serviceManifest.Path("spec.ports").Children()
             suite.Assertions.EqualValues(tc.expectedName, servicePorts[0].Path("name").Data())
@@ -95,7 +95,7 @@ func (suite *ServiceTestSuite) TestPortProtocol() {
                 suite.FailNow(err.Error())
             }
 
-            serviceManifest := suite.Chart.GetManifest("Service", "common-test")
+            serviceManifest := suite.Chart.Manifests.Get("Service", "common-test")
             suite.Assertions.NotEmpty(serviceManifest)
             servicePorts, _ := serviceManifest.Path("spec.ports").Children()
             suite.Assertions.EqualValues(tc.expectedProtocol, servicePorts[0].Path("protocol").Data())
@@ -121,7 +121,7 @@ func (suite *ServiceTestSuite) TestAnnotations() {
                 suite.FailNow(err.Error())
             }
 
-            serviceManifest := suite.Chart.GetManifest("Service", "common-test")
+            serviceManifest := suite.Chart.Manifests.Get("Service", "common-test")
             suite.Assertions.NotEmpty(serviceManifest)
             serviceAnnotations, _ := serviceManifest.Path("metadata.annotations").Children()
             if tc.expectedAnnotations == nil {

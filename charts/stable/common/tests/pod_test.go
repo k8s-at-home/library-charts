@@ -38,7 +38,7 @@ func (suite *PodTestSuite) TestReplicas() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.replicas").Data())
         })
@@ -61,7 +61,7 @@ func (suite *PodTestSuite) TestHostNetwork() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.template.spec.hostNetwork").Data())
         })
@@ -85,7 +85,7 @@ func (suite *PodTestSuite) TestDnsPolicy() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
             suite.Assertions.EqualValues(tc.expectedValue, deploymentManifest.Path("spec.template.spec.dnsPolicy").Data())
         })
@@ -107,7 +107,7 @@ func (suite *PodTestSuite) TestAdditionalContainers() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             containers := deploymentManifest.Path("spec.template.spec.containers")
             suite.Assertions.Contains(containers.Search("name").Data(), tc.expectedContainer)
         })
@@ -143,7 +143,7 @@ func (suite *PodTestSuite) TestPersistenceItems() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             volumes := deploymentManifest.Path("spec.template.spec.volumes")
 
             if tc.expectedVolumes == nil {
@@ -195,7 +195,7 @@ func (suite *PodTestSuite) TestPersistenceClaimNames() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
 
             for _, volume := range volumes {
@@ -233,7 +233,7 @@ func (suite *PodTestSuite) TestPersistenceEmptyDir() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
             volume := volumes[0]
             suite.Assertions.NotEmpty(volume.Data())
@@ -280,7 +280,7 @@ func (suite *PodTestSuite) TestHostPathVolumes() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             volumes := deploymentManifest.Path("spec.template.spec.volumes")
 
             if tc.expectedVolumes == nil {
@@ -324,7 +324,7 @@ func (suite *PodTestSuite) TestHostPathVolumePaths() {
                 suite.FailNow(err.Error())
             }
 
-            deploymentManifest := suite.Chart.GetManifest("Deployment", "common-test")
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
 
             for _, volume := range volumes {
@@ -372,7 +372,7 @@ func (suite *PodTestSuite) TestVolumeClaimTemplates() {
                 suite.FailNow(err.Error())
             }
 
-            controllerManifest := suite.Chart.GetManifest("StatefulSet", "common-test")
+            controllerManifest := suite.Chart.Manifests.Get("StatefulSet", "common-test")
             suite.Assertions.NotEmpty(controllerManifest)
 
             volumeClaimTemplates, _ := controllerManifest.Path("spec.volumeClaimTemplates").Children()
