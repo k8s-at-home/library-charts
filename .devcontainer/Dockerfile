@@ -1,14 +1,9 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.154.0/containers/ruby/.devcontainer/base.Dockerfile
-
-# [Choice] Ruby version: 2, 2.7, 2.6, 2.5
-ARG VARIANT="2"
-FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
+ARG VARIANT="1.16"
+FROM mcr.microsoft.com/vscode/devcontainers/go:0-${VARIANT}
 
 ARG HELM_VERSION="3.5.4"
 ARG CT_VERSION=3.3.1
 ENV DEBIAN_FRONTEND=noninteractive
-
-COPY Gemfile /tmp/Gemfile
 
 RUN \
   apt-get update \
@@ -36,11 +31,6 @@ RUN \
     yamale \
     yamllint \
   && \
-  bundle config set system 'true' \
-  && bundle install --gemfile /tmp/Gemfile \
-  && \
   rm \
-    /tmp/Gemfile \
-    /tmp/Gemfile.lock \
     /tmp/helm.tar.gz \
     /tmp/ct.tar.gz

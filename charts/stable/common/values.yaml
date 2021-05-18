@@ -280,17 +280,6 @@ ingress:
     #    hosts:
     #      - chart-example.local
 
-## Adds a portal configmap for use with TrueNAS SCALE
-## This should not be enabled on other systems than TrueNAS SCALE because it requires a seperate namespace for each chart.
-# portal:
-  # enabled: false
-  ## Override default port used for the portal button when using ingress.
-  # ingressPort: 80
-  ## Override hostname used for the portal button when using nodePort
-  # host: 192.168.0.2
-  ## Override the path used in the url
-  # path: /example
-
 # -- Configure the persistent volumes for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
 # @default -- See below

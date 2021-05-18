@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple ingress objects can now be specified under the `ingress` key.
 - Multiple service objects can now be specified under the `ingress` key.
 - `nameSuffix` has been renamed to `nameOverride`.
+- Test framework has been rewritten from Ruby to Go.
 
 #### Fixed
 
@@ -35,8 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed
 
-- Removed support for `ingress.additionalIngresses`
-- Removed support for `services.additionalServices`
+- Removed support for `ingress.additionalIngresses`.
+- Removed support for `services.additionalServices`.
+- Removed support for `portal` directive until TrueNAS SCALE is out of beta.
 
 ### [2.5.0]
 
