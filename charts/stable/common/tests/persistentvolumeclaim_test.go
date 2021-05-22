@@ -52,7 +52,6 @@ func (suite *PersistenceVolumeClaimTestSuite) TestStorageClass() {
     }{
         "Default":     {values: []string{"persistence.config.enabled=true"}, expectedStorageClass: "-"},
         "CustomClass": {values: []string{"persistence.config.enabled=true", "persistence.config.storageClass=custom"}, expectedStorageClass: "custom"},
-        "ScaleZFS":    {values: []string{"persistence.config.enabled=true", "persistence.config.storageClass=SCALE-ZFS"}, expectedStorageClass: "ix-storage-class-common-test"},
         "Empty":       {values: []string{"persistence.config.enabled=true", "persistence.config.storageClass=-"}, expectedStorageClass: ""},
     }
     for name, tc := range tests {

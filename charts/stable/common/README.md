@@ -148,7 +148,7 @@ N/A
 | persistence.config.mountPath | string | `"/config"` | Where to mount the volume in the main container. |
 | persistence.config.nameOverride | string | `nil` | Override the name suffix that is used for this volume. |
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
-| persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to `SCALE-ZFS`, the default provisioner for TrueNAS SCALE is used. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
+| persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
 | persistence.shared.enabled | bool | `false` | Create an emptyDir volume to share between all containers |
 | persistence.shared.mountPath | string | `"/shared"` | Where to mount the shared volume in the main container. |
@@ -227,7 +227,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed support for `ingress.additionalIngresses`.
 - Removed support for `services.additionalServices`.
-- Removed support for `portal` directive until TrueNAS SCALE is out of beta.
+- Removed support for TrueNAS SCALE features. These are out of scope for our project.
 
 ### [2.5.0]
 

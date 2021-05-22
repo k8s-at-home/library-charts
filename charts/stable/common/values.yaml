@@ -303,7 +303,6 @@ persistence:
 
     # -- Storage Class for the config volume.
     # If set to `-`, dynamic provisioning is disabled.
-    # If set to `SCALE-ZFS`, the default provisioner for TrueNAS SCALE is used.
     # If set to something else, the given storageClass is used.
     # If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
     storageClass:  # "-"
