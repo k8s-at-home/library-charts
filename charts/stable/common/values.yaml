@@ -23,6 +23,9 @@ fullnameOverride: ""
 # Set annotations on the pod
 podAnnotations: {}
 
+# Set labels on the pod
+podLabels: {}
+
 # ## Adds a Horizontal Pod Autoscaler
 # autoscaling:
 #   enabled: false
