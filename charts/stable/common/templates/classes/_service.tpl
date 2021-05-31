@@ -3,19 +3,19 @@ This template serves as a blueprint for all Service objects that are created
 within the common library.
 */}}
 {{- define "common.classes.service" -}}
-{{- $values := .Values.service -}}
-{{- if hasKey . "ObjectValues" -}}
-  {{- with .ObjectValues.service -}}
-    {{- $values = . -}}
-  {{- end -}}
-{{ end -}}
+  {{- $values := .Values.service -}}
+  {{- if hasKey . "ObjectValues" -}}
+    {{- with .ObjectValues.service -}}
+      {{- $values = . -}}
+    {{- end -}}
+  {{ end -}}
 
-{{- $serviceName := include "common.names.fullname" . -}}
-{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
-  {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
-{{ end -}}
-{{- $svcType := $values.type | default "" -}}
-{{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) }}
+  {{- $serviceName := include "common.names.fullname" . -}}
+  {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+    {{- $serviceName = printf "%v-%v" $serviceName $values.nameOverride -}}
+  {{ end -}}
+  {{- $svcType := $values.type | default "" -}}
+  {{- $primaryPort := get $values.ports (include "common.classes.service.ports.primary" (dict "values" $values)) }}
 ---
 apiVersion: v1
 kind: Service
@@ -36,30 +36,30 @@ metadata:
 spec:
   {{- if (or (eq $svcType "ClusterIP") (empty $svcType)) }}
   type: ClusterIP
-  {{- if $values.clusterIP }}
+    {{- if $values.clusterIP }}
   clusterIP: {{ $values.clusterIP }}
-  {{end}}
+    {{- end }}
   {{- else if eq $svcType "LoadBalancer" }}
   type: {{ $svcType }}
-  {{- if $values.loadBalancerIP }}
+    {{- if $values.loadBalancerIP }}
   loadBalancerIP: {{ $values.loadBalancerIP }}
-  {{- end }}
-  {{- if $values.externalTrafficPolicy }}
+    {{- end }}
+    {{- if $values.externalTrafficPolicy }}
   externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
-  {{- end }}
-  {{- if $values.loadBalancerSourceRanges }}
+    {{- end }}
+    {{- if $values.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
-    {{ toYaml $values.loadBalancerSourceRanges | nindent 4 }}
-  {{- end -}}
+      {{ toYaml $values.loadBalancerSourceRanges | nindent 4 }}
+    {{- end -}}
   {{- else }}
   type: {{ $svcType }}
   {{- end }}
   {{- if $values.sessionAffinity }}
   sessionAffinity: {{ $values.sessionAffinity }}
-  {{- if $values.sessionAffinityConfig }}
+    {{- if $values.sessionAffinityConfig }}
   sessionAffinityConfig:
-    {{ toYaml $values.sessionAffinityConfig | nindent 4 }}
-  {{- end -}}
+      {{ toYaml $values.sessionAffinityConfig | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- with $values.externalIPs }}
   externalIPs:
@@ -70,23 +70,23 @@ spec:
   {{- end }}
   ports:
   {{- range $name, $port := $values.ports }}
-  {{- if $port.enabled }}
+    {{- if $port.enabled }}
   - port: {{ $port.port }}
     targetPort: {{ $port.targetPort | default $name }}
-    {{- if $port.protocol }}
-    {{- if or ( eq $port.protocol "HTTP" ) ( eq $port.protocol "HTTPS" ) ( eq $port.protocol "TCP" ) }}
+      {{- if $port.protocol }}
+        {{- if or ( eq $port.protocol "HTTP" ) ( eq $port.protocol "HTTPS" ) ( eq $port.protocol "TCP" ) }}
     protocol: TCP
-    {{- else }}
+        {{- else }}
     protocol: {{ $port.protocol }}
-    {{- end }}
-    {{- else }}
+        {{- end }}
+      {{- else }}
     protocol: TCP
-    {{- end }}
+      {{- end }}
     name: {{ $name }}
-    {{- if (and (eq $svcType "NodePort") (not (empty $port.nodePort))) }}
+      {{- if (and (eq $svcType "NodePort") (not (empty $port.nodePort))) }}
     nodePort: {{ $port.nodePort }}
-    {{ end }}
-  {{- end }}
+      {{- end }}
+    {{- end }}
   {{- end }}
   selector:
     {{- include "common.labels.selectorLabels" . | nindent 4 }}

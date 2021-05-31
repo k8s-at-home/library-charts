@@ -1,7 +1,4 @@
-{{/*
-This template serves as a blueprint for all PersistentVolumeClaim objects that are created
-within the common library.
-*/}}
+{{/* PersistentVolumeClaim */}}
 {{- define "common.classes.pvc" -}}
 {{- $values := .Values.persistence -}}
 {{- if hasKey . "ObjectValues" -}}
@@ -26,11 +23,11 @@ metadata:
     "helm.sh/resource-policy": keep
     {{- end }}
     {{- with $values.annotations }}
-    {{- toYaml . | nindent 4 }}
+      {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- end }}
   labels:
-  {{- include "common.labels" . | nindent 4 }}
+    {{- include "common.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $values.accessMode | quote }}

@@ -1,7 +1,4 @@
-{{/*
-This template serves as a blueprint for all Ingress objects that are created
-within the common library.
-*/}}
+{{/* Ingress blueprint */}}
 {{- define "common.classes.ingress" -}}
   {{- $ingressName := include "common.names.fullname" . -}}
   {{- $values := .Values.ingress -}}
@@ -10,7 +7,7 @@ within the common library.
     {{- with .ObjectValues.ingress -}}
       {{- $values = . -}}
     {{- end -}}
-  {{ end -}}
+  {{- end -}}
 
   {{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
     {{- $ingressName = printf "%v-%v" $ingressName $values.nameOverride -}}
@@ -53,12 +50,12 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          {{- $service := $name -}}
-          {{- $port := $primaryPort.port -}}
-          {{- if .service -}}
-            {{- $service = default $name .service.name -}}
-            {{- $port = default $primaryPort.port .service.port -}}
-          {{- end }}
+            {{- $service := $name -}}
+            {{- $port := $primaryPort.port -}}
+            {{- if .service -}}
+              {{- $service = default $name .service.name -}}
+              {{- $port = default $primaryPort.port .service.port -}}
+            {{- end }}
           - path: {{ tpl .path $ | quote }}
             {{- if $isStable }}
             pathType: {{ default "Prefix" .pathType }}
