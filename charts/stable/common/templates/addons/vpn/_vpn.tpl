@@ -24,18 +24,16 @@ It will include / inject the required templates based on the given values.
     {{- $secret | nindent 0 -}}
   {{- end -}}
 
-  {{/* Append the vpn scripts volume to the additionalVolumes */}}
-  {{- $scriptVolume := include "common.addon.vpn.scriptsVolume" . | fromYaml -}}
+  {{/* Append the vpn scripts volume to the volumes */}}
+  {{- $scriptVolume := include "common.addon.vpn.scriptsVolumeSpec" . | fromYaml -}}
   {{- if $scriptVolume -}}
-    {{- $additionalVolumes := append .Values.additionalVolumes $scriptVolume }}
-    {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
+    {{- $_ := set .Values.persistence "vpnscript" (dict "enabled" "true" "mountPath" "-" "type" "custom" "volumeSpec" $scriptVolume) -}}
   {{- end -}}
 
-  {{/* Append the vpn config volume to the additionalVolumes */}}
-  {{- $configVolume := include "common.addon.vpn.configVolume" . | fromYaml -}}
-  {{- if $configVolume -}}
-    {{- $additionalVolumes := append .Values.additionalVolumes $configVolume }}
-    {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
+  {{/* Append the vpn config volume to the volumes */}}
+  {{- $configVolume := include "common.addon.vpn.configVolumeSpec" . | fromYaml }}
+  {{ if $configVolume -}}
+    {{- $_ := set .Values.persistence "vpnconfig" (dict "enabled" "true" "mountPath" "-" "type" "custom" "volumeSpec" $configVolume) -}}
   {{- end -}}
 
   {{/* Include the networkpolicy if not empty */}}

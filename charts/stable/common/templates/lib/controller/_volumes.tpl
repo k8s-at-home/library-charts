@@ -37,13 +37,11 @@ Volumes included by the controller.
     {{- with $persistence.hostPathType }}
     type: {{ . }}
     {{- end }}
+  {{- else if eq $persistence.type "custom" }}
+    {{- toYaml $persistence.volumeSpec | nindent 2 }}
   {{- else }}
     {{- fail (printf "Not a valid persistence.type (%s)" .Values.persistence.type) }}
   {{- end }}
 {{- end }}
-{{- end }}
-
-{{- if .Values.additionalVolumes }}
-  {{- toYaml .Values.additionalVolumes | nindent 0 }}
 {{- end }}
 {{- end }}

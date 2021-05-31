@@ -298,7 +298,8 @@ persistence:
     type: pvc
 
     # -- Where to mount the volume in the main container.
-    # Defaults to `/<name_of_the_volume>`
+    # Defaults to `/<name_of_the_volume>`,
+    # setting to '-' creates the volume but disables the volumeMount.
     mountPath:  # /config
     # -- Specify if the volume should be mounted read-only.
     readOnly: false
@@ -361,11 +362,25 @@ persistence:
     # -- Specify if the path should be mounted read-only.
     readOnly: true
 
-# -- Specify any additional volumes here. (e.g. to mount nfs volumes directly)
-additionalVolumes: []
-
-# -- Specify any additional volume mounts for the main container here.
-additionalVolumeMounts: []
+  # -- Example of a custom mount
+  # @default -- See below
+  custom-mount:
+    enabled: false
+    type: custom
+    # -- Where to mount the volume in the main container.
+    # Defaults to `/<name_of_the_volume>`,
+    # setting to '-' creates the volume but disables the volumeMount.
+    mountPath:  # /custom-mount
+    # -- Specify if the volume should be mounted read-only.
+    readOnly: false
+    # -- Specify if the path should be mounted read-only.
+    readOnly: true
+    # -- Define the custom Volume spec here
+    # [[ref]](https://kubernetes.io/docs/concepts/storage/volumes/)
+    volumeSpec: {}
+      # configMap:
+      #   defaultMode: 420
+      #   name: my-settings
 
 # -- Used in conjunction with `controller.type: statefulset` to create individual disks for each instance.
 volumeClaimTemplates: []

@@ -17,11 +17,10 @@ It will include / inject the required templates based on the given values.
     {{- $secret | nindent 0 -}}
   {{- end -}}
 
-  {{/* Append the secret volume to the additionalVolumes */}}
-  {{- $volume := include "common.addon.codeserver.deployKeyVolume" . | fromYaml -}}
+  {{/* Append the secret volume to the volumes */}}
+  {{- $volume := include "common.addon.codeserver.deployKeyVolumeSpec" . | fromYaml -}}
   {{- if $volume -}}
-    {{- $additionalVolumes := append .Values.additionalVolumes $volume }}
-    {{- $_ := set .Values "additionalVolumes" $additionalVolumes -}}
+    {{- $_ := set .Values.persistence "deploykey" (dict "enabled" "true" "mountPath" "-" "type" "custom" "volumeSpec" $volume) -}}
   {{- end -}}
 
   {{/* Add the code-server service */}}

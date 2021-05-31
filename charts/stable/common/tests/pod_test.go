@@ -124,14 +124,22 @@ func (suite *PodTestSuite) TestPersistenceItems() {
             data:
                 enabled: true
                 existingClaim: dataClaim
+            custom-mount:
+                enabled: true
+                type: custom
+                volumeSpec:
+                    downwardAPI:
+                        items:
+                            - path: "labels"
+                              fieldRef:
+                                  fieldPath: metadata.labels
     `
-
     tests := map[string]struct {
         values          *string
         expectedVolumes []string
     }{
         "Default":       {values: nil, expectedVolumes: nil},
-        "MultipleItems": {values: &values, expectedVolumes: []string{"config", "cache", "data"}},
+        "MultipleItems": {values: &values, expectedVolumes: []string{"config", "cache", "data", "custom-mount"}},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {

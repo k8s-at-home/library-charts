@@ -1,14 +1,14 @@
 {{/* Volumes included by the controller */}}
 {{- define "common.controller.volumeMounts" -}}
   {{- range $index, $item := .Values.persistence }}
-    {{- if $item.enabled }}
-      {{- $mountPath := (printf "/%v" $index) -}}
-      {{- if eq "hostPath" (default "pvc" $item.type) -}}
-        {{- $mountPath = $item.hostPath -}}
-      {{- end -}}
-      {{- with $item.mountPath -}}
-        {{- $mountPath = . -}}
-      {{- end }}
+    {{- $mountPath := (printf "/%v" $index) -}}
+    {{- if eq "hostPath" (default "pvc" $item.type) -}}
+      {{- $mountPath = $item.hostPath -}}
+    {{- end -}}
+    {{- with $item.mountPath -}}
+      {{- $mountPath = . -}}
+    {{- end }}
+    {{- if and $item.enabled (ne $mountPath "-") }}
 - mountPath: {{ $mountPath }}
   name: {{ $index }}
       {{- with $item.subPath }}
@@ -18,10 +18,6 @@
   readOnly: {{ . }}
       {{- end }}
     {{- end }}
-  {{- end }}
-
-  {{- if .Values.additionalVolumeMounts }}
-    {{- toYaml .Values.additionalVolumeMounts | nindent 0 }}
   {{- end }}
 
   {{- if eq .Values.controller.type "statefulset" }}
