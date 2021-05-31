@@ -373,8 +373,6 @@ persistence:
     mountPath:  # /custom-mount
     # -- Specify if the volume should be mounted read-only.
     readOnly: false
-    # -- Specify if the path should be mounted read-only.
-    readOnly: true
     # -- Define the custom Volume spec here
     # [[ref]](https://kubernetes.io/docs/concepts/storage/volumes/)
     volumeSpec: {}
