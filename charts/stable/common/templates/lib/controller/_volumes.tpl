@@ -5,67 +5,33 @@ Volumes included by the controller.
 {{- range $index, $persistence := .Values.persistence }}
 {{- if $persistence.enabled }}
 - name: {{ $index }}
-{{- if $persistence.existingClaim }}
-{{- /* Always prefer an existingClaim if that is set */}}
-  persistentVolumeClaim:
-    claimName: {{ $persistence.existingClaim }}
-{{- else -}}
-  {{- /* Always prefer an emptyDir next if that is set */}}
-  {{- $emptyDir := false -}}
-  {{- if $persistence.emptyDir -}}
-    {{- if $persistence.emptyDir.enabled -}}
-      {{- $emptyDir = true -}}
-    {{- end -}}
-  {{- end -}}
-  {{- if $emptyDir }}
-  {{- if or $persistence.emptyDir.medium $persistence.emptyDir.sizeLimit }}
-  emptyDir:
-    {{- with $persistence.emptyDir.medium }}
-    medium: "{{ . }}"
+  {{- if eq (default "pvc" $persistence.type) "pvc" }}
+    {{- $pvcName := (include "common.names.fullname" $) -}}
+    {{- if $persistence.existingClaim }}
+      {{- /* Always prefer an existingClaim if that is set */}}
+      {{- $pvcName = $persistence.existingClaim -}}
+    {{- else -}}
+      {{- /* Otherwise refer to the PVC name */}}
+      {{- if $persistence.nameOverride -}}
+        {{- if not (eq $persistence.nameOverride "-") -}}
+          {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameOverride) -}}
+        {{- end -}}
+      {{- else -}}
+        {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $index) -}}
+      {{- end -}}
     {{- end }}
-    {{- with $persistence.emptyDir.sizeLimit }}
-    sizeLimit: "{{ . }}"
-    {{- end }}
-  {{- else }}
-  emptyDir: {}
-  {{- end }}
-  {{- else -}}
-  {{- /* Otherwise refer to the PVC name */}}
-  {{- $pvcName := (include "common.names.fullname" $) -}}
-  {{- if $persistence.nameOverride -}}
-    {{- if not (eq $persistence.nameOverride "-") -}}
-      {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $persistence.nameOverride) -}}
-    {{- end -}}
-  {{- else -}}
-    {{- $pvcName = (printf "%s-%s" (include "common.names.fullname" $) $index) -}}
-  {{- end }}
   persistentVolumeClaim:
     claimName: {{ $pvcName }}
+  {{- else if eq $persistence.type "emptyDir" }}
+    {{- $emptyDir := dict -}}
+    {{- with $persistence.medium -}}
+      {{- $_ := set $emptyDir "medium" . -}}
+    {{- end -}}
+    {{- with $persistence.sizeLimit -}}
+      {{- $_ := set $emptyDir "sizeLimit" . -}}
+    {{- end }}
+  emptyDir: {{- $emptyDir | toYaml | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
-{{- if .Values.additionalVolumes }}
-  {{- toYaml .Values.additionalVolumes | nindent 0 }}
-{{- end }}
-
-
-{{/*
-Creates Volumes for hostPaths which can be directly mounted to a container
-*/}}
-{{- range $name, $hpm := .Values.hostPathMounts -}}
-{{ if $hpm.enabled }}
-{{ if $hpm.name }}
-{{ $name = $hpm.name }}
-{{ end }}
-- name: hostpathmounts-{{ $name }}
-  {{ if $hpm.emptyDir }}
-  emptyDir: {}
-  {{- else -}}
-  hostPath:
-    path: {{ required "hostPath not set" $hpm.hostPath }}
-  {{ end }}
-{{ end }}
-{{- end -}}
-
-{{- end -}}

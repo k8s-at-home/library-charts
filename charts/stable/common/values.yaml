@@ -283,26 +283,24 @@ ingress:
     #    hosts:
     #      - chart-example.local
 
-# -- Configure the persistent volumes for the chart here.
+# -- Configure persistence for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
 # @default -- See below
 persistence:
   # -- Default persistence for configuration files.
   # @default -- See below
   config:
-    # -- Enables or disables the persistent volume
+    # -- Enables or disables the persistence item
     enabled: false
+
+    # -- Sets the persistence type
+    # Valid options are pvc, emptyDir, hostPathMount or custom
+    type: pvc
 
     # -- Where to mount the volume in the main container.
     mountPath: /config
-
     # -- Override the name suffix that is used for this volume.
     nameOverride:
-
-    emptyDir:
-      # -- Create an emptyDir volume instead of a persistent volume.
-      # [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
-      enabled: false
 
     # -- Storage Class for the config volume.
     # If set to `-`, dynamic provisioning is disabled.

@@ -118,12 +118,9 @@ func (suite *PodTestSuite) TestPersistenceItems() {
         persistence:
             cache:
                 enabled: true
-                emptyDir:
-                    enabled: true
+                type: emptyDir
             config:
                 enabled: true
-                emptyDir:
-                    enabled: false
             data:
                 enabled: true
                 existingClaim: dataClaim
@@ -214,8 +211,7 @@ func (suite *PodTestSuite) TestPersistenceEmptyDir() {
         persistence:
             config:
                 enabled: true
-                emptyDir:
-                    enabled: true
+                type: emptyDir
     `
     tests := map[string]struct {
         values            []string
@@ -223,8 +219,8 @@ func (suite *PodTestSuite) TestPersistenceEmptyDir() {
         expectedSizeLimit string
     }{
         "Enabled":       {values: nil, expectedMedium: "", expectedSizeLimit: ""},
-        "WithMedium":    {values: []string{"persistence.config.emptyDir.medium=memory"}, expectedMedium: "memory", expectedSizeLimit: ""},
-        "WithSizeLimit": {values: []string{"persistence.config.emptyDir.medium=memory", "persistence.config.emptyDir.sizeLimit=1Gi"}, expectedMedium: "memory", expectedSizeLimit: "1Gi"},
+        "WithMedium":    {values: []string{"persistence.config.medium=memory"}, expectedMedium: "memory", expectedSizeLimit: ""},
+        "WithSizeLimit": {values: []string{"persistence.config.medium=memory", "persistence.config.sizeLimit=1Gi"}, expectedMedium: "memory", expectedSizeLimit: "1Gi"},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {

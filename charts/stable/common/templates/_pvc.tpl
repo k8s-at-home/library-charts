@@ -1,18 +1,10 @@
 {{/*
-Renders the PersistentVolumeClaim objects required by the chart by returning a concatinated list
-of all the entries of the persistence key.
+Renders the Persistent Volume Claim objects required by the chart.
 */}}
 {{- define "common.pvc" -}}
   {{- /* Generate pvc as required */ -}}
   {{- range $index, $PVC := .Values.persistence }}
-    {{- $emptyDir := false -}}
-    {{- if $PVC.emptyDir -}}
-      {{- if $PVC.emptyDir.enabled -}}
-        {{- $emptyDir = true -}}
-      {{- end -}}
-    {{- end -}}
-
-    {{- if and $PVC.enabled (not (or $emptyDir $PVC.existingClaim)) -}}
+    {{- if and $PVC.enabled (eq (default "pvc" $PVC.type) "pvc") (not $PVC.existingClaim) -}}
       {{- $persistenceValues := $PVC -}}
       {{- if not $persistenceValues.nameOverride -}}
         {{- $_ := set $persistenceValues "nameOverride" $index -}}
