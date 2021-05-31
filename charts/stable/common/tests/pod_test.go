@@ -255,12 +255,12 @@ func (suite *PodTestSuite) TestHostPathVolumes() {
         persistence:
             hostpathmounts-data:
                 enabled: true
-                type: hostPathMount
+                type: hostPath
                 hostPath: "/tmp1"
                 mountPath: "/data"
             hostpathmounts-with-type:
                 enabled: true
-                type: hostPathMount
+                type: hostPath
                 hostPath: "/tmp2"
                 hostPathType: "Directory"
                 mountPath: "/data2"

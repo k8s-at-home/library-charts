@@ -251,14 +251,13 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
                 subPath: "mySubPath"
             hostpath-data:
                 enabled: true
-                type: hostPathMount
+                type: hostPath
                 mountPath: /data
                 hostPath: /tmp
             hostpath-dev:
                 enabled: true
-                type: hostPathMount
+                type: hostPath
                 hostPath: /dev
-                mountPath: /mydev
                 subPath: mySubPath
     `
     tests := map[string]struct {
@@ -272,7 +271,7 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
         "MountWithCustomMountPath": {values: &values, volumeToTest: "claimWithCustomMountPath", expectedMountPath: "/custom"},
         "MountWithSubPath":         {values: &values, volumeToTest: "claimWithSubPath", expectedMountPath: "/claimWithSubPath", expectedSubPath: "mySubPath"},
         "HostPathMount":            {values: &values, volumeToTest: "hostpath-data", expectedMountPath: "/data"},
-        "HostPathMountWithSubPath": {values: &values, volumeToTest: "hostpath-dev", expectedMountPath: "/mydev", expectedSubPath: "mySubPath"},
+        "HostPathMountWithSubPath": {values: &values, volumeToTest: "hostpath-dev", expectedMountPath: "/dev", expectedSubPath: "mySubPath"},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {

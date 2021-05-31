@@ -31,13 +31,13 @@ Volumes included by the controller.
       {{- $_ := set $emptyDir "sizeLimit" . -}}
     {{- end }}
   emptyDir: {{- $emptyDir | toYaml | nindent 4 }}
-  {{- else if eq $persistence.type "hostPathMount" }}
+  {{- else if eq $persistence.type "hostPath" }}
   hostPath:
     path: {{ required "hostPath not set" $persistence.hostPath }}
     {{- with $persistence.hostPathType }}
     type: {{ . }}
     {{- end }}
-  {{ else }}
+  {{- else }}
     {{- fail (printf "Not a valid persistence.type (%s)" .Values.persistence.type) }}
   {{- end }}
 {{- end }}

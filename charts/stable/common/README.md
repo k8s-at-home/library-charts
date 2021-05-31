@@ -143,21 +143,21 @@ N/A
 | persistence.config.accessMode | string | `"ReadWriteOnce"` | AccessMode for the persistent volume. Make sure to select an access mode that is supported by your storage provider! [[ref]](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
 | persistence.config.enabled | bool | `false` | Enables or disables the persistence item |
 | persistence.config.existingClaim | string | `nil` | If you want to reuse an existing claim, the name of the existing PVC can be passed here. |
-| persistence.config.mountPath | string | `"/config"` | Where to mount the volume in the main container. |
+| persistence.config.mountPath | string | `nil` | Where to mount the volume in the main container. Defaults to `/<name_of_the_volume>` |
 | persistence.config.nameOverride | string | `nil` | Override the name suffix that is used for this volume. |
 | persistence.config.readOnly | bool | `false` | Specify if the volume should be mounted read-only. |
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
-| persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPathMount or custom |
-| persistence.host-dev | object | See below | Example of a hostPathMount [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) |
+| persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPath or custom |
+| persistence.host-dev | object | See below | Example of a hostPath mount [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) |
 | persistence.host-dev.hostPath | string | `"/dev"` | Which path on the host should be mounted. |
 | persistence.host-dev.hostPathType | string | `""` | Specifying a hostPathType adds a check before trying to mount the path. See Kubernetes documentation for options. |
+| persistence.host-dev.mountPath | string | `nil` | Where to mount the path in the main container. Defaults to the value of `hostPath` |
 | persistence.host-dev.readOnly | bool | `true` | Specify if the path should be mounted read-only. |
 | persistence.shared | object | See below | Create an emptyDir volume to share between all containers [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
 | persistence.shared.medium | string | `nil` | Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead of the storage medium that backs the node. |
-| persistence.shared.mountPath | string | `"/shared"` | Where to mount the shared volume in the main container. |
-| persistence.shared.sizeLimit | string | `nil` | If the `SizeMemoryBackedVolumes` feature gate is enabled, you can  specify a size for memory backed volumes. |
+| persistence.shared.sizeLimit | string | `nil` | If the `SizeMemoryBackedVolumes` feature gate is enabled, you can specify a size for memory backed volumes. |
 | podAnnotations | object | `{}` | Set annotations on the pod |
 | podLabels | object | `{}` | Set labels on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |

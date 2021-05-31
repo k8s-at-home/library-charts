@@ -66,7 +66,7 @@
   {{- include "common.controller.ports" . | trim | nindent 2 }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}
   volumeMounts:
-    {{ nindent 4 . }}
+    {{- nindent 4 . }}
   {{- end }}
   {{- include "common.controller.probes" . | trim | nindent 2 }}
   {{- with .Values.resources }}

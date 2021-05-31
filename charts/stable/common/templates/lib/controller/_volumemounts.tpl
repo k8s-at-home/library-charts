@@ -2,7 +2,14 @@
 {{- define "common.controller.volumeMounts" -}}
   {{- range $index, $item := .Values.persistence }}
     {{- if $item.enabled }}
-- mountPath: {{ default (printf "/%v" $index) $item.mountPath }}
+      {{- $mountPath := (printf "/%v" $index) -}}
+      {{- if eq "hostPath" (default "pvc" $item.type) -}}
+        {{- $mountPath = $item.hostPath -}}
+      {{- end -}}
+      {{- with $item.mountPath -}}
+        {{- $mountPath = . -}}
+      {{- end }}
+- mountPath: {{ $mountPath }}
   name: {{ $index }}
       {{- with $item.subPath }}
   subPath: {{ . }}
