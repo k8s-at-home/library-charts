@@ -31,6 +31,12 @@ Volumes included by the controller.
       {{- $_ := set $emptyDir "sizeLimit" . -}}
     {{- end }}
   emptyDir: {{- $emptyDir | toYaml | nindent 4 }}
+  {{- else if eq $persistence.type "hostPathMount" }}
+  hostPath:
+    path: {{ required "hostPath not set" $persistence.hostPath }}
+    {{- with $persistence.hostPathType }}
+    type: {{ . }}
+    {{- end }}
   {{ else }}
     {{- fail (printf "Not a valid persistence.type (%s)" .Values.persistence.type) }}
   {{- end }}
@@ -40,22 +46,4 @@ Volumes included by the controller.
 {{- if .Values.additionalVolumes }}
   {{- toYaml .Values.additionalVolumes | nindent 0 }}
 {{- end }}
-
-{{/*
-Creates Volumes for hostPaths which can be directly mounted to a container
-*/}}
-{{- range $name, $hpm := .Values.hostPathMounts -}}
-{{ if $hpm.enabled }}
-{{ if $hpm.name }}
-{{ $name = $hpm.name }}
-{{ end }}
-- name: hostpathmounts-{{ $name }}
-  {{ if $hpm.emptyDir }}
-  emptyDir: {}
-  {{- else -}}
-  hostPath:
-    path: {{ required "hostPath not set" $hpm.hostPath }}
-  {{ end }}
-{{ end }}
-{{- end -}}
 {{- end }}

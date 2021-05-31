@@ -252,22 +252,25 @@ func (suite *PodTestSuite) TestPersistenceEmptyDir() {
 
 func (suite *PodTestSuite) TestHostPathVolumes() {
     values := `
-        hostPathMounts:
-            - name: data
-              enabled: true
-              mountPath: "/data"
-              hostPath: "/tmp1"
-            - name: config
-              enabled: true
-              emptyDir: true
-              mountPath: "/data"
+        persistence:
+            hostpathmounts-data:
+                enabled: true
+                type: hostPathMount
+                hostPath: "/tmp1"
+                mountPath: "/data"
+            hostpathmounts-with-type:
+                enabled: true
+                type: hostPathMount
+                hostPath: "/tmp2"
+                hostPathType: "Directory"
+                mountPath: "/data2"
     `
     tests := map[string]struct {
         values          *string
         expectedVolumes []string
     }{
         "Default":       {values: nil, expectedVolumes: nil},
-        "MultipleItems": {values: &values, expectedVolumes: []string{"hostpathmounts-data", "hostpathmounts-config"}},
+        "MultipleItems": {values: &values, expectedVolumes: []string{"hostpathmounts-data", "hostpathmounts-with-type"}},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {
@@ -286,58 +289,6 @@ func (suite *PodTestSuite) TestHostPathVolumes() {
                 searchVolumes := volumes.Search("name").Data()
                 for _, expectedVolume := range tc.expectedVolumes {
                     suite.Assertions.Contains(searchVolumes, expectedVolume)
-                }
-            }
-        })
-    }
-}
-
-func (suite *PodTestSuite) TestHostPathVolumePaths() {
-    values := `
-        hostPathMounts:
-            - name: data
-              enabled: true
-              mountPath: "/data"
-              hostPath: "/tmp1"
-            - name: config
-              enabled: true
-              emptyDir: true
-              mountPath: "/data"
-    `
-    tests := map[string]struct {
-        values       *string
-        volumeToTest string
-        expectedPath string
-        emptyDir     bool
-    }{
-        "HostPath": {values: &values, volumeToTest: "hostpathmounts-data", expectedPath: "/tmp1", emptyDir: false},
-        "EmptyDir": {values: &values, volumeToTest: "hostpathmounts-config", expectedPath: "", emptyDir: true},
-    }
-    for name, tc := range tests {
-        suite.Suite.Run(name, func() {
-            err := suite.Chart.Render(nil, nil, tc.values)
-            if err != nil {
-                suite.FailNow(err.Error())
-            }
-
-            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
-            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
-
-            for _, volume := range volumes {
-                volumeName := volume.Path("name").Data().(string)
-                if volumeName == tc.volumeToTest {
-                    if tc.expectedPath == "" {
-                        suite.Assertions.Nil(volume.Path("hostPath.path"))
-                    } else {
-                        suite.Assertions.EqualValues(tc.expectedPath, volume.Path("hostPath.path").Data())
-                    }
-
-                    if tc.emptyDir == false {
-                        suite.Assertions.Nil(volume.Path("emptyDir"))
-                    } else {
-                        suite.Assertions.NotNil(volume.Path("emptyDir"))
-                    }
-                    break
                 }
             }
         })

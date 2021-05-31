@@ -1,11 +1,14 @@
 {{/* Volumes included by the controller */}}
 {{- define "common.controller.volumeMounts" -}}
-  {{- range $index, $PVC := .Values.persistence }}
-    {{- if $PVC.enabled }}
-- mountPath: {{ $PVC.mountPath | default (printf "/%v" $index) }}
+  {{- range $index, $item := .Values.persistence }}
+    {{- if $item.enabled }}
+- mountPath: {{ default (printf "/%v" $index) $item.mountPath }}
   name: {{ $index }}
-      {{- if $PVC.subPath }}
-  subPath: {{ $PVC.subPath }}
+      {{- with $item.subPath }}
+  subPath: {{ . }}
+      {{- end }}
+      {{- with $item.readOnly }}
+  readOnly: {{ . }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -24,18 +27,4 @@
     {{- end }}
   {{- end }}
 
-  {{/* Creates mountpoints to mount hostPaths directly to the container */}}
-  {{- range $name, $hpm := .Values.hostPathMounts }}
-    {{- if $hpm.enabled }}
-      {{- $name = default $name $hpm.name }}
-- name: hostpathmounts-{{ $name }}
-  mountPath: {{ $hpm.mountPath }}
-      {{- if $hpm.subPath }}
-  subPath: {{ $hpm.subPath }}
-      {{- end }}
-      {{- if $hpm.readOnly }}
-  readOnly: {{ $hpm.readOnly }}
-      {{- end }}
-    {{- end }}
-  {{ end }}
 {{- end -}}

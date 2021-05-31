@@ -299,6 +299,8 @@ persistence:
 
     # -- Where to mount the volume in the main container.
     mountPath: /config
+    # -- Specify if the volume should be mounted read-only.
+    readOnly: false
     # -- Override the name suffix that is used for this volume.
     nameOverride:
 
@@ -325,23 +327,36 @@ persistence:
     # - Set to true to retain the PVC upon `helm uninstall`
     skipuninstall: false
 
+  # -- Create an emptyDir volume to share between all containers
+  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
+  # @default -- See below
   shared:
-    # -- Create an emptyDir volume to share between all containers
     enabled: false
-    emptyDir:
-      enabled: true
+    type: emptyDir
     # -- Where to mount the shared volume in the main container.
     mountPath: /shared
 
-# -- Mount a path on the host to the main container.
-hostPathMounts: []
-  # - name: "data"
-  #   enabled: false
-  #   emptyDir: false
-  #   mountPath: "/data"
-  #   subPath: some-subpath
-  #   hostPath: ""
-  #   readOnly: false
+    # -- Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead
+    # of the storage medium that backs the node.
+    medium:  # Memory
+
+    # -- If the `SizeMemoryBackedVolumes` feature gate is enabled, you can
+    # specify a size for memory backed volumes.
+    sizeLimit:  # 1Gi
+
+  # -- Example of a hostPathMount
+  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#hostpath)
+  # @default -- See below
+  host-dev:
+    enabled: false
+    type: hostPathMount
+    # -- Which path on the host should be mounted.
+    hostPath: /dev
+    # -- Specifying a hostPathType adds a check before trying to mount the path.
+    # See Kubernetes documentation for options.
+    hostPathType: ""
+    # -- Specify if the path should be mounted read-only.
+    readOnly: true
 
 # -- Specify any additional volumes here. (e.g. to mount nfs volumes directly)
 additionalVolumes: []

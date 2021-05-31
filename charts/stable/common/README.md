@@ -118,7 +118,6 @@ N/A
 | global.nameOverride | string | `nil` | Set an override for the prefix of the fullname |
 | hostAliases | list | `[]` | Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames. [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/) |
 | hostNetwork | bool | `false` | When using hostNetwork make sure you set dnsPolicy to `ClusterFirstWithHostNet` |
-| hostPathMounts | list | `[]` | Mount a path on the host to the main container. |
 | hostname | string | `nil` | Allows specifying explicit hostname setting |
 | image.pullPolicy | string | `nil` | image pull policy |
 | image.repository | string | `nil` | image repository |
@@ -139,19 +138,26 @@ N/A
 | initContainers | list | `[]` | Specify any initContainers here. Yaml will be passed in to the Pod as-is. |
 | lifecycle | object | `{}` | Configure the lifecycle for the main container |
 | nodeSelector | object | `{}` | Node selection constraint [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
-| persistence | object | See below | Configure the persistent volumes for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. |
+| persistence | object | See below | Configure persistence for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. |
 | persistence.config | object | See below | Default persistence for configuration files. |
 | persistence.config.accessMode | string | `"ReadWriteOnce"` | AccessMode for the persistent volume. Make sure to select an access mode that is supported by your storage provider! [[ref]](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) |
-| persistence.config.emptyDir.enabled | bool | `false` | Create an emptyDir volume instead of a persistent volume. [[ref]] (https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
-| persistence.config.enabled | bool | `false` | Enables or disables the persistent volume |
+| persistence.config.enabled | bool | `false` | Enables or disables the persistence item |
 | persistence.config.existingClaim | string | `nil` | If you want to reuse an existing claim, the name of the existing PVC can be passed here. |
 | persistence.config.mountPath | string | `"/config"` | Where to mount the volume in the main container. |
 | persistence.config.nameOverride | string | `nil` | Override the name suffix that is used for this volume. |
+| persistence.config.readOnly | bool | `false` | Specify if the volume should be mounted read-only. |
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
-| persistence.shared.enabled | bool | `false` | Create an emptyDir volume to share between all containers |
+| persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPathMount or custom |
+| persistence.host-dev | object | See below | Example of a hostPathMount [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) |
+| persistence.host-dev.hostPath | string | `"/dev"` | Which path on the host should be mounted. |
+| persistence.host-dev.hostPathType | string | `""` | Specifying a hostPathType adds a check before trying to mount the path. See Kubernetes documentation for options. |
+| persistence.host-dev.readOnly | bool | `true` | Specify if the path should be mounted read-only. |
+| persistence.shared | object | See below | Create an emptyDir volume to share between all containers [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
+| persistence.shared.medium | string | `nil` | Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead of the storage medium that backs the node. |
 | persistence.shared.mountPath | string | `"/shared"` | Where to mount the shared volume in the main container. |
+| persistence.shared.sizeLimit | string | `nil` | If the `SizeMemoryBackedVolumes` feature gate is enabled, you can  specify a size for memory backed volumes. |
 | podAnnotations | object | `{}` | Set annotations on the pod |
 | podLabels | object | `{}` | Set labels on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
@@ -219,6 +225,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple ingress objects can now be specified under the `ingress` key.
 - Multiple service objects can now be specified under the `ingress` key.
 - `nameSuffix` has been renamed to `nameOverride`.
+- `hostPathMounts` has been integrated with `persistence`.
 - Test framework has been rewritten from Ruby to Go.
 
 #### Fixed

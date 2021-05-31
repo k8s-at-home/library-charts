@@ -239,8 +239,7 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
                 enabled: true
             cache:
                 enabled: true
-                emptyDir:
-                    enabled: true
+                type: emptyDir
             claimWithCustomMountPath:
                 enabled: true
                 mountPath: /custom
@@ -250,6 +249,17 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
                 enabled: true
                 existingClaim: myClaim
                 subPath: "mySubPath"
+            hostpath-data:
+                enabled: true
+                type: hostPathMount
+                mountPath: /data
+                hostPath: /tmp
+            hostpath-dev:
+                enabled: true
+                type: hostPathMount
+                hostPath: /dev
+                mountPath: /mydev
+                subPath: mySubPath
     `
     tests := map[string]struct {
         values            *string
@@ -261,58 +271,8 @@ func (suite *ContainerTestSuite) TestPersistenceVolumeMounts() {
         "EmptyDir":                 {values: &values, volumeToTest: "cache", expectedMountPath: "/cache"},
         "MountWithCustomMountPath": {values: &values, volumeToTest: "claimWithCustomMountPath", expectedMountPath: "/custom"},
         "MountWithSubPath":         {values: &values, volumeToTest: "claimWithSubPath", expectedMountPath: "/claimWithSubPath", expectedSubPath: "mySubPath"},
-    }
-    for name, tc := range tests {
-        suite.Suite.Run(name, func() {
-            err := suite.Chart.Render(nil, nil, tc.values)
-            if err != nil {
-                suite.FailNow(err.Error())
-            }
-
-            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
-            suite.Assertions.NotEmpty(deploymentManifest)
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
-            containerVolumeMounts, _ := containers[0].Path("volumeMounts").Children()
-            suite.Assertions.NotEmpty(containerVolumeMounts)
-
-            for _, volumeMount := range containerVolumeMounts {
-                volumeMountName := volumeMount.Path("name").Data().(string)
-                if volumeMountName == tc.volumeToTest {
-                    suite.Assertions.EqualValues(tc.expectedMountPath, volumeMount.Path("mountPath").Data())
-
-                    if tc.expectedSubPath == "" {
-                        suite.Assertions.Empty(volumeMount.Path("subPath").Data())
-                    } else {
-                        suite.Assertions.EqualValues(tc.expectedSubPath, volumeMount.Path("subPath").Data())
-                    }
-                    break
-                }
-            }
-        })
-    }
-}
-
-func (suite *ContainerTestSuite) TestPersistenceHostpathMounts() {
-    values := `
-        hostPathMounts:
-          - name: data
-            enabled: true
-            mountPath: /data
-            hostPath: /tmp
-          - name: config
-            enabled: true
-            hostPath: /tmp
-            mountPath: /config
-            subPath: mySubPath
-    `
-    tests := map[string]struct {
-        values            *string
-        volumeToTest      string
-        expectedMountPath string
-        expectedSubPath   string
-    }{
-        "WithMountPath": {values: &values, volumeToTest: "hostpathmounts-data", expectedMountPath: "/data"},
-        "WithSubPath":   {values: &values, volumeToTest: "hostpathmounts-config", expectedMountPath: "/config", expectedSubPath: "mySubPath"},
+        "HostPathMount":            {values: &values, volumeToTest: "hostpath-data", expectedMountPath: "/data"},
+        "HostPathMountWithSubPath": {values: &values, volumeToTest: "hostpath-dev", expectedMountPath: "/mydev", expectedSubPath: "mySubPath"},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {
