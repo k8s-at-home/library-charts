@@ -31,7 +31,8 @@ Volumes included by the controller.
       {{- $_ := set $emptyDir "sizeLimit" . -}}
     {{- end }}
   emptyDir: {{- $emptyDir | toYaml | nindent 4 }}
-  {{- else if eq $persistence.type "emptyDir" }}
+  {{ else }}
+    {{- fail (printf "Not a valid persistence.type (%s)" .Values.persistence.type) }}
   {{- end }}
 {{- end }}
 {{- end }}
