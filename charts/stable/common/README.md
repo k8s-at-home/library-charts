@@ -153,6 +153,7 @@ N/A
 | persistence.shared.enabled | bool | `false` | Create an emptyDir volume to share between all containers |
 | persistence.shared.mountPath | string | `"/shared"` | Where to mount the shared volume in the main container. |
 | podAnnotations | object | `{}` | Set annotations on the pod |
+| podLabels | object | `{}` | Set labels on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
 | priorityClassName | string | `nil` | Custom priority class for different treatment by the scheduler |
 | probes | object | See below | Probe configuration -- [[ref]](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) |
@@ -206,6 +207,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - It is now possible to flag an ingress / service / port as primary. This will then be used
   by default in the chart notes, probes, etc.
 - Individual ports can now be enabled / disabled.
+- Allow setting Pod labels using the `podLabels` field.
+- Allow setting `volumeName` for PVC's.
 - Annotated the values.yaml to better describe what fields do. This is also reflected in the [README.md](README.md) file.
 
 #### Changed
