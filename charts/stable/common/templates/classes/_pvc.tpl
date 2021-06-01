@@ -40,4 +40,7 @@ spec:
   {{- if $values.storageClass }}
   storageClassName: {{ if (eq "-" $values.storageClass) }}""{{- else }}{{ $values.storageClass | quote }}{{- end }}
   {{- end }}
+  {{- if $values.volumeName }}
+  volumeName: {{ $values.volumeName | quote }}
+  {{- end }}
 {{- end -}}
