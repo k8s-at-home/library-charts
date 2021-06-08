@@ -1,3 +1,5 @@
+{{/* ~~~ Names ~~~ */}}
+
 {{/* Expand the name of the chart */}}
 {{- define "common.names.name" -}}
   {{- default .Chart.Name (default .Values.nameOverride .Values.global.nameOverride) | trunc 63 | trimSuffix "-" -}}
@@ -46,5 +48,57 @@ If release name contains chart name it will be used as a full name.
     {{- print "StatefulSet" -}}
   {{- else -}}
     {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* ~~~ Capabilities ~~~ */}}
+
+{{/* Allow KubeVersion to be overridden */}}
+{{- define "common.capabilities.ingress.kubeVersion" -}}
+  {{- default .Capabilities.KubeVersion.Version .Values.kubeVersionOverride -}}
+{{- end -}}
+
+{{/* Return the appropriate apiVersion for Ingress objects */}}
+{{- define "common.capabilities.ingress.apiVersion" -}}
+  {{- print "networking.k8s.io/v1" -}}
+  {{- if semverCompare "<1.19" (include "common.capabilities.ingress.kubeVersion" .) -}}
+    {{- print "beta1" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Check Ingress stability */}}
+{{- define "common.capabilities.ingress.isStable" -}}
+  {{- if eq (include "common.capabilities.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
+    {{- true -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* ~~~ Labels ~~~ */}}
+
+{{/* Common labels shared across objects */}}
+{{- define "common.labels" -}}
+helm.sh/chart: {{ include "common.names.chart" . }}
+{{ include "common.labels.selectorLabels" . }}
+  {{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+  {{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/* Selector labels shared across objects */}}
+{{- define "common.labels.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "common.names.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{/* ~~~ Values ~~~ */}}
+
+{{/* Merge the local chart values and the common chart defaults */}}
+{{- define "common.values.setup" -}}
+  {{- if .Values.common -}}
+    {{- $defaultValues := deepCopy .Values.common -}}
+    {{- $userValues := deepCopy (omit .Values "common") -}}
+    {{- $mergedValues := mustMergeOverwrite $defaultValues $userValues -}}
+    {{- $_ := set . "Values" (deepCopy $mergedValues) -}}
   {{- end -}}
 {{- end -}}

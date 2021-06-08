@@ -63,7 +63,10 @@
         name: {{ include "common.names.fullname" . }}
     {{- end }}
   {{- end }}
-  {{- include "common.controller.ports" . | trim | nindent 2 }}
+  {{- with (include "common.controller.ports" . | trim) }}
+  ports:
+    {{- nindent 4 . }}
+  {{- end }}
   {{- with (include "common.controller.volumeMounts" . | trim) }}
   volumeMounts:
     {{- nindent 4 . }}
@@ -73,4 +76,17 @@
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end -}}
+
+{{/* Ports */}}
+{{- define "common.controller.ports" -}}
+  {{- range .Values.service -}}
+    {{- if .enabled -}}
+      {{- range $name, $def := .ports }}
+- name: {{ $name }}
+  containerPort: {{ default $def.port $def.targetPort }}
+  protocol: {{ default "TCP" $def.protocol }}
+      {{- end }}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
