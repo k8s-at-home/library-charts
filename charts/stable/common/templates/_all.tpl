@@ -20,6 +20,11 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.addon.promtail" . }}
   {{- end -}}
 
+  {{- /* Enable netshoot add-on if required */ -}}
+  {{- if .Values.addons.netshoot.enabled }}
+    {{- include "common.addon.netshoot" . }}
+  {{- end -}}
+
   {{- /* Build the templates */ -}}
   {{- include "common.pvc" . }}
 

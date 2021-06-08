@@ -66,6 +66,12 @@ N/A
 | addons.codeserver.service.enabled | bool | `true` | Enable a service for the code-server add-on. |
 | addons.codeserver.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the code-server container. At least 1 volumeMount is required! |
 | addons.codeserver.workingDir | string | `""` | Specify the working dir that will be opened when code-server starts If not given, the app will default to the mountpah of the first specified volumeMount |
+| addons.netshoot | object | See values.yaml | The common library supports adding a netshoot add-on to troubleshoot network issues within a Pod. It can be configured under this key. |
+| addons.netshoot.enabled | bool | `false` | Enable running a netshoot container in the pod |
+| addons.netshoot.env | object | `{}` | Set any environment variables for netshoot here |
+| addons.netshoot.image.pullPolicy | string | `"Always"` | Specify the netshoot image pull policy |
+| addons.netshoot.image.repository | string | `"nicolaka/netshoot"` | Specify the netshoot image |
+| addons.netshoot.image.tag | string | `"latest"` | Specify the netshoot image tag |
 | addons.promtail | object | See values.yaml | The common library supports adding a promtail add-on to to access logs and ship them to loki. It can be configured under this key. |
 | addons.promtail.args | list | `[]` | Set promtail command line arguments |
 | addons.promtail.enabled | bool | `false` | Enable running a promtail container in the pod |
@@ -218,6 +224,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow setting Pod labels using the `podLabels` field.
 - Allow setting `volumeName` for PVC's.
 - Annotated the values.yaml to better describe what fields do. This is also reflected in the [README.md](README.md) file.
+- Added a [netshoot](https://github.com/nicolaka/netshoot) add-on. This allows for injecting a network trouble-shooting swiss-army sidecar container.
 
 #### Changed
 

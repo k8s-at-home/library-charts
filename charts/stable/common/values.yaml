@@ -661,3 +661,25 @@ addons:
 
     securityContext:
       runAsUser: 0
+
+  # -- The common library supports adding a netshoot add-on to troubleshoot network issues within a Pod. It can be configured under this key.
+  # @default -- See values.yaml
+  netshoot:
+    # -- Enable running a netshoot container in the pod
+    enabled: false
+
+    image:
+      # -- Specify the netshoot image
+      repository: nicolaka/netshoot
+      # -- Specify the netshoot image tag
+      tag: latest
+      # -- Specify the netshoot image pull policy
+      pullPolicy: Always
+
+    # -- Set any environment variables for netshoot here
+    env: {}
+
+    securityContext:
+      capabilities:
+        add:
+          - NET_ADMIN
