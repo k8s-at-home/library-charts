@@ -10,11 +10,12 @@ within the common library.
   {{- end -}}
 {{ end -}}
 {{- $pvcName := include "common.names.fullname" . -}}
-{{- if hasKey $values "nameSuffix" -}}
-  {{- if not (eq $values.nameSuffix "-") -}}
-    {{- $pvcName = printf "%v-%v" $pvcName $values.nameSuffix -}}
+{{- if and (hasKey $values "nameOverride") $values.nameOverride -}}
+  {{- if not (eq $values.nameOverride "-") -}}
+    {{- $pvcName = printf "%v-%v" $pvcName $values.nameOverride -}}
   {{ end -}}
-{{ end -}}
+{{ end }}
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -37,6 +38,9 @@ spec:
     requests:
       storage: {{ required (printf "size is required for PVC %v" $pvcName) $values.size | quote }}
   {{- if $values.storageClass }}
-  storageClassName: {{ if (eq "-" $values.storageClass) }}""{{- else if (eq "SCALE-ZFS" $values.storageClass ) }}{{ ( printf "%v-%v"  "ix-storage-class" .Release.Name ) }}{{- else }}{{ $values.storageClass | quote }}{{- end }}
+  storageClassName: {{ if (eq "-" $values.storageClass) }}""{{- else }}{{ $values.storageClass | quote }}{{- end }}
+  {{- end }}
+  {{- if $values.volumeName }}
+  volumeName: {{ $values.volumeName | quote }}
   {{- end }}
 {{- end -}}

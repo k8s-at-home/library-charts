@@ -3,6 +3,7 @@ The OpenVPN credentials secrets to be included.
 */}}
 {{- define "common.addon.codeserver.deployKeySecret" -}}
 {{- if or .Values.addons.codeserver.git.deployKey .Values.addons.codeserver.git.deployKeyBase64 }}
+---
 apiVersion: v1
 kind: Secret
 metadata:

@@ -2,7 +2,8 @@
 Blueprint for the NetworkPolicy object that can be included in the addon.
 */}}
 {{- define "common.addon.vpn.networkpolicy" -}}
-{{- if .Values.addons.vpn.networkPolicy.enabled -}}
+{{- if .Values.addons.vpn.networkPolicy.enabled }}
+---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:

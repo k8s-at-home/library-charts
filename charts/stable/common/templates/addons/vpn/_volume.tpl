@@ -1,9 +1,8 @@
 {{/*
 The volume (referencing VPN scripts) to be inserted into additionalVolumes.
 */}}
-{{- define "common.addon.vpn.scriptsVolume" -}}
+{{- define "common.addon.vpn.scriptsVolumeSpec" -}}
 {{- if or .Values.addons.vpn.scripts.up .Values.addons.vpn.scripts.down -}}
-name: vpnscript
 configMap:
   name: {{ include "common.names.fullname" . }}-vpn
   items:
@@ -23,9 +22,8 @@ configMap:
 {{/*
 The volume (referencing VPN config) to be inserted into additionalVolumes.
 */}}
-{{- define "common.addon.vpn.configVolume" -}}
+{{- define "common.addon.vpn.configVolumeSpec" -}}
 {{- if or .Values.addons.vpn.configFile .Values.addons.vpn.configFileSecret -}}
-name: vpnconfig
 secret:
   {{- if .Values.addons.vpn.configFileSecret }}
   secretName: {{ .Values.addons.vpn.configFileSecret }}

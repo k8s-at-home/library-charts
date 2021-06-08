@@ -13,7 +13,6 @@ and add a credentials secret if speciffied.
   {{/* Include the secret if not empty */}}
   {{- $secret := include "common.addon.openvpn.secret" . -}}
   {{- if $secret -}}
-    {{- print "---" | nindent 0 -}}
     {{- $secret | nindent 0 -}}
   {{- end -}}
 {{- end -}}

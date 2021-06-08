@@ -1,7 +1,7 @@
 # See https://pre-commit.com for more information
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.0.1
+  rev: v3.4.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
@@ -9,19 +9,10 @@ repos:
   - id: mixed-line-ending
   - id: check-merge-conflict
   - id: check-case-conflict
-  - id: check-executables-have-shebangs
   - id: check-docstring-first
-  - id: check-symlinks
-  - id: destroyed-symlinks
 
-- repo: local
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.1.10
   hooks:
-  - id: ct-lint
-    name: "Chart Test: Lint"
-    language: docker_image
-    pass_filenames: false
-    types: ['file']
-    files: '^(stable|incubator)/.*(\.ya?ml|\.tpl|\.helmignore|NOTES.txt)'
-    entry: -u 0 quay.io/helmpack/chart-testing:v3.0.0 ct
-    args:
-    - lint
+  - id: remove-crlf
+  - id: remove-tabs

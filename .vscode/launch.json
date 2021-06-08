@@ -5,30 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "UnitTest - active spec file only",
-            "type": "Ruby",
+            "name": "stable/common tests",
+            "type": "go",
             "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "program": "/usr/local/bin/bundle",
-            "args": [
-                "exec",
-                "m",
-                "-r",
-                "${relativeFile}"
-            ]
-        },
-        {
-            "name": "UnitTest - all spec files",
-            "type": "Ruby",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "program": "/usr/local/bin/bundle",
-            "args": [
-                "exec",
-                "m",
-                "-r",
-                "${workspaceFolder}/test"
-            ]
+            "mode": "test",
+            "program": "${workspaceRoot}/charts/stable/common/tests/",
+            "args": ["-test.v"],
+            "showLog": true
         }
     ]
 }
