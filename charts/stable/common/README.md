@@ -244,7 +244,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the primary ingress from `ingress` to `ingress.main`.
 - Moved the primary service from `service` to `service.main`.
 - Multiple ingress objects can now be specified under the `ingress` key.
-- Multiple service objects can now be specified under the `ingress` key.
+- Multiple service objects can now be specified under the `service` key.
 - `nameSuffix` has been renamed to `nameOverride`.
 - `hostPathMounts` has been integrated with `persistence`.
 - `additionalVolumes` has been integrated with `persistence`.
