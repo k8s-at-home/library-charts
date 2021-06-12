@@ -39,6 +39,9 @@ Main entrypoint for the common library chart. It will render all underlying temp
   {{ else if eq .Values.controller.type "statefulset"  }}
     {{- include "common.statefulset" . | nindent 0 }}
   {{ else }}
+  {{ else if eq .Values.controller.type "none"  }}
+    {{- /* No controller */ -}}
+  {{ else }}
     {{- fail (printf "Not a valid controller.type (%s)" .Values.controller.type) }}
   {{- end -}}
 
