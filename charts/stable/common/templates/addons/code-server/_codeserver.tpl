@@ -39,9 +39,7 @@ It will include / inject the required templates based on the given values.
 
     {{/* Determine the target service name & port */}}
     {{- $svcName := printf "%v-codeserver" (include "common.names.fullname" .) -}}
-    {{- $_ := set $ingressValues "serviceName" $svcName -}}
-    {{- $_ := set $ingressValues "servicePort" .Values.addons.codeserver.service.ports.codeserver.port -}}
-
+    {{- $_ := set (index (index $ingressValues.hosts 0).paths 0) "service" (dict "name" $svcName "port" .Values.addons.codeserver.service.ports.codeserver.port) -}}
     {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
     {{- include "common.classes.ingress" $ -}}
     {{- $_ := unset $ "ObjectValues" -}}
