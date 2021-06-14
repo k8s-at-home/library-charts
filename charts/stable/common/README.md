@@ -106,6 +106,7 @@ N/A
 | autoscaling | object | <disabled> | Add a Horizontal Pod Autoscaler |
 | command | list | `[]` | Override the command(s) for the default container |
 | controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
+| controller.enabled | bool | `true` | enable the controller. |
 | controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
 | controller.replicas | int | `1` | Number of desired pods |
 | controller.revisionHistoryLimit | int | `3` | ReplicaSet revision history limit |
@@ -214,7 +215,11 @@ All notable changes to this library Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-#### [3.1.0]
+### [3.1.0]
+
+#### Added
+
+- Support to disable the controller when no container is deployed.
 
 #### Fixed
 
