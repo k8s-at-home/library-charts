@@ -3,7 +3,7 @@ package common
 import (
     "testing"
 
-    "github.com/Jeffail/gabs"
+    "github.com/Jeffail/gabs/v2"
     "github.com/k8s-at-home/library-charts/test/helmunit"
     "github.com/stretchr/testify/suite"
 )
@@ -43,7 +43,7 @@ func (suite *AddonVpnTestSuite) TestContainer() {
 
             deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
+            containers := deploymentManifest.Path("spec.template.spec.containers").Children()
 
             var vpnContainer *gabs.Container
             for _, container := range containers {
@@ -89,7 +89,7 @@ func (suite *AddonVpnTestSuite) TestConfiguration() {
             deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
 
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
+            containers := deploymentManifest.Path("spec.template.spec.containers").Children()
             var vpnContainer *gabs.Container
             for _, container := range containers {
                 containerName := container.Path("name").Data().(string)
@@ -100,7 +100,7 @@ func (suite *AddonVpnTestSuite) TestConfiguration() {
             }
             suite.Assertions.NotEmpty(vpnContainer)
 
-            volumeMounts, _ := vpnContainer.Path("volumeMounts").Children()
+            volumeMounts := vpnContainer.Path("volumeMounts").Children()
             var vpnConfigVolumeMount *gabs.Container
             for _, volumeMount := range volumeMounts {
                 volumeMountName := volumeMount.Path("name").Data().(string)
@@ -113,7 +113,7 @@ func (suite *AddonVpnTestSuite) TestConfiguration() {
             suite.Assertions.EqualValues("/vpn/vpn.conf", vpnConfigVolumeMount.Path("mountPath").Data())
             suite.Assertions.EqualValues("vpnConfigfile", vpnConfigVolumeMount.Path("subPath").Data())
 
-            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
+            volumes := deploymentManifest.Path("spec.template.spec.volumes").Children()
             var vpnConfigVolume *gabs.Container
             for _, volume := range volumes {
                 volumeName := volume.Path("name").Data().(string)

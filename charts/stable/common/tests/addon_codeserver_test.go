@@ -3,7 +3,7 @@ package common
 import (
     "testing"
 
-    "github.com/Jeffail/gabs"
+    "github.com/Jeffail/gabs/v2"
     "github.com/k8s-at-home/library-charts/test/helmunit"
     "github.com/stretchr/testify/suite"
 )
@@ -50,7 +50,7 @@ func (suite *AddonCodeserverTestSuite) TestContainer() {
 
             deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
+            containers := deploymentManifest.Path("spec.template.spec.containers").Children()
 
             var codeserverContainer *gabs.Container
             for _, container := range containers {
@@ -97,7 +97,7 @@ func (suite *AddonCodeserverTestSuite) TestDeployKey() {
             deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
 
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
+            containers := deploymentManifest.Path("spec.template.spec.containers").Children()
             var codeserverContainer *gabs.Container
             for _, container := range containers {
                 containerName := container.Path("name").Data().(string)
@@ -108,7 +108,7 @@ func (suite *AddonCodeserverTestSuite) TestDeployKey() {
             }
             suite.Assertions.NotEmpty(codeserverContainer)
 
-            volumeMounts, _ := codeserverContainer.Path("volumeMounts").Children()
+            volumeMounts := codeserverContainer.Path("volumeMounts").Children()
             var gitDeploykeyVolumeMount *gabs.Container
             for _, volumeMount := range volumeMounts {
                 volumeMountName := volumeMount.Path("name").Data().(string)
@@ -121,7 +121,7 @@ func (suite *AddonCodeserverTestSuite) TestDeployKey() {
             suite.Assertions.EqualValues("/root/.ssh/id_rsa", gitDeploykeyVolumeMount.Path("mountPath").Data())
             suite.Assertions.EqualValues("id_rsa", gitDeploykeyVolumeMount.Path("subPath").Data())
 
-            volumes, _ := deploymentManifest.Path("spec.template.spec.volumes").Children()
+            volumes := deploymentManifest.Path("spec.template.spec.volumes").Children()
             var gitDeploykeyVolume *gabs.Container
             for _, volume := range volumes {
                 volumeName := volume.Path("name").Data().(string)
