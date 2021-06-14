@@ -26,9 +26,7 @@ It will include / inject the required templates based on the given values.
   {{/* Add the code-server service */}}
   {{- if .Values.addons.codeserver.service.enabled -}}
     {{- $serviceValues := .Values.addons.codeserver.service -}}
-    {{- if not $serviceValues.nameOverride -}}
-        {{- $_ := set $serviceValues "nameOverride" "codeserver" -}}
-    {{ end -}}
+    {{- $_ := set $serviceValues "nameOverride" "codeserver" -}}
     {{- $_ := set $ "ObjectValues" (dict "service" $serviceValues) -}}
     {{- include "common.classes.service" $ -}}
     {{- $_ := unset $ "ObjectValues" -}}
@@ -37,15 +35,11 @@ It will include / inject the required templates based on the given values.
   {{/* Add the code-server ingress */}}
   {{- if .Values.addons.codeserver.ingress.enabled -}}
     {{- $ingressValues := .Values.addons.codeserver.ingress -}}
-    {{- if not $ingressValues.nameOverride -}}
-        {{- $_ := set $ingressValues "nameOverride" "codeserver" -}}
-    {{ end -}}
+    {{- $_ := set $ingressValues "nameOverride" "codeserver" -}}
 
     {{/* Determine the target service name & port */}}
-    {{- $svcName := printf "%v-%v" (include "common.names.fullname" .) .Values.addons.codeserver.service.nameOverride -}}
-    {{- $_ := set $ingressValues "serviceName" $svcName -}}
-    {{- $_ := set $ingressValues "servicePort" .Values.addons.codeserver.service.ports.codeserver.port -}}
-
+    {{- $svcName := printf "%v-codeserver" (include "common.names.fullname" .) -}}
+    {{- $_ := set (index (index $ingressValues.hosts 0).paths 0) "service" (dict "name" $svcName "port" .Values.addons.codeserver.service.ports.codeserver.port) -}}
     {{- $_ := set $ "ObjectValues" (dict "ingress" $ingressValues) -}}
     {{- include "common.classes.ingress" $ -}}
     {{- $_ := unset $ "ObjectValues" -}}

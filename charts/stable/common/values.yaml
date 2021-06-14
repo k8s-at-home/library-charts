@@ -607,7 +607,6 @@ addons:
     ingress:
       # -- Enable an ingress for the code-server add-on.
       enabled: false
-      nameOverride: codeserver
       annotations: {}
         # kubernetes.io/ingress.class: nginx
         # kubernetes.io/tls-acme: "true"
