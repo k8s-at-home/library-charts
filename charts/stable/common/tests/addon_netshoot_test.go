@@ -3,7 +3,7 @@ package common
 import (
     "testing"
 
-    "github.com/Jeffail/gabs"
+    "github.com/Jeffail/gabs/v2"
     "github.com/k8s-at-home/library-charts/test/helmunit"
     "github.com/stretchr/testify/suite"
 )
@@ -43,7 +43,7 @@ func (suite *AddonNetshootTestSuite) TestContainer() {
 
             deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
             suite.Assertions.NotEmpty(deploymentManifest)
-            containers, _ := deploymentManifest.Path("spec.template.spec.containers").Children()
+            containers := deploymentManifest.Path("spec.template.spec.containers").Children()
 
             var netshootContainer *gabs.Container
             for _, container := range containers {
