@@ -220,6 +220,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 
 - Fixed an issue where the default service would not be determined correctly for Ingress objects.
+- Fixed an issue where the code-server addon ingress would reference the wrong service when multiple hosts were specified (https://github.com/k8s-at-home/library-charts/issues/64).
 
 ### [3.1.0]
 
