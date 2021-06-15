@@ -111,7 +111,7 @@ jobs:
 
     - name: Configure Git
       run: |
-        git config user.name "$k8s-at-home[bot]"
+        git config user.name "k8s-at-home[bot]"
         git config user.email "<k8s-at-home[bot]@users.noreply.github.com>"
 
     - name: Install Helm
