@@ -403,6 +403,10 @@ nodeSelector: {}
 # [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
 affinity: {}
 
+# -- Defines topologySpreadConstraint rules.
+# [[ref]](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/)
+topologySpreadConstraints: []
+
 # -- Specify taint tolerations
 # [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 tolerations: []
