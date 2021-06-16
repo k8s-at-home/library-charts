@@ -406,6 +406,10 @@ affinity: {}
 # -- Defines topologySpreadConstraint rules.
 # [[ref]](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/)
 topologySpreadConstraints: []
+# - maxSkew: <integer>
+#   topologyKey: <string>
+#   whenUnsatisfiable: <string>
+#   labelSelector: <object>
 
 # -- Specify taint tolerations
 # [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
