@@ -155,6 +155,9 @@ N/A
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
 | persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPath or custom |
+| persistence.shared | object | See below | Create an emptyDir volume to share between all containers [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
+| persistence.shared.medium | string | `nil` | Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead of the storage medium that backs the node. |
+| persistence.shared.sizeLimit | string | `nil` | If the `SizeMemoryBackedVolumes` feature gate is enabled, you can specify a size for memory backed volumes. |
 | podAnnotations | object | `{}` | Set annotations on the pod |
 | podLabels | object | `{}` | Set labels on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
@@ -213,7 +216,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed
 
-- Removed persistence examples (except for `config`) from the `values.yaml` file. These will be documented instead in [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
+- Removed persistence examples from the `values.yaml` file. These will be documented instead in [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
 
 ### [3.1.1]
 

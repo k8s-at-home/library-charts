@@ -331,6 +331,22 @@ persistence:
     # - Set to true to retain the PVC upon `helm uninstall`
     skipuninstall: false
 
+  # -- Create an emptyDir volume to share between all containers
+  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
+  # @default -- See below
+  shared:
+    enabled: false
+    type: emptyDir
+    mountPath: /shared
+
+    # -- Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead
+    # of the storage medium that backs the node.
+    medium:  # Memory
+
+    # -- If the `SizeMemoryBackedVolumes` feature gate is enabled, you can
+    # specify a size for memory backed volumes.
+    sizeLimit:  # 1Gi
+
 # -- Used in conjunction with `controller.type: statefulset` to create individual disks for each instance.
 volumeClaimTemplates: []
 # - name: data
