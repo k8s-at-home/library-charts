@@ -331,57 +331,6 @@ persistence:
     # - Set to true to retain the PVC upon `helm uninstall`
     skipuninstall: false
 
-  # -- Create an emptyDir volume to share between all containers
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
-  # @default -- See below
-  shared:
-    enabled: false
-    type: emptyDir
-    mountPath: /shared
-
-    # -- Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead
-    # of the storage medium that backs the node.
-    medium:  # Memory
-
-    # -- If the `SizeMemoryBackedVolumes` feature gate is enabled, you can
-    # specify a size for memory backed volumes.
-    sizeLimit:  # 1Gi
-
-  # -- Example of a hostPath mount
-  # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#hostpath)
-  # @default -- See below
-  host-dev:
-    enabled: false
-    type: hostPath
-    # -- Which path on the host should be mounted.
-    hostPath: /dev
-    # -- Where to mount the path in the main container.
-    # Defaults to the value of `hostPath`
-    mountPath:  # /myDev
-    # -- Specifying a hostPathType adds a check before trying to mount the path.
-    # See Kubernetes documentation for options.
-    hostPathType: ""
-    # -- Specify if the path should be mounted read-only.
-    readOnly: true
-
-  # -- Example of a custom mount
-  # @default -- See below
-  custom-mount:
-    enabled: false
-    type: custom
-    # -- Where to mount the volume in the main container.
-    # Defaults to `/<name_of_the_volume>`,
-    # setting to '-' creates the volume but disables the volumeMount.
-    mountPath:  # /custom-mount
-    # -- Specify if the volume should be mounted read-only.
-    readOnly: false
-    # -- Define the custom Volume spec here
-    # [[ref]](https://kubernetes.io/docs/concepts/storage/volumes/)
-    volumeSpec: {}
-      # configMap:
-      #   defaultMode: 420
-      #   name: my-settings
-
 # -- Used in conjunction with `controller.type: statefulset` to create individual disks for each instance.
 volumeClaimTemplates: []
 # - name: data
