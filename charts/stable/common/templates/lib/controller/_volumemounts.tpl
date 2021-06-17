@@ -1,23 +1,41 @@
 {{/* Volumes included by the controller */}}
 {{- define "common.controller.volumeMounts" -}}
-  {{- range $index, $item := .Values.persistence }}
-    {{- $mountPath := (printf "/%v" $index) -}}
-    {{- if eq "hostPath" (default "pvc" $item.type) -}}
-      {{- $mountPath = $item.hostPath -}}
-    {{- end -}}
-    {{- with $item.mountPath -}}
-      {{- $mountPath = . -}}
-    {{- end }}
-    {{- if and $item.enabled (ne $mountPath "-") }}
-- mountPath: {{ $mountPath }}
-  name: {{ $index }}
-      {{- with $item.subPath }}
-  subPath: {{ . }}
-      {{- end }}
-      {{- with $item.readOnly }}
+  {{- range $persistenceIndex, $persistenceItem := .Values.persistence }}
+    {{- if $persistenceItem.enabled -}}
+      {{- if kindIs "slice" $persistenceItem.subPath -}}
+        {{- if $persistenceItem.mountPath -}}
+          {{- fail (printf "Cannot use persistence.mountPath with a subPath list (%s)" $persistenceIndex) }}
+        {{- end -}}
+        {{- range $subPathIndex, $subPathItem := $persistenceItem.subPath }}
+- name: {{ $persistenceIndex }}
+  subPath: {{ required "subPaths as a list of maps require a path field" $subPathItem.path }}
+  mountPath: {{ required "subPaths as a list of maps require an explicit mountPath field" $subPathItem.mountPath }}
+          {{- with $subPathItem.readOnly }}
   readOnly: {{ . }}
-      {{- end }}
-    {{- end }}
+          {{- end }}
+        {{- end -}}
+      {{- else -}}
+        {{/* Set the default mountPath to /<name_of_the_peristence_item> */}}
+        {{- $mountPath := (printf "/%v" $persistenceIndex) -}}
+        {{- if eq "hostPath" (default "pvc" $persistenceItem.type) -}}
+          {{- $mountPath = $persistenceItem.hostPath -}}
+        {{- end -}}
+        {{/* Use the specified mountPath if provided */}}
+        {{- with $persistenceItem.mountPath -}}
+          {{- $mountPath = . -}}
+        {{- end }}
+        {{- if ne $mountPath "-" }}
+- name: {{ $persistenceIndex }}
+  mountPath: {{ $mountPath }}
+          {{- with $persistenceItem.subPath }}
+  subPath: {{ . }}
+          {{- end }}
+          {{- with $persistenceItem.readOnly }}
+  readOnly: {{ . }}
+          {{- end }}
+        {{- end }}
+      {{- end -}}
+    {{- end -}}
   {{- end }}
 
   {{- if eq .Values.controller.type "statefulset" }}
@@ -29,5 +47,4 @@
       {{- end }}
     {{- end }}
   {{- end }}
-
 {{- end -}}
