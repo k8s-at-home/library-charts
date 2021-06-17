@@ -1,6 +1,7 @@
 {{/* Volumes included by the controller */}}
 {{- define "common.controller.volumeMounts" -}}
   {{- range $persistenceIndex, $persistenceItem := .Values.persistence }}
+    {{- if $persistenceItem.enabled -}}
       {{- if kindIs "slice" $persistenceItem.subPath -}}
         {{- if $persistenceItem.mountPath -}}
           {{- fail (printf "Cannot use persistence.mountPath with a subPath list (%s)" $persistenceIndex) }}
@@ -23,7 +24,7 @@
         {{- with $persistenceItem.mountPath -}}
           {{- $mountPath = . -}}
         {{- end }}
-        {{- if and $persistenceItem.enabled (ne $mountPath "-") }}
+        {{- if ne $mountPath "-" }}
 - name: {{ $persistenceIndex }}
   mountPath: {{ $mountPath }}
           {{- with $persistenceItem.subPath }}
@@ -34,6 +35,7 @@
           {{- end }}
         {{- end }}
       {{- end -}}
+    {{- end -}}
   {{- end }}
 
   {{- if eq .Values.controller.type "statefulset" }}
