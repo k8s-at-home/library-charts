@@ -1,6 +1,8 @@
 {
     "recommendations": [
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
         "ms-vscode-remote.remote-containers",
-        "golang.go"
+        "golang.go",
+        "mrmlnc.vscode-json5"
     ]
 }
