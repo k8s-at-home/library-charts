@@ -216,7 +216,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed
 
-- Removed persistence examples from the `values.yaml` file. These will be documented instead in [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
+- Removed persistence examples from the `values.yaml` file. These will be documented instead in [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage/).
 
 ### [3.1.1]
 
@@ -267,8 +267,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple ingress objects can now be specified under the `ingress` key.
 - Multiple service objects can now be specified under the `service` key.
 - `nameSuffix` has been renamed to `nameOverride`.
-- `hostPathMounts` has been integrated with `persistence`.
-- `additionalVolumes` has been integrated with `persistence`.
+- `hostPathMounts` has been integrated with `persistence`. See [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage/).
+- `additionalVolumes` has been integrated with `persistence`. See [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage/).
 - Test framework has been rewritten from Ruby to Go.
 
 #### Fixed
