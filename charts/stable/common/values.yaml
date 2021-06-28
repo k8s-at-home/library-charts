@@ -437,7 +437,7 @@ addons:
     wireguard:
       image:
         # -- Specify the WireGuard image
-        repository: docker pull ghcr.io/k8s-at-home/wireguard
+        repository: ghcr.io/k8s-at-home/wireguard
         # -- Specify the WireGuard image tag
         tag: v1.0.20210424
         # -- Specify the WireGuard image pull policy
