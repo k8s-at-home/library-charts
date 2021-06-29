@@ -1,5 +1,10 @@
 # Library Charts
 
+# Helm charts
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 Most of our application Helm charts consume our Common library Helm chart.
 
 ## Background
@@ -32,3 +37,28 @@ We have a few outlets for getting support with our projects:
 - Visit our [Docs](https://docs.k8s-at-home.com/).
 - Bugs or feature requests should be opened in an [issue](https://github.com/k8s-at-home/library-charts/issues/new/choose).
 - Questions or comments should be discussed in our [Discord](https://discord.gg/sTMX7Vh) or via [Github discussions](https://github.com/k8s-at-home/organization/discussions).
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/bjw-s"><img src="https://avatars.githubusercontent.com/u/6213398?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bᴇʀɴᴅ Sᴄʜᴏʀɢᴇʀs</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=bjw-s" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/onedr0p"><img src="https://avatars.githubusercontent.com/u/213795?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ᗪєνιη ᗷυнʟ</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=onedr0p" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/angelnu"><img src="https://avatars.githubusercontent.com/u/4406403?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Angel Nunez Mencias</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=angelnu" title="Code">💻</a></td>
+    <td align="center"><a href="https://winston.milli.ng/"><img src="https://avatars.githubusercontent.com/u/6162814?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Winston R. Milling</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=wrmilling" title="Code">💻</a></td>
+    <td align="center"><a href="https://cajun.pro/"><img src="https://avatars.githubusercontent.com/u/15788890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nicholas St. Germain</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=dirtycajunrice" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/billtomturner"><img src="https://avatars.githubusercontent.com/u/65121940?v=4?s=100" width="100px;" alt=""/><br /><sub><b>billtomturner</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=billtomturner" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/jr0dd"><img src="https://avatars.githubusercontent.com/u/285797?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jr0dd</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=jr0dd" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

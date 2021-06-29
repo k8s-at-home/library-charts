@@ -1,0 +1,78 @@
+{
+  "projectName": "library-charts",
+  "projectOwner": "k8s-at-home",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "bjw-s",
+      "name": "Bᴇʀɴᴅ Sᴄʜᴏʀɢᴇʀs",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6213398?v=4",
+      "profile": "https://github.com/bjw-s",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "onedr0p",
+      "name": "ᗪєνιη ᗷυнʟ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/213795?v=4",
+      "profile": "https://github.com/onedr0p",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "angelnu",
+      "name": "Angel Nunez Mencias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4406403?v=4",
+      "profile": "https://github.com/angelnu",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "wrmilling",
+      "name": "Winston R. Milling",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6162814?v=4",
+      "profile": "https://winston.milli.ng/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "dirtycajunrice",
+      "name": "Nicholas St. Germain",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15788890?v=4",
+      "profile": "https://cajun.pro/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "billtomturner",
+      "name": "billtomturner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/65121940?v=4",
+      "profile": "https://github.com/billtomturner",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "jr0dd",
+      "name": "jr0dd",
+      "avatar_url": "https://avatars.githubusercontent.com/u/285797?v=4",
+      "profile": "https://github.com/jr0dd",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "commitConvention": "none"
+}
