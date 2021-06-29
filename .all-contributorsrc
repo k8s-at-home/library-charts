@@ -71,8 +71,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "allenporter",
+      "name": "Allen Porter",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6026418?v=4",
+      "profile": "https://github.com/allenporter",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "commitConvention": "none"
+  "commitConvention": "none",
+  "skipCi": true
 }

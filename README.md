@@ -2,7 +2,7 @@
 
 # Helm charts
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Most of our application Helm charts consume our Common library Helm chart.
@@ -55,10 +55,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/billtomturner"><img src="https://avatars.githubusercontent.com/u/65121940?v=4?s=100" width="100px;" alt=""/><br /><sub><b>billtomturner</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=billtomturner" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jr0dd"><img src="https://avatars.githubusercontent.com/u/285797?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jr0dd</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=jr0dd" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/allenporter"><img src="https://avatars.githubusercontent.com/u/6026418?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Allen Porter</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=allenporter" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
