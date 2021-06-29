@@ -287,6 +287,7 @@ ingress:
 
 # -- Configure persistence for the chart here.
 # Additional items can be added by adding a dictionary key similar to the 'config' key.
+# [[ref]](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage)
 # @default -- See below
 persistence:
   # -- Default persistence for configuration files.
