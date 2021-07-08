@@ -207,6 +207,21 @@ All notable changes to this library Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [3.3.0]
+
+#### Added
+
+- Support ability to specify the [mountPropagation](https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation) key under persistence items (https://github.com/k8s-at-home/library-charts/issues/74).
+
+#### Changed
+
+- Changed the docstring for `persistence` to better reference [our documentation](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage/) regarding Storage options.
+
+#### Fixed
+
+- Fixed an issue where the default `repository` value for the Wireguard addon was incorrect (https://github.com/k8s-at-home/library-charts/issues/69).
+- Fixed an issue where probes were not referencing the service `targetPort`.
+
 ### [3.2.0]
 
 #### Added
@@ -384,21 +399,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `command` and `args` values now properly support both string and list values.
 
-[3.2.0]: #3.2.0
-[3.1.1]: #3.1.1
-[3.1.0]: #3.1.0
-[3.0.2]: #3.0.2
-[3.0.1]: #3.0.1
-[3.0.0]: #3.0.0
-[2.5.0]: #2.5.0
-[2.4.0]: #2.4.0
-[2.3.1]: #2.3.1
-[2.3.0]: #2.3.0
-[2.2.0]: #2.2.0
-[2.1.0]: #2.1.0
-[2.0.1]: #2.0.1
-[2.0.0]: #2.0.0
-[1.0.0]: #1.0.0
+[3.3.0]: #330
+[3.2.0]: #320
+[3.1.1]: #311
+[3.1.0]: #310
+[3.0.2]: #302
+[3.0.1]: #301
+[3.0.0]: #300
+[2.5.0]: #250
+[2.4.0]: #240
+[2.3.1]: #231
+[2.3.0]: #230
+[2.2.0]: #220
+[2.1.0]: #210
+[2.0.1]: #201
+[2.0.0]: #200
+[1.0.0]: #100
 
 ## Support
 
