@@ -13,6 +13,9 @@
           {{- with $subPathItem.readOnly }}
   readOnly: {{ . }}
           {{- end }}
+          {{- with $subPathItem.mountPropagation }}
+  mountPropagation: {{ . }}
+          {{- end }}
         {{- end -}}
       {{- else -}}
         {{/* Set the default mountPath to /<name_of_the_peristence_item> */}}
@@ -32,6 +35,9 @@
           {{- end }}
           {{- with $persistenceItem.readOnly }}
   readOnly: {{ . }}
+          {{- end }}
+          {{- with $persistenceItem.mountPropagation }}
+  mountPropagation: {{ . }}
           {{- end }}
         {{- end }}
       {{- end -}}
