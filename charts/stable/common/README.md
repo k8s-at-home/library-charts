@@ -1,6 +1,6 @@
 # common
 
-![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 4.0.0](https://img.shields.io/badge/Version-4.0.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -207,6 +207,8 @@ All notable changes to this library Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [4.0.0]
+
 ### [3.3.0]
 
 #### Added
@@ -399,6 +401,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `command` and `args` values now properly support both string and list values.
 
+[4.0.0]: #400
 [3.3.0]: #330
 [3.2.0]: #320
 [3.1.1]: #311
