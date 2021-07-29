@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    name: Lint charts
     runs-on: ubuntu-20.04
     outputs:
       changed: ${{ steps.list-changed.outputs.changed }}
@@ -44,9 +44,10 @@ jobs:
       run: ct lint --config .github/ct-lint.yaml
 
   unittest:
-    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    needs:
+    - lint
+    name: Run unit tests
     runs-on: ubuntu-20.04
-    needs: lint
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -85,9 +86,10 @@ jobs:
         test-results: test.json
 
   install:
-    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    needs:
+    - lint
+    name: Install charts
     runs-on: ubuntu-20.04
-    needs: lint
     steps:
     - name: Checkout
       uses: actions/checkout@v2
