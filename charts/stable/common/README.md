@@ -151,6 +151,7 @@ N/A
 | persistence.config.mountPath | string | `nil` | Where to mount the volume in the main container. Defaults to `/<name_of_the_volume>`, setting to '-' creates the volume but disables the volumeMount. |
 | persistence.config.nameOverride | string | `nil` | Override the name suffix that is used for this volume. |
 | persistence.config.readOnly | bool | `false` | Specify if the volume should be mounted read-only. |
+| persistence.config.retain | bool | `false` | Set to true to retain the PVC upon `helm uninstall` |
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
@@ -216,6 +217,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for specifying container termination message path and policy (#77).
 - Support for specifying Pod termination grace period.
+
+#### Changed
+
+- **BREAKING**: Renamed the `skipuninstall` key to `retain` for `persistence` items.
 
 ### [3.3.0]
 

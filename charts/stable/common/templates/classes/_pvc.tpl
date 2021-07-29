@@ -20,9 +20,9 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ $pvcName }}
-  {{- if or $values.skipuninstall $values.annotations }}
+  {{- if or $values.retain $values.annotations }}
   annotations:
-    {{- if $values.skipuninstall }}
+    {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
     {{- with $values.annotations }}

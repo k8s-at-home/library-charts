@@ -343,8 +343,8 @@ persistence:
     # -- The amount of storage that is requested for the persistent volume.
     size: 1Gi
 
-    # - Set to true to retain the PVC upon `helm uninstall`
-    skipuninstall: false
+    # -- Set to true to retain the PVC upon `helm uninstall`
+    retain: false
 
   # -- Create an emptyDir volume to share between all containers
   # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)
