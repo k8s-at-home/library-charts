@@ -31,6 +31,9 @@ metadata:
   {{- end }}
   labels:
   {{- include "common.labels" . | nindent 4 }}
+  {{- with $values.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   accessModes:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $values.accessMode | quote }}
