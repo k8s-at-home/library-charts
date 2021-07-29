@@ -27,6 +27,13 @@
   lifecycle:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.termination.messagePath }}
+  terminationMessagePath: {{ . }}
+  {{- end }}
+  {{- with .Values.termination.messagePolicy }}
+  terminationMessagePolicy: {{ . }}
+  {{- end }}
+
   {{- with .Values.env }}
   env:
     {{- range $k, $v := . }}
