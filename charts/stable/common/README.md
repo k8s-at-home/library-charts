@@ -49,7 +49,7 @@ N/A
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalContainers | list | `[]` | Specify any additional containers here. Yaml will be passed in to the Pod as-is. |
+| additionalContainers | object | `{}` | Specify any additional containers here as dictionary items. Each additional container should have its own key. Helm templates can be used. |
 | addons | object | See below | The common chart supports several add-ons. These can be configured under this key. |
 | addons.codeserver | object | See values.yaml | The common library supports adding a code-server add-on to access files. It can be configured under this key. For more info, check out [our docs](http://docs.k8s-at-home.com/our-helm-charts/common-library-add-ons/#code-server) |
 | addons.codeserver.args | list | `["--auth","none"]` | Set codeserver command line arguments. Consider setting --user-data-dir to a persistent location to preserve code-server setting changes |
@@ -140,7 +140,7 @@ N/A
 | ingress.main.nameOverride | string | `nil` | Override the name suffix that is used for this ingress. |
 | ingress.main.primary | bool | `true` | Make this the primary ingress (used in probes, notes, etc...). If there is more than 1 ingress, make sure that only 1 ingress is marked as primary. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
-| initContainers | list | `[]` | Specify any initContainers here. Yaml will be passed in to the Pod as-is. |
+| initContainers | object | `{}` | Specify any initContainers here as dictionary items. Each initContainer should have its own key. The dictionary item key will determine the order. Helm templates can be used. |
 | lifecycle | object | `{}` | Configure the lifecycle for the main container |
 | nodeSelector | object | `{}` | Node selection constraint [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
 | persistence | object | See below | Configure persistence for the chart here. Additional items can be added by adding a dictionary key similar to the 'config' key. [[ref]](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage) |
@@ -222,6 +222,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Changed
 
 - **BREAKING**: Renamed the `skipuninstall` key to `retain` for `persistence` items.
+- **BREAKING**: `initContainers` now expects a dictionary instead of a list to make merging less error-prone. initContainers are ordered by their key.
+- **BREAKING**: `additionalContainers` now expects a dictionary instead of a list to make merging less error-prone.
 
 ### [3.3.0]
 

@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Changed
 
 - **BREAKING**: Renamed the `skipuninstall` key to `retain` for `persistence` items.
+- **BREAKING**: `initContainers` now expects a dictionary instead of a list to make merging less error-prone. initContainers are ordered by their key.
+- **BREAKING**: `additionalContainers` now expects a dictionary instead of a list to make merging less error-prone.
 
 ### [3.3.0]
 
