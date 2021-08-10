@@ -124,11 +124,13 @@ securityContext: {}
 # -- Configure the lifecycle for the main container
 lifecycle: {}
 
-# -- Specify any initContainers here. Yaml will be passed in to the Pod as-is.
-initContainers: []
+# -- Specify any initContainers here as dictionary items. Each initContainer should have its own key.
+# The dictionary item key will determine the order. Helm templates can be used.
+initContainers: {}
 
-# -- Specify any additional containers here. Yaml will be passed in to the Pod as-is.
-additionalContainers: []
+# -- Specify any additional containers here as dictionary items. Each additional container should have its own key.
+# Helm templates can be used.
+additionalContainers: {}
 
 # -- Probe configuration
 # -- [[ref]](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
@@ -182,6 +184,20 @@ probes:
       ## This means it has a maximum of 5*30=150 seconds to start up before it fails
       periodSeconds: 5
       failureThreshold: 30
+
+termination:
+  # -- Configure the path at which the file to which the main container's termination message will be written.
+  # -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)]
+  messagePath:
+
+  # -- Indicate how the main container's termination message should be populated.
+  # Valid options are `File` and `FallbackToLogsOnError`.
+  # -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)]
+  messagePolicy:
+
+  # -- Duration in seconds the pod needs to terminate gracefully
+  # -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle)]
+  gracePeriodSeconds:
 
 # -- Configure the services for the chart here.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.
@@ -329,8 +345,8 @@ persistence:
     # -- The amount of storage that is requested for the persistent volume.
     size: 1Gi
 
-    # - Set to true to retain the PVC upon `helm uninstall`
-    skipuninstall: false
+    # -- Set to true to retain the PVC upon `helm uninstall`
+    retain: false
 
   # -- Create an emptyDir volume to share between all containers
   # [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir)

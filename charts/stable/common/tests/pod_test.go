@@ -92,13 +92,37 @@ func (suite *PodTestSuite) TestDnsPolicy() {
     }
 }
 
+func (suite *PodTestSuite) TestInitContainers() {
+    tests := map[string]struct {
+        values            []string
+        expectedContainer interface{}
+    }{
+        "StaticWithName":    {values: []string{"initContainers.init1.name=template-test"}, expectedContainer: "template-test"},
+        "StaticWithoutName": {values: []string{"initContainers.init1.image=template-test"}, expectedContainer: "init1"},
+        "DynamicTemplate":   {values: []string{`initContainers.init1.name=\{\{ .Release.Name \}\}-container`}, expectedContainer: "common-test-container"},
+    }
+    for name, tc := range tests {
+        suite.Suite.Run(name, func() {
+            err := suite.Chart.Render(nil, tc.values, nil)
+            if err != nil {
+                suite.FailNow(err.Error())
+            }
+
+            deploymentManifest := suite.Chart.Manifests.Get("Deployment", "common-test")
+            initcontainers := deploymentManifest.Path("spec.template.spec.initContainers")
+            suite.Assertions.Contains(initcontainers.Search("*", "name").Data(), tc.expectedContainer)
+        })
+    }
+}
+
 func (suite *PodTestSuite) TestAdditionalContainers() {
     tests := map[string]struct {
         values            []string
         expectedContainer interface{}
     }{
-        "Static":          {values: []string{"additionalContainers[0].name=template-test"}, expectedContainer: "template-test"},
-        "DynamicTemplate": {values: []string{`additionalContainers[0].name=\{\{ .Release.Name \}\}-container`}, expectedContainer: "common-test-container"},
+        "StaticWithName":    {values: []string{"additionalContainers.additional1.name=template-test"}, expectedContainer: "template-test"},
+        "StaticWithoutName": {values: []string{"additionalContainers.additional1.image=template-test"}, expectedContainer: "additional1"},
+        "DynamicTemplate":   {values: []string{`additionalContainers.additional1.name=\{\{ .Release.Name \}\}-container`}, expectedContainer: "common-test-container"},
     }
     for name, tc := range tests {
         suite.Suite.Run(name, func() {

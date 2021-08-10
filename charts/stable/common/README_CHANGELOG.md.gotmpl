@@ -10,6 +10,20 @@ All notable changes to this library Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [4.0.0]
+
+#### Added
+
+- Support for specifying container termination message path and policy (#77).
+- Support for specifying Pod termination grace period.
+- Support for specifying PVC labels for `persistence` items.
+
+#### Changed
+
+- **BREAKING**: Renamed the `skipuninstall` key to `retain` for `persistence` items.
+- **BREAKING**: `initContainers` now expects a dictionary instead of a list to make merging less error-prone. initContainers are ordered by their key.
+- **BREAKING**: `additionalContainers` now expects a dictionary instead of a list to make merging less error-prone.
+
 ### [3.3.0]
 
 #### Added
@@ -202,6 +216,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `command` and `args` values now properly support both string and list values.
 
+[4.0.0]: #400
 [3.3.0]: #330
 [3.2.0]: #320
 [3.1.1]: #311
