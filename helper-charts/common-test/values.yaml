@@ -2,3 +2,6 @@ image:
   repository: b4bz/homer
   tag: latest
   pullPolicy: IfNotPresent
+
+additionalLabels:
+  app: common-test
