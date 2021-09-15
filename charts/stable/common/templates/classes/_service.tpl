@@ -23,9 +23,9 @@ metadata:
   name: {{ $serviceName }}
   labels:
     {{- include "common.labels" . | nindent 4 }}
-  {{- if $values.labels }}
-    {{ toYaml $values.labels | nindent 4 }}
-  {{- end }}
+    {{- with $values.labels }}
+       {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https

@@ -215,7 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- Fixed an issue where users weren't able to set custom ingress annotations
+- Fixed an issue where users weren't able to set custom ingress labels.
 
 ### [4.0.0]
 
