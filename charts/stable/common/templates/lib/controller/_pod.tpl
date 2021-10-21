@@ -7,6 +7,7 @@ imagePullSecrets:
     {{- toYaml . | nindent 2 }}
   {{- end }}
 serviceAccountName: {{ include "common.names.serviceAccountName" . }}
+automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
   {{- with .Values.podSecurityContext }}
 securityContext:
     {{- toYaml . | nindent 2 }}
