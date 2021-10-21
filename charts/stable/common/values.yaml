@@ -77,6 +77,12 @@ serviceAccount:
 secret: {}
   # PASSWORD: my-password
 
+# -- Specifies whether a configmap should be created
+configmap:
+  # configData:
+    # configKey: "core.conf"
+    # configValue: ...
+
 # -- Main environment variables. Template enabled.
 # Syntax options:
 # A) TZ: UTC
