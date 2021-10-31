@@ -5,7 +5,7 @@ go 1.16
 require (
     github.com/Jeffail/gabs/v2 v2.6.1
     github.com/stretchr/testify v1.7.0
-    helm.sh/helm/v3 v3.5.4
+    helm.sh/helm/v3 v3.7.1
     sigs.k8s.io/yaml v1.3.0
 )
 
