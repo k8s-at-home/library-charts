@@ -1,5 +1,5 @@
 {{/*
-The ConfigMap object to be created.
+The ConfigMap object to be generated.
 */}}
 {{- define "common.configmap" }}
 ---
