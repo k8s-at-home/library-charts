@@ -80,6 +80,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "AlexanderBabel",
+      "name": "Alex Babel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13570439?v=4",
+      "profile": "http://alexbabel.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
