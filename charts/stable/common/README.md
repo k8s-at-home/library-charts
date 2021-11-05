@@ -1,6 +1,6 @@
 # common
 
-![Version: 4.0.1](https://img.shields.io/badge/Version-4.0.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 4.1.0](https://img.shields.io/badge/Version-4.1.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -103,8 +103,14 @@ N/A
 | addons.vpn.wireguard.image.tag | string | `"v1.0.20210424"` | Specify the WireGuard image tag |
 | affinity | object | `{}` | Defines affinity constraint rules. [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | args | list | `[]` | Override the args for the default container |
+| automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
 | autoscaling | object | <disabled> | Add a Horizontal Pod Autoscaler |
 | command | list | `[]` | Override the command(s) for the default container |
+| configmap | object | See below | Configure configMaps for the chart here. Additional configMaps can be added by adding a dictionary key similar to the 'config' object. |
+| configmap.config.annotations | object | `{}` | Annotations to add to the configMap |
+| configmap.config.data | object | `{}` | configMap data content. Helm template enabled. |
+| configmap.config.enabled | bool | `false` | Enables or disables the configMap |
+| configmap.config.labels | object | `{}` | Labels to add to the configMap |
 | controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controller.enabled | bool | `true` | enable the controller. |
 | controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
@@ -197,7 +203,6 @@ N/A
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
 | termination.gracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle)] |
 | termination.messagePath | string | `nil` | Configure the path at which the file to which the main container's termination message will be written. -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
 | termination.messagePolicy | string | `nil` | Indicate how the main container's termination message should be populated. Valid options are `File` and `FallbackToLogsOnError`. -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
@@ -217,6 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - Support for specifying whether a pod should auto mount a service account token.
+- Support for specifying configMaps directly in values.yaml.
 
 ### [4.0.1]
 

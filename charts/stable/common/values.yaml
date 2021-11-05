@@ -80,11 +80,20 @@ automountServiceAccountToken: true
 secret: {}
   # PASSWORD: my-password
 
-# -- Specifies whether a configmap should be created
+# -- Configure configMaps for the chart here.
+# Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
+# @default -- See below
 configmap:
-  # configData:
-    # configKey: "core.conf"
-    # configValue: ...
+  config:
+    # -- Enables or disables the configMap
+    enabled: false
+    # -- Labels to add to the configMap
+    labels: {}
+    # -- Annotations to add to the configMap
+    annotations: {}
+    # -- configMap data content. Helm template enabled.
+    data: {}
+      # foo: bar
 
 # -- Main environment variables. Template enabled.
 # Syntax options:
