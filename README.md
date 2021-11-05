@@ -2,7 +2,7 @@
 
 # Helm charts
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Most of our application Helm charts consume our Common library Helm chart.
@@ -57,6 +57,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/allenporter"><img src="https://avatars.githubusercontent.com/u/6026418?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Allen Porter</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=allenporter" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://alexbabel.com"><img src="https://avatars.githubusercontent.com/u/13570439?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Babel</b></sub></a><br /><a href="https://github.com/k8s-at-home/library-charts/commits?author=AlexanderBabel" title="Code">💻</a></td>
   </tr>
 </table>
 
