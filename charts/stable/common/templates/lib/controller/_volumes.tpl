@@ -22,6 +22,23 @@ Volumes included by the controller.
     {{- end }}
   persistentVolumeClaim:
     claimName: {{ $pvcName }}
+  {{- else if or (eq $persistence.type "configMap") (eq $persistence.type "secret") }}
+    {{- $objectName := (required (printf "name not set for persistence item %s" $index) $persistence.name) }}
+    {{- $objectName = tpl $objectName $ }}
+    {{- if eq $persistence.type "configMap" }}
+  configMap:
+    name: {{ $objectName }}
+    {{- else }}
+  secret:
+    secretName: {{ $objectName }}
+    {{- end }}
+    {{- with $persistence.defaultMode }}
+    defaultMode: {{ . }}
+    {{- end }}
+    {{- with $persistence.items }}
+    items:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   {{- else if eq $persistence.type "emptyDir" }}
     {{- $emptyDir := dict -}}
     {{- with $persistence.medium -}}

@@ -331,7 +331,7 @@ persistence:
     enabled: false
 
     # -- Sets the persistence type
-    # Valid options are pvc, emptyDir, hostPath or custom
+    # Valid options are pvc, emptyDir, hostPath, secret, configMap or custom
     type: pvc
 
     # -- Where to mount the volume in the main container.
