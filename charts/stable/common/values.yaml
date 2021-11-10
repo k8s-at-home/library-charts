@@ -474,7 +474,7 @@ addons:
         # -- Specify the WireGuard image
         repository: ghcr.io/k8s-at-home/wireguard
         # -- Specify the WireGuard image tag
-        tag: v1.0.20210424
+        tag: v1.0.20210914
         # -- Specify the WireGuard image pull policy
         pullPolicy: IfNotPresent
 
@@ -526,16 +526,24 @@ addons:
       # periodSeconds: 60
       # failureThreshold: 1
 
-    # If set to true, will deploy a network policy that blocks all outbound
-    # traffic except traffic specified as allowed
     networkPolicy:
+      # -- If set to true, will deploy a network policy that blocks all outbound
+      # traffic except traffic specified as allowed
       enabled: false
 
-      # The egress configuration for your network policy, All outbound traffic
-      # From the pod will be blocked unless specified here. Your cluster must
-      # have a CNI that supports network policies (Canal, Calico, etc...)
-      # https://kubernetes.io/docs/concepts/services-networking/network-policies/
-      # https://github.com/ahmetb/kubernetes-network-policy-recipes
+      # -- Provide additional annotations which may be required.
+      annotations: {}
+
+      # -- Provide additional labels which may be required.
+      labels: {}
+
+      # -- Provide additional podSelector labels which may be required.
+      podSelectorLabels: {}
+
+      # -- The egress configuration for your network policy, All outbound traffic
+      # from the pod will be blocked unless specified here.
+      # [[ref]](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
+      # [[recipes]](https://github.com/ahmetb/kubernetes-network-policy-recipes)
       egress:
         # - to:
         #   - ipBlock:

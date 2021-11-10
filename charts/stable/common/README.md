@@ -88,6 +88,11 @@ N/A
 | addons.vpn.enabled | bool | `false` | Enable running a VPN in the pod to route traffic through a VPN |
 | addons.vpn.env | object | `{}` | All variables specified here will be added to the vpn sidecar container See the documentation of the VPN image for all config values |
 | addons.vpn.livenessProbe | object | `{}` | Optionally specify a livenessProbe, e.g. to check if the connection is still being protected by the VPN |
+| addons.vpn.networkPolicy.annotations | object | `{}` | Provide additional annotations which may be required. |
+| addons.vpn.networkPolicy.egress | string | `nil` | The egress configuration for your network policy, All outbound traffic from the pod will be blocked unless specified here. [[ref]](https://kubernetes.io/docs/concepts/services-networking/network-policies/) [[recipes]](https://github.com/ahmetb/kubernetes-network-policy-recipes) |
+| addons.vpn.networkPolicy.enabled | bool | `false` | If set to true, will deploy a network policy that blocks all outbound traffic except traffic specified as allowed |
+| addons.vpn.networkPolicy.labels | object | `{}` | Provide additional labels which may be required. |
+| addons.vpn.networkPolicy.podSelectorLabels | object | `{}` | Provide additional podSelector labels which may be required. |
 | addons.vpn.openvpn | object | See below | OpenVPN specific configuration |
 | addons.vpn.openvpn.auth | string | `nil` | Credentials to connect to the VPN Service (used with -a) |
 | addons.vpn.openvpn.authSecret | string | `nil` | Optionally specify an existing secret that contains the credentials. Credentials should be stored under the `VPN_AUTH` key |
@@ -100,7 +105,7 @@ N/A
 | addons.vpn.wireguard | object | See below | WireGuard specific configuration |
 | addons.vpn.wireguard.image.pullPolicy | string | `"IfNotPresent"` | Specify the WireGuard image pull policy |
 | addons.vpn.wireguard.image.repository | string | `"ghcr.io/k8s-at-home/wireguard"` | Specify the WireGuard image |
-| addons.vpn.wireguard.image.tag | string | `"v1.0.20210424"` | Specify the WireGuard image tag |
+| addons.vpn.wireguard.image.tag | string | `"v1.0.20210914"` | Specify the WireGuard image tag |
 | affinity | object | `{}` | Defines affinity constraint rules. [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | args | list | `[]` | Override the args for the default container |
 | automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
@@ -219,10 +224,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [4.1.0]
 
+#### Changed
+
+- Updated Wireguard add-on image tag to `v1.0.20210914`.
+
 #### Added
 
 - Support for specifying whether a pod should auto mount a service account token.
 - Support for specifying configMaps directly in values.yaml.
+- Support for specifying annotations/labels on the VPN add-on `NetworkPolicy`.
+- Support for specifying custom podSelector labels on the VPN add-on `NetworkPolicy`.
 
 ### [4.0.1]
 
