@@ -25,6 +25,8 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.addon.netshoot" . }}
   {{- end -}}
 
+  {{ include "common.configmap" . | nindent 0 }}
+
   {{- /* Build the templates */ -}}
   {{- include "common.pvc" . }}
 

@@ -1,6 +1,6 @@
 # common
 
-![Version: 4.0.1](https://img.shields.io/badge/Version-4.0.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 4.1.0](https://img.shields.io/badge/Version-4.1.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -88,6 +88,11 @@ N/A
 | addons.vpn.enabled | bool | `false` | Enable running a VPN in the pod to route traffic through a VPN |
 | addons.vpn.env | object | `{}` | All variables specified here will be added to the vpn sidecar container See the documentation of the VPN image for all config values |
 | addons.vpn.livenessProbe | object | `{}` | Optionally specify a livenessProbe, e.g. to check if the connection is still being protected by the VPN |
+| addons.vpn.networkPolicy.annotations | object | `{}` | Provide additional annotations which may be required. |
+| addons.vpn.networkPolicy.egress | string | `nil` | The egress configuration for your network policy, All outbound traffic from the pod will be blocked unless specified here. [[ref]](https://kubernetes.io/docs/concepts/services-networking/network-policies/) [[recipes]](https://github.com/ahmetb/kubernetes-network-policy-recipes) |
+| addons.vpn.networkPolicy.enabled | bool | `false` | If set to true, will deploy a network policy that blocks all outbound traffic except traffic specified as allowed |
+| addons.vpn.networkPolicy.labels | object | `{}` | Provide additional labels which may be required. |
+| addons.vpn.networkPolicy.podSelectorLabels | object | `{}` | Provide additional podSelector labels which may be required. |
 | addons.vpn.openvpn | object | See below | OpenVPN specific configuration |
 | addons.vpn.openvpn.auth | string | `nil` | Credentials to connect to the VPN Service (used with -a) |
 | addons.vpn.openvpn.authSecret | string | `nil` | Optionally specify an existing secret that contains the credentials. Credentials should be stored under the `VPN_AUTH` key |
@@ -100,11 +105,17 @@ N/A
 | addons.vpn.wireguard | object | See below | WireGuard specific configuration |
 | addons.vpn.wireguard.image.pullPolicy | string | `"IfNotPresent"` | Specify the WireGuard image pull policy |
 | addons.vpn.wireguard.image.repository | string | `"ghcr.io/k8s-at-home/wireguard"` | Specify the WireGuard image |
-| addons.vpn.wireguard.image.tag | string | `"v1.0.20210424"` | Specify the WireGuard image tag |
+| addons.vpn.wireguard.image.tag | string | `"v1.0.20210914"` | Specify the WireGuard image tag |
 | affinity | object | `{}` | Defines affinity constraint rules. [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | args | list | `[]` | Override the args for the default container |
+| automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
 | autoscaling | object | <disabled> | Add a Horizontal Pod Autoscaler |
 | command | list | `[]` | Override the command(s) for the default container |
+| configmap | object | See below | Configure configMaps for the chart here. Additional configMaps can be added by adding a dictionary key similar to the 'config' object. |
+| configmap.config.annotations | object | `{}` | Annotations to add to the configMap |
+| configmap.config.data | object | `{}` | configMap data content. Helm template enabled. |
+| configmap.config.enabled | bool | `false` | Enables or disables the configMap |
+| configmap.config.labels | object | `{}` | Labels to add to the configMap |
 | controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controller.enabled | bool | `true` | enable the controller. |
 | controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
@@ -155,7 +166,7 @@ N/A
 | persistence.config.size | string | `"1Gi"` | The amount of storage that is requested for the persistent volume. |
 | persistence.config.storageClass | string | `nil` | Storage Class for the config volume. If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | persistence.config.subPath | string | `nil` | Used in conjunction with `existingClaim`. Specifies a sub-path inside the referenced volume instead of its root |
-| persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPath or custom |
+| persistence.config.type | string | `"pvc"` | Sets the persistence type Valid options are pvc, emptyDir, hostPath, secret, configMap or custom |
 | persistence.shared | object | See below | Create an emptyDir volume to share between all containers [[ref]]https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) |
 | persistence.shared.medium | string | `nil` | Set the medium to "Memory" to mount a tmpfs (RAM-backed filesystem) instead of the storage medium that backs the node. |
 | persistence.shared.sizeLimit | string | `nil` | If the `SizeMemoryBackedVolumes` feature gate is enabled, you can specify a size for memory backed volumes. |
@@ -210,6 +221,20 @@ All notable changes to this library Helm chart will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [4.1.0]
+
+#### Changed
+
+- Updated Wireguard add-on image tag to `v1.0.20210914`.
+
+#### Added
+
+- Support for specifying whether a pod should auto mount a service account token.
+- Support for specifying configMaps directly in values.yaml.
+- Support for specifying annotations/labels on the VPN add-on `NetworkPolicy`.
+- Support for specifying custom podSelector labels on the VPN add-on `NetworkPolicy`.
+- Added `secret` and `configMap` as persistence types. [[ref]](http://docs.k8s-at-home.com/our-helm-charts/common-library-storage/).
 
 ### [4.0.1]
 
