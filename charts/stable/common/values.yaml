@@ -111,6 +111,9 @@ env:
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
 
+# -- Allow specifying a runtimeClassName other than the default one (ie: nvidia)
+runtimeClassName: #nvidia
+
 # -- Allows specifying a custom scheduler name
 schedulerName:  # awkward-dangerous-scheduler
 

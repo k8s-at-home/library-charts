@@ -190,6 +190,7 @@ N/A
 | probes.startup.enabled | bool | `true` | Enable the startup probe |
 | probes.startup.spec | object | See below | The spec field contains the values for the default startupProbe. If you selected `custom: true`, this field holds the definition of the startupProbe. |
 | resources | object | `{}` | Set the resource requests / limits for the main container. |
+| runtimeClassName | string | `nil` | Allow specifying a runtimeClassName other than the default one (ie: nvidia)
 | schedulerName | string | `nil` | Allows specifying a custom scheduler name |
 | secret | object | `{}` | Use this to populate a secret with the values you specify. Be aware that these values are not encrypted by default, and could therefore visible to anybody with access to the values.yaml file. |
 | securityContext | object | `{}` | Configure the Security Context for the main container |
@@ -224,6 +225,11 @@ All notable changes to this library Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [4.3.0]
+
+#### Added
+
+- Support for setting the runtimeClassName of the pods
 ### [4.2.0]
 
 #### Added
