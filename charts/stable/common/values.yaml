@@ -112,7 +112,7 @@ env:
 priorityClassName:  # system-node-critical
 
 # -- Allow specifying a runtimeClassName other than the default one (ie: nvidia)
-runtimeClassName: # nvidia
+runtimeClassName:  # nvidia
 
 # -- Allows specifying a custom scheduler name
 schedulerName:  # awkward-dangerous-scheduler
