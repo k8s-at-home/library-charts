@@ -15,10 +15,10 @@ securityContext:
   {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
   {{- end }}
-  {{- with .Values.schedulerName }}
+  {{- with .Values.runtimeClassName }}
 runtimeClassName: {{ . }}
   {{- end }}
-  {{- with .Values.runtimeClassName }}
+  {{- with .Values.schedulerName }}
 schedulerName: {{ . }}
   {{- end }}
   {{- with .Values.hostNetwork }}
