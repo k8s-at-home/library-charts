@@ -12,10 +12,13 @@ charts/*/charts
 helper-charts/*/Chart.lock
 helper-charts/*/charts
 
-# Other rsources
+# Other resources
 .env
 .envrc
 Gemfile.lock
 
 # Trash
 .DS_Store
+
+# Vim
+*.swp

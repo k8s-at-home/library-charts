@@ -71,9 +71,11 @@ spec:
   {{- if $values.ipFamilyPolicy }}
   ipFamilyPolicy: {{ $values.ipFamilyPolicy }}
   {{- end }}
-  {{- with $values.ipFamilies }}
+  {{- if $values.ipFamilies }}
+  {{- with $values.ipFamilies -}}
   ipFamilies:
     {{ toYaml . | nindent 4 }}
+  {{- end -}}
   {{- end }}
   ports:
   {{- range $name, $port := $values.ports }}
