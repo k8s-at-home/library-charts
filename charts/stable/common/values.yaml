@@ -113,6 +113,14 @@ configmap:
 #      value: '{{ .Release.Name }}'
 env:
 
+# -- Environment variables that can be loaded from Secrets or ConfigMaps.
+# [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables)
+envFrom: []
+# - configMapRef:
+#     name: config-map-name
+# - secretRef:
+#     name: secret-name
+
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
 
