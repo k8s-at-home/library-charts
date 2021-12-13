@@ -100,8 +100,13 @@ configmap:
 # A) TZ: UTC
 # B) PASSWD: '{{ .Release.Name }}'
 # C) PASSWD:
-#      envFrom:
-#        ...
+#      configMapKeyRef:
+#        name: config-map-name
+#        key: key-name
+#      secretKeyRef:
+#        name: secret-name
+#        key: key-name
+#      ...
 # D) - name: TZ
 #      value: UTC
 # E) - name: TZ
