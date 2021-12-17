@@ -100,13 +100,26 @@ configmap:
 # A) TZ: UTC
 # B) PASSWD: '{{ .Release.Name }}'
 # C) PASSWD:
-#      envFrom:
-#        ...
+#      configMapKeyRef:
+#        name: config-map-name
+#        key: key-name
+#      secretKeyRef:
+#        name: secret-name
+#        key: key-name
+#      ...
 # D) - name: TZ
 #      value: UTC
 # E) - name: TZ
 #      value: '{{ .Release.Name }}'
 env:
+
+# -- Environment variables that can be loaded from Secrets or ConfigMaps.
+# [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables)
+envFrom: []
+# - configMapRef:
+#     name: config-map-name
+# - secretRef:
+#     name: secret-name
 
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
