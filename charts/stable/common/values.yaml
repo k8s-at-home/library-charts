@@ -30,6 +30,8 @@ controller:
     partition:
   # -- ReplicaSet revision history limit
   revisionHistoryLimit: 3
+  # -- Set statefulset podManagementPolicy, valid values are Parallel and OrderedReady (default).
+  podManagementPolicy:
 
 image:
   # -- image repository
