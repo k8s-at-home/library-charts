@@ -30,6 +30,9 @@ Ports included by the controller.
   {{- else }}
   protocol: TCP
   {{- end }}
+  {{- if .hostPort }}
+  hostPort: {{ .hostPort }}
+  {{- end }}
 {{- end}}
 {{- end -}}
 {{- end -}}

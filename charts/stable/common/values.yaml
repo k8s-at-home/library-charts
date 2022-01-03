@@ -290,6 +290,9 @@ service:
         # [[ref]](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
         nodePort:
 
+        # -- Specify the hostPort value for pod to expose.
+        hostPort:
+
 # -- Configure the ingresses for the chart here.
 # Additional ingresses can be added by adding a dictionary key similar to the 'main' ingress.
 # @default -- See below

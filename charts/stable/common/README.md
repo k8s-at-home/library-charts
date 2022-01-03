@@ -203,6 +203,7 @@ N/A
 | service.main.nameOverride | string | `nil` | Override the name suffix that is used for this service |
 | service.main.ports | object | See below | Configure the Service port information here. Additional ports can be added by adding a dictionary key similar to the 'http' service. |
 | service.main.ports.http.enabled | bool | `true` | Enables or disables the port |
+| service.main.ports.http.hostPort | string | `nil` | Specify the hostPort value for pod to expose. |
 | service.main.ports.http.nodePort | string | `nil` | Specify the nodePort value for the LoadBalancer and NodePort service types. [[ref]](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | service.main.ports.http.port | string | `nil` | The port number |
 | service.main.ports.http.primary | bool | `true` | Make this the primary port (used in probes, notes, etc...) If there is more than 1 service, make sure that only 1 port is marked as primary. |
@@ -226,6 +227,12 @@ All notable changes to this library Helm chart will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [4.4.0]
+
+#### Added
+
+- Support setting `hostPort` on pods
 
 ### [4.3.0]
 
