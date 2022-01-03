@@ -15,6 +15,9 @@ securityContext:
   {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
   {{- end }}
+  {{- with .Values.runtimeClassName }}
+runtimeClassName: {{ . }}
+  {{- end }}
   {{- with .Values.schedulerName }}
 schedulerName: {{ . }}
   {{- end }}

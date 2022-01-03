@@ -30,6 +30,8 @@ controller:
     partition:
   # -- ReplicaSet revision history limit
   revisionHistoryLimit: 3
+  # -- Set statefulset podManagementPolicy, valid values are Parallel and OrderedReady (default).
+  podManagementPolicy:
 
 image:
   # -- image repository
@@ -100,16 +102,34 @@ configmap:
 # A) TZ: UTC
 # B) PASSWD: '{{ .Release.Name }}'
 # C) PASSWD:
-#      envFrom:
-#        ...
-# D) - name: TZ
-#      value: UTC
+#      configMapKeyRef:
+#        name: config-map-name
+#        key: key-name
+# D) PASSWD:
+#      valueFrom:
+#        secretKeyRef:
+#          name: secret-name
+#          key: key-name
+#      ...
 # E) - name: TZ
+#      value: UTC
+# F) - name: TZ
 #      value: '{{ .Release.Name }}'
 env:
 
+# -- Secrets and/or ConfigMaps that will be loaded as environment variables.
+# [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables)
+envFrom: []
+# - configMapRef:
+#     name: config-map-name
+# - secretRef:
+#     name: secret-name
+
 # -- Custom priority class for different treatment by the scheduler
 priorityClassName:  # system-node-critical
+
+# -- Allow specifying a runtimeClassName other than the default one (ie: nvidia)
+runtimeClassName:  # nvidia
 
 # -- Allows specifying a custom scheduler name
 schedulerName:  # awkward-dangerous-scheduler

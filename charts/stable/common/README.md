@@ -1,6 +1,6 @@
 # common
 
-![Version: 4.2.0](https://img.shields.io/badge/Version-4.2.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 4.3.0](https://img.shields.io/badge/Version-4.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
 Function library for k8s-at-home charts
 
@@ -121,6 +121,7 @@ N/A
 | controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controller.enabled | bool | `true` | enable the controller. |
 | controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
+| controller.podManagementPolicy | string | `nil` | Set statefulset podManagementPolicy, valid values are Parallel and OrderedReady (default). |
 | controller.replicas | int | `1` | Number of desired pods |
 | controller.revisionHistoryLimit | int | `3` | ReplicaSet revision history limit |
 | controller.rollingUpdate.partition | string | `nil` | Set statefulset RollingUpdate partition |
@@ -131,7 +132,8 @@ N/A
 | dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
 | dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
 | enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
-| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      envFrom:        ... D) - name: TZ      value: UTC E) - name: TZ      value: '{{ .Release.Name }}' |
+| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      configMapKeyRef:        name: config-map-name        key: key-name D) PASSWD:      valueFrom:        secretKeyRef:          name: secret-name          key: key-name      ... E) - name: TZ      value: UTC F) - name: TZ      value: '{{ .Release.Name }}' |
+| envFrom | list | `[]` | Secrets and/or ConfigMaps that will be loaded as environment variables. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
 | global.fullnameOverride | string | `nil` | Set the entire name definition |
 | global.nameOverride | string | `nil` | Set an override for the prefix of the fullname |
 | hostAliases | list | `[]` | Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames. [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/) |
@@ -190,6 +192,7 @@ N/A
 | probes.startup.enabled | bool | `true` | Enable the startup probe |
 | probes.startup.spec | object | See below | The spec field contains the values for the default startupProbe. If you selected `custom: true`, this field holds the definition of the startupProbe. |
 | resources | object | `{}` | Set the resource requests / limits for the main container. |
+| runtimeClassName | string | `nil` | Allow specifying a runtimeClassName other than the default one (ie: nvidia) |
 | schedulerName | string | `nil` | Allows specifying a custom scheduler name |
 | secret | object | `{}` | Use this to populate a secret with the values you specify. Be aware that these values are not encrypted by default, and could therefore visible to anybody with access to the values.yaml file. |
 | securityContext | object | `{}` | Configure the Security Context for the main container |
@@ -223,6 +226,17 @@ All notable changes to this library Helm chart will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+### [4.3.0]
+
+#### Added
+
+- Support setting `podManagementPolicy` on StatefulSet
+- Support setting the `runtimeClassName` of pods
+
+#### Changed
+
+- Improved environment variables documentation to correctly reflect the available syntax options.
 
 ### [4.2.0]
 
