@@ -105,17 +105,19 @@ configmap:
 #      configMapKeyRef:
 #        name: config-map-name
 #        key: key-name
-#      secretKeyRef:
-#        name: secret-name
-#        key: key-name
+# D) PASSWD:
+#      valueFrom:
+#        secretKeyRef:
+#          name: secret-name
+#          key: key-name
 #      ...
-# D) - name: TZ
-#      value: UTC
 # E) - name: TZ
+#      value: UTC
+# F) - name: TZ
 #      value: '{{ .Release.Name }}'
 env:
 
-# -- Environment variables that can be loaded from Secrets or ConfigMaps.
+# -- Secrets and/or ConfigMaps that will be loaded as environment variables.
 # [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables)
 envFrom: []
 # - configMapRef:

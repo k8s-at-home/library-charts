@@ -121,6 +121,7 @@ N/A
 | controller.annotations | object | `{}` | Set annotations on the deployment/statefulset/daemonset |
 | controller.enabled | bool | `true` | enable the controller. |
 | controller.labels | object | `{}` | Set labels on the deployment/statefulset/daemonset |
+| controller.podManagementPolicy | string | `nil` | Set statefulset podManagementPolicy, valid values are Parallel and OrderedReady (default). |
 | controller.replicas | int | `1` | Number of desired pods |
 | controller.revisionHistoryLimit | int | `3` | ReplicaSet revision history limit |
 | controller.rollingUpdate.partition | string | `nil` | Set statefulset RollingUpdate partition |
@@ -131,8 +132,8 @@ N/A
 | dnsConfig | object | `{}` | Optional DNS settings, configuring the ndots option may resolve nslookup issues on some Kubernetes setups. |
 | dnsPolicy | string | `nil` | Defaults to "ClusterFirst" if hostNetwork is false and "ClusterFirstWithHostNet" if hostNetwork is true. |
 | enableServiceLinks | bool | `true` | Enable/disable the generation of environment variables for services. [[ref]](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#accessing-the-service) |
-| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      configMapKeyRef:        name: config-map-name        key: key-name      secretKeyRef:        name: secret-name        key: key-name      ... D) - name: TZ      value: UTC E) - name: TZ      value: '{{ .Release.Name }}' |
-| envFrom | list | `[]` | Environment variables that can be loaded from Secrets or ConfigMaps. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
+| env | string | `nil` | Main environment variables. Template enabled. Syntax options: A) TZ: UTC B) PASSWD: '{{ .Release.Name }}' C) PASSWD:      configMapKeyRef:        name: config-map-name        key: key-name D) PASSWD:      valueFrom:        secretKeyRef:          name: secret-name          key: key-name      ... E) - name: TZ      value: UTC F) - name: TZ      value: '{{ .Release.Name }}' |
+| envFrom | list | `[]` | Secrets and/or ConfigMaps that will be loaded as environment variables. [[ref]](https://unofficial-kubernetes.readthedocs.io/en/latest/tasks/configure-pod-container/configmap/#use-case-consume-configmap-in-environment-variables) |
 | global.fullnameOverride | string | `nil` | Set the entire name definition |
 | global.nameOverride | string | `nil` | Set an override for the prefix of the fullname |
 | hostAliases | list | `[]` | Use hostAliases to add custom entries to /etc/hosts - mapping IP addresses to hostnames. [[ref]](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/) |
@@ -230,7 +231,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- Support for setting the runtimeClassName of the pods
+- Support setting `podManagementPolicy` on StatefulSet
+- Support setting the `runtimeClassName` of pods
+
+#### Changed
+
+- Improved environment variables documentation to correctly reflect the available syntax options.
 
 ### [4.2.0]
 
