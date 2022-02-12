@@ -498,6 +498,17 @@ addons:
         # -- Specify the WireGuard image pull policy
         pullPolicy: IfNotPresent
 
+    # -- Gluetun specific configuration
+    # @default -- See below
+    gluetun:
+      image:
+        # -- Specify the Gluetun image
+        repository: qmcgaw/gluetun
+        # -- Specify the Gluetun image tag
+        tag: v3.27.0
+        # -- Specify the Gluetun image pull policy
+        pullPolicy: IfNotPresent
+
     # -- Set the VPN container securityContext
     # @default -- See values.yaml
     securityContext:
