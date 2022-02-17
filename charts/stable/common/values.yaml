@@ -40,9 +40,10 @@ image:
   tag:
   # -- image pull policy
   pullPolicy:
-  # -- image pull secrets
-  # imagePullSecrets:
-  #  - name: registry-key
+
+# -- Set image pull secrets
+# imagePullSecrets:
+#  - name: registry-key
 
 # -- Override the command(s) for the default container
 command: []
