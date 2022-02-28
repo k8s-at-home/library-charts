@@ -43,7 +43,7 @@ jobs:
       with:
         version: v3.5.4
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v3
       if: steps.filter.outputs.addedOrModified == 'true'
       with:
         python-version: 3.7
