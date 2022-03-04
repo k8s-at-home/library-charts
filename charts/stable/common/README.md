@@ -68,6 +68,14 @@ N/A
 | addons.codeserver.service.ipFamilyPolicy | string | `"SingleStack"` | Specify the ip policy. Options: SingleStack, PreferDualStack, RequireDualStack |
 | addons.codeserver.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the code-server container. At least 1 volumeMount is required! |
 | addons.codeserver.workingDir | string | `""` | Specify the working dir that will be opened when code-server starts If not given, the app will default to the mountpah of the first specified volumeMount |
+| addons.honeytail.configFile | string | `nil` | Provide a customized honeytail configuration file |
+| addons.honeytail.configFileSecret | string | `nil` | Reference an existing secret that contains the honeytail configuration file The chart expects it to be present under the `honeytailConfigfile` key. |
+| addons.honeytail.enabled | bool | `false` | Enable running a honeytail container in the pod |
+| addons.honeytail.env | object | `{}` | Set any environment variables for honeytail here |
+| addons.honeytail.image.pullPolicy | string | `"Always"` | Specify the honeytail image pull policy |
+| addons.honeytail.image.repository | string | `"registry.gitlab.com/mterhar/honeytail-sidecar"` | Specify the honeytail image |
+| addons.honeytail.image.tag | string | `"latest"` | Specify the honeytail image tag |
+| addons.honeytail.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the honeytail container. At least 1 volumeMount is required! |
 | addons.netshoot | object | See values.yaml | The common library supports adding a netshoot add-on to troubleshoot network issues within a Pod. It can be configured under this key. |
 | addons.netshoot.enabled | bool | `false` | Enable running a netshoot container in the pod |
 | addons.netshoot.env | object | `{}` | Set any environment variables for netshoot here |
@@ -178,7 +186,7 @@ N/A
 | podLabels | object | `{}` | Set labels on the pod |
 | podSecurityContext | object | `{}` | Configure the Security Context for the Pod |
 | priorityClassName | string | `nil` | Custom priority class for different treatment by the scheduler |
-| probes | object | See below | Probe configuration -- [[ref]](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) |
+| probes | object | See below | [[ref]](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) |
 | probes.liveness | object | See below | Liveness probe configuration |
 | probes.liveness.custom | bool | `false` | Set this to `true` if you wish to specify your own livenessProbe |
 | probes.liveness.enabled | bool | `true` | Enable the liveness probe |
@@ -213,9 +221,9 @@ N/A
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
-| termination.gracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle)] |
-| termination.messagePath | string | `nil` | Configure the path at which the file to which the main container's termination message will be written. -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
-| termination.messagePolicy | string | `nil` | Indicate how the main container's termination message should be populated. Valid options are `File` and `FallbackToLogsOnError`. -- [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
+| termination.gracePeriodSeconds | string | `nil` | [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle)] |
+| termination.messagePath | string | `nil` | [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
+| termination.messagePolicy | string | `nil` | [[ref](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#lifecycle-1)] |
 | tolerations | list | `[]` | Specify taint tolerations [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) |
 | topologySpreadConstraints | list | `[]` | Defines topologySpreadConstraint rules. [[ref]](https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) |
 | volumeClaimTemplates | list | `[]` | Used in conjunction with `controller.type: statefulset` to create individual disks for each instance. |
@@ -496,4 +504,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Join our [Discord](https://discord.gg/sTMX7Vh) community
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)
+Autogenerated from chart metadata using [helm-docs v1.7.0](https://github.com/norwoodj/helm-docs/releases/v1.7.0)

@@ -10,6 +10,11 @@ Main entrypoint for the common library chart. It will render all underlying temp
     {{- include "common.addon.codeserver" . }}
   {{- end -}}
 
+  {{- /* Enable honeytail add-on if required */ -}}
+  {{- if .Values.addons.honeytail.enabled }}
+    {{- include "common.addon.honeytail" . }}
+  {{- end -}}
+
   {{- /* Enable VPN add-on if required */ -}}
   {{- if .Values.addons.vpn.enabled }}
     {{- include "common.addon.vpn" . }}
