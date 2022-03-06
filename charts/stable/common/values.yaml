@@ -511,6 +511,9 @@ addons:
     env: {}
       # TZ: UTC
 
+    # -- Override the args for the vpn sidecar container
+    args: []
+
     # -- Provide a customized vpn configuration file to be used by the VPN.
     configFile:  # |-
       # Some Example Config
