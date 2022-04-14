@@ -41,6 +41,10 @@ image:
   # -- image pull policy
   pullPolicy:
 
+# -- Set image pull secrets
+# imagePullSecrets:
+#  - name: registry-key
+
 # -- Override the command(s) for the default container
 command: []
 # -- Override the args for the default container
