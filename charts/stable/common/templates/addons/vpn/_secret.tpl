@@ -8,8 +8,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ include "common.names.fullname" . }}-vpnconfig
-  labels:
-  {{- include "common.labels" $ | nindent 4 }}
+  labels: {{- include "common.labels" $ | nindent 4 }}
 stringData:
   {{- with .Values.addons.vpn.configFile }}
   vpnConfigfile: |-

@@ -3,6 +3,8 @@ global:
   nameOverride:
   # -- Set the entire name definition
   fullnameOverride:
+  # -- Set additional global labels. Helm templates can be used.
+  labels: {}
 
 controller:
   # -- enable the controller.

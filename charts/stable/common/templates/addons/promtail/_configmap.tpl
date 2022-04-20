@@ -8,8 +8,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-promtail
-  labels:
-  {{- include "common.labels" . | nindent 4 }}
+  labels: {{- include "common.labels" . | nindent 4 }}
 data:
   promtail.yaml: |
     server:
