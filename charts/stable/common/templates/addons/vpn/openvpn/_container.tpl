@@ -16,6 +16,10 @@ env:
     value: {{ $v | quote }}
 {{- end }}
 {{- end }}
+args:
+{{- range .Values.addons.vpn.args }}
+- {{ . | quote }}
+{{- end }}
 {{- if or .Values.addons.vpn.openvpn.auth .Values.addons.vpn.openvpn.authSecret }}
 envFrom:
   - secretRef:
