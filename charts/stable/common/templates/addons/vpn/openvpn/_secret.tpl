@@ -8,8 +8,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: {{ include "common.names.fullname" $ }}-openvpn
-  labels:
-  {{- include "common.labels" $ | nindent 4 }}
+  labels: {{- include "common.labels" $ | nindent 4 }}
 data:
   VPN_AUTH: {{ . | b64enc }}
 {{- end -}}

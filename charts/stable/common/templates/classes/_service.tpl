@@ -21,11 +21,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
-       {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- with (merge $values.labels (include "common.labels" . | fromYaml)) }}
+  labels: {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
