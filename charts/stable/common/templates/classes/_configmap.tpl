@@ -21,7 +21,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $configMapName }}
-  {{- with (merge $values.labels (include "common.labels" . | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $values.annotations }}

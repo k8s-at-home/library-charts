@@ -1,0 +1,49 @@
+suite: persistence custom
+templates:
+  - common.yaml
+tests:
+  - it: custom persistence type should pass
+    set:
+      persistence:
+        custom-mount:
+          enabled: true
+          type: custom
+          volumeSpec:
+            downwardAPI:
+              items:
+                - path: "labels"
+                  fieldRef:
+                    fieldPath: metadata.labels
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: custom-mount
+            downwardAPI:
+              items:
+              - fieldRef:
+                  fieldPath: metadata.labels
+                path: labels
+
+  - it: configmap persistence type should pass
+    set:
+      persistence:
+        configmap:
+          enabled: true
+          type: configMap
+          name: mySettings
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: configmap
+            configMap:
+              name: mySettings

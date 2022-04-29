@@ -20,7 +20,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ $pvcName }}
-  {{- with (merge $values.labels (include "common.labels" . | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- if or $values.retain $values.annotations }}

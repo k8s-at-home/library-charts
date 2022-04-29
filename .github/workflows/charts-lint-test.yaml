@@ -3,6 +3,7 @@ name: "Charts: Lint and test"
 on:
   pull_request:
     paths:
+    - '.github/workflows/charts-lint-test.yaml'
     - 'charts/**'
     - 'helper-charts/**'
 
@@ -54,36 +55,16 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: actions/setup-go@v3
+    - name: Install Helm
+      uses: azure/setup-helm@v1
       with:
-        go-version: '^1.16'
-
-    # Get values for cache paths to be used in later steps
-    - id: go-cache-paths
-      run: |
-        echo "::set-output name=go-build::$(go env GOCACHE)"
-        echo "::set-output name=go-mod::$(go env GOMODCACHE)"
-
-    # Cache go build cache, used to speedup go test
-    - name: Go Build Cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ steps.go-cache-paths.outputs.go-build }}
-        key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
-
-    - name: Download modules
-      run: |
-        go mod download
+        version: v3.5.4
 
     - name: Run tests
       run: |
-        go test ./charts/.../tests -json | tee test.json
-
-    - name: Annotate tests
-      if: always()
-      uses: guyarb/golang-test-annotations@v0.5.0
-      with:
-        test-results: test.json
+        helm plugin install https://github.com/vbehar/helm3-unittest --version v1.0.16
+        cd helper-charts/common-test/
+        helm unittest -f "tests/**/*_test.yaml" .
 
   install:
     needs:

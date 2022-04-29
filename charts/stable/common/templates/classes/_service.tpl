@@ -21,7 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  {{- with (merge $values.labels (include "common.labels" . | fromYaml)) }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
   annotations:
