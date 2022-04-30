@@ -8,8 +8,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-vpn
-  labels:
-  {{- include "common.labels" . | nindent 4 }}
+  labels: {{- include "common.labels" . | nindent 4 }}
+  annotations: {{- include "annotations.labels" . | nindent 4 }}
 data:
 {{- with .Values.addons.vpn.scripts.up }}
   up.sh: |-

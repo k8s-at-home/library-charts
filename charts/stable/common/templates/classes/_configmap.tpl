@@ -21,14 +21,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $configMapName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
-       {{- toYaml . | nindent 4 }}
-    {{- end }}
-  {{- with $values.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
+  labels: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
+  annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 data:
 {{- with $values.data }}

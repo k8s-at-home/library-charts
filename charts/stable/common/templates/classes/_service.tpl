@@ -21,16 +21,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  labels:
-    {{- include "common.labels" . | nindent 4 }}
-    {{- with $values.labels }}
-       {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
+  labels: {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
   {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
     {{ toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -44,15 +42,15 @@ spec:
   {{- if $values.loadBalancerIP }}
   loadBalancerIP: {{ $values.loadBalancerIP }}
   {{- end }}
-  {{- if $values.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
-  {{- end }}
   {{- if $values.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{ toYaml $values.loadBalancerSourceRanges | nindent 4 }}
   {{- end -}}
   {{- else }}
   type: {{ $svcType }}
+  {{- end }}
+  {{- if $values.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
   {{- end }}
   {{- if $values.sessionAffinity }}
   sessionAffinity: {{ $values.sessionAffinity }}

@@ -20,7 +20,7 @@ Default NOTES.txt content.
 {{- end }}
 
 {{- if $primaryIngress }}
-1. Access the application by visting one of these URL's:
+1. Access the application by visiting one of these URL's:
 {{ range $primaryIngress.hosts }}
   {{- $protocol := "http" -}}
   {{ if $primaryIngress.tls -}}

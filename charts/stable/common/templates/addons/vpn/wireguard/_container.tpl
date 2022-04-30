@@ -16,6 +16,10 @@ env:
     value: {{ $v | quote }}
 {{- end }}
 {{- end }}
+args:
+{{- range .Values.addons.vpn.args }}
+- {{ . | quote }}
+{{- end }}
 {{- if or .Values.addons.vpn.configFile .Values.addons.vpn.configFileSecret .Values.addons.vpn.scripts.up .Values.addons.vpn.scripts.down .Values.addons.vpn.additionalVolumeMounts .Values.persistence.shared.enabled }}
 volumeMounts:
 {{- if or .Values.addons.vpn.configFile .Values.addons.vpn.configFileSecret }}

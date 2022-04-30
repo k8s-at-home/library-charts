@@ -3,6 +3,10 @@ global:
   nameOverride:
   # -- Set the entire name definition
   fullnameOverride:
+  # -- Set additional global labels. Helm templates can be used.
+  labels: {}
+  # -- Set additional global annotations. Helm templates can be used.
+  annotations: {}
 
 controller:
   # -- enable the controller.
@@ -40,6 +44,9 @@ image:
   tag:
   # -- image pull policy
   pullPolicy:
+
+# -- Set image pull secrets
+imagePullSecrets: []
 
 # -- Override the command(s) for the default container
 command: []
@@ -254,6 +261,15 @@ service:
 
     # -- Set the service type
     type: ClusterIP
+
+    # -- Specify the externalTrafficPolicy for the service. Options: Cluster, Local
+    # -- [[ref](https://kubernetes.io/docs/tutorials/services/source-ip/)]
+    externalTrafficPolicy:
+
+    # -- Specify the ip policy. Options: SingleStack, PreferDualStack, RequireDualStack
+    ipFamilyPolicy:
+    # -- The ip families that should be used. Options: IPv4, IPv6
+    ipFamilies: []
 
     # -- Provide additional annotations which may be required.
     annotations: {}
@@ -511,6 +527,9 @@ addons:
     env: {}
       # TZ: UTC
 
+    # -- Override the args for the vpn sidecar container
+    args: []
+
     # -- Provide a customized vpn configuration file to be used by the VPN.
     configFile:  # |-
       # Some Example Config
@@ -525,9 +544,12 @@ addons:
     # -- Provide custom up/down scripts that can be used by the vpn configuration.
     # @default -- See values.yaml
     scripts:
+      # @default -- See below
       up:  # |-
         # #!/bin/bash
         # echo "connected" > /shared/vpnstatus
+
+      # @default -- See below
       down:  # |-
         # #!/bin/bash
         # echo "disconnected" > /shared/vpnstatus
@@ -639,18 +661,15 @@ addons:
           # nodePort:
       annotations: {}
       labels: {}
-      # -- Specify the ip policy. Options: SingleStack, PreferDualStack, RequireDualStack
-      ipFamilyPolicy: SingleStack
-      # -- The ip families that should be used. Options: IPv4, IPv6
-      ipFamilies:
-        - IPv4
 
     ingress:
       # -- Enable an ingress for the code-server add-on.
       enabled: false
+
       annotations: {}
         # kubernetes.io/ingress.class: nginx
         # kubernetes.io/tls-acme: "true"
+
       labels: {}
       hosts:
         - host: code.chart-example.local

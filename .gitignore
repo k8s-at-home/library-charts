@@ -19,3 +19,6 @@ Gemfile.lock
 
 # Trash
 .DS_Store
+
+# Testing
+__snapshot__/
