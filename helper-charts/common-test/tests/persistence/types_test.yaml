@@ -48,6 +48,63 @@ tests:
             configMap:
               name: mySettings
 
+  - it: configmap persistence type with name template should pass
+    set:
+      persistence:
+        configmap:
+          enabled: true
+          type: configMap
+          name: "{{ include \"common.names.fullname\" $ }}-config"
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: configmap
+            configMap:
+              name: RELEASE-NAME-common-test-config
+
+  - it: secret persistence type should pass
+    set:
+      persistence:
+        secret:
+          enabled: true
+          type: secret
+          name: mySettings
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: secret
+            secret:
+              secretName: mySettings
+
+  - it: secret persistence type with name template should pass
+    set:
+      persistence:
+        secret:
+          enabled: true
+          type: secret
+          name: "{{ .Release.Name }}-config"
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: secret
+            secret:
+              secretName: RELEASE-NAME-config
+
   - it: nfs persistence type should pass
     set:
       persistence:
