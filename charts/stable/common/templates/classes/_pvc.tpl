@@ -23,15 +23,13 @@ metadata:
   {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- if or $values.retain $values.annotations }}
   annotations:
     {{- if $values.retain }}
     "helm.sh/resource-policy": keep
     {{- end }}
-    {{- with $values.annotations }}
+    {{- with (merge ($values.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- end }}
 spec:
   accessModes:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $values.accessMode | quote }}

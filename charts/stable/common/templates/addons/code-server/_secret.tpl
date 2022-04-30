@@ -9,6 +9,7 @@ kind: Secret
 metadata:
   name: {{ template "common.names.fullname" . }}-deploykey
   labels: {{- include "common.labels" . | nindent 4 }}
+  annotations: {{- include "common.annotations" . | nindent 4 }}
 type: Opaque
 {{- if .Values.addons.codeserver.git.deployKey }}
 stringData:

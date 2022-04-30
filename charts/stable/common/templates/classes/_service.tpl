@@ -28,7 +28,7 @@ metadata:
   {{- if eq ( $primaryPort.protocol | default "" ) "HTTPS" }}
     traefik.ingress.kubernetes.io/service.serversscheme: https
   {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
     {{ toYaml . | nindent 4 }}
   {{- end }}
 spec:

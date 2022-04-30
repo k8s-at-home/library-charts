@@ -8,10 +8,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
-  {{- with (merge .Values.controller.labels (include "common.labels" . | fromYaml)) }}
+  {{- with (merge (.Values.controller.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.controller.annotations }}
+  {{- with (merge (.Values.controller.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
   annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:

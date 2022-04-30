@@ -24,7 +24,7 @@ metadata:
   {{- with (merge ($values.labels | default dict) (include "common.labels" . | fromYaml)) }}
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with $values.annotations }}
+  {{- with (merge ($values.annotations | default dict) (include "common.annotations" . | fromYaml)) }}
   annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 data:

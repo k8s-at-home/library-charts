@@ -5,6 +5,8 @@ global:
   fullnameOverride:
   # -- Set additional global labels. Helm templates can be used.
   labels: {}
+  # -- Set additional global annotations. Helm templates can be used.
+  annotations: {}
 
 controller:
   # -- enable the controller.

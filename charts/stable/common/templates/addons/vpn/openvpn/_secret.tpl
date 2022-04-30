@@ -9,6 +9,7 @@ kind: Secret
 metadata:
   name: {{ include "common.names.fullname" $ }}-openvpn
   labels: {{- include "common.labels" $ | nindent 4 }}
+  annotations: {{- include "annotations.labels" . | nindent 4 }}
 data:
   VPN_AUTH: {{ . | b64enc }}
 {{- end -}}

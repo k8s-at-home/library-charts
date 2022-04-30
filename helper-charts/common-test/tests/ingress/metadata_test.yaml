@@ -1,41 +1,18 @@
-suite: pvc metadata
+suite: ingress metadata
 templates:
   - common.yaml
 tests:
-  - it: default should pass
+  - it: default metadata should pass
     set:
-      persistence.config.enabled: true
+      ingress.main.enabled: true
     asserts:
-      - documentIndex: &PersistentVolumeClaimDocument 0
+      - documentIndex: &IngressDocument 2
         isKind:
-          of: PersistentVolumeClaim
-      - documentIndex: *PersistentVolumeClaimDocument
+          of: Ingress
+      - documentIndex: *IngressDocument
         isNull:
           path: metadata.annotations
-      - documentIndex: *PersistentVolumeClaimDocument
-        equal:
-          path: metadata.labels
-          value:
-            app.kubernetes.io/instance: RELEASE-NAME
-            app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/name: common-test
-            helm.sh/chart: common-test-0.1.0
-
-  - it: retain enabled should pass
-    set:
-      persistence.config:
-        enabled: true
-        retain: true
-    asserts:
-      - documentIndex: &PersistentVolumeClaimDocument 0
-        isKind:
-          of: PersistentVolumeClaim
-      - documentIndex: *PersistentVolumeClaimDocument
-        equal:
-          path: metadata.annotations
-          value:
-            helm.sh/resource-policy: keep
-      - documentIndex: *PersistentVolumeClaimDocument
+      - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
           value:
@@ -46,22 +23,22 @@ tests:
 
   - it: custom metadata should pass
     set:
-      persistence.config:
+      ingress.main:
         enabled: true
-        labels:
-          test_label: test
         annotations:
           test_annotation: test
+        labels:
+          test_label: test
     asserts:
-      - documentIndex: &PersistentVolumeClaimDocument 0
+      - documentIndex: &IngressDocument 2
         isKind:
-          of: PersistentVolumeClaim
-      - documentIndex: *PersistentVolumeClaimDocument
+          of: Ingress
+      - documentIndex: *IngressDocument
         equal:
           path: metadata.annotations
           value:
             test_annotation: test
-      - documentIndex: *PersistentVolumeClaimDocument
+      - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
           value:
@@ -78,23 +55,23 @@ tests:
           global_label: test
         annotations:
           global_annotation: test
-      persistence.config:
+      ingress.main:
         enabled: true
-        labels:
-          test_label: test
         annotations:
           test_annotation: test
+        labels:
+          test_label: test
     asserts:
-      - documentIndex: &PersistentVolumeClaimDocument 0
+      - documentIndex: &IngressDocument 2
         isKind:
-          of: PersistentVolumeClaim
-      - documentIndex: *PersistentVolumeClaimDocument
+          of: Ingress
+      - documentIndex: *IngressDocument
         equal:
           path: metadata.annotations
           value:
-            test_annotation: test
             global_annotation: test
-      - documentIndex: *PersistentVolumeClaimDocument
+            test_annotation: test
+      - documentIndex: *IngressDocument
         equal:
           path: metadata.labels
           value:

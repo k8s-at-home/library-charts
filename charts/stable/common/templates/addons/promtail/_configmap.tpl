@@ -9,6 +9,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "common.names.fullname" . }}-promtail
   labels: {{- include "common.labels" . | nindent 4 }}
+  annotations: {{- include "common.annotations" . | nindent 4 }}
 data:
   promtail.yaml: |
     server:

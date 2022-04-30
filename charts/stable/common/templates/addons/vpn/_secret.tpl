@@ -9,6 +9,7 @@ kind: Secret
 metadata:
   name: {{ include "common.names.fullname" . }}-vpnconfig
   labels: {{- include "common.labels" $ | nindent 4 }}
+  annotations: {{- include "common.annotations" . | nindent 4 }}
 stringData:
   {{- with .Values.addons.vpn.configFile }}
   vpnConfigfile: |-
