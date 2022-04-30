@@ -63,7 +63,6 @@ N/A
 | addons.codeserver.image.repository | string | `"codercom/code-server"` | Specify the code-server image |
 | addons.codeserver.image.tag | string | `"3.9.2"` | Specify the code-server image tag |
 | addons.codeserver.ingress.enabled | bool | `false` | Enable an ingress for the code-server add-on. |
-| addons.codeserver.ingress.labels | object | `{}` |  kubernetes.io/tls-acme: "true" |
 | addons.codeserver.service.enabled | bool | `true` | Enable a service for the code-server add-on. |
 | addons.codeserver.volumeMounts | list | `[]` | Specify a list of volumes that get mounted in the code-server container. At least 1 volumeMount is required! |
 | addons.codeserver.workingDir | string | `""` | Specify the working dir that will be opened when code-server starts If not given, the app will default to the mountpah of the first specified volumeMount |
@@ -237,7 +236,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- Support additional global labels
+- Support for `nfs` as a persistence type. [[ref](https://docs.k8s-at-home.com/our-helm-charts/common-library-storage/#nfs-volume)].
+- Support for setting custom `args` for VPN containers.
+- Support setting additional global labels. These will be applied to all objects rendered by the chart.
+- Support setting additional global annotations. These will be applied to all objects rendered by the chart.
+- Support Helm templating in `podAnnotations`.
+
+#### Changed
+
+- `externalTrafficPolicy` (when a value is specified) is now set for all Service types. (fixes https://github.com/k8s-at-home/library-charts/issues/125)
+- Changed the unit test framework to an easier and more readable solution.
+
+#### Fixed
+
+- Fix a typo in the generated Notes.
+- Explicitly add `imagePullSecrets` to `values.yaml` to improve discoverability of the setting.
 
 ### [4.3.0]
 

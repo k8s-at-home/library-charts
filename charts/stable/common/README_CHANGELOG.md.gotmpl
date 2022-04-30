@@ -14,7 +14,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- Support additional global labels
+- Support for `nfs` as a persistence type. [[ref](https://docs.k8s-at-home.com/our-helm-charts/common-library-storage/#nfs-volume)].
+- Support for setting custom `args` for VPN containers.
+- Support setting additional global labels. These will be applied to all objects rendered by the chart.
+- Support setting additional global annotations. These will be applied to all objects rendered by the chart.
+- Support Helm templating in `podAnnotations`.
+
+#### Changed
+
+- `externalTrafficPolicy` (when a value is specified) is now set for all Service types. (fixes https://github.com/k8s-at-home/library-charts/issues/125)
+- Changed the unit test framework to an easier and more readable solution.
+
+#### Fixed
+
+- Fix a typo in the generated Notes.
+- Explicitly add `imagePullSecrets` to `values.yaml` to improve discoverability of the setting.
 
 ### [4.3.0]
 
