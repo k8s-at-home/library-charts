@@ -1,4 +1,4 @@
-suite: persistence custom
+suite: persistence types
 templates:
   - common.yaml
 tests:
@@ -47,3 +47,24 @@ tests:
             name: configmap
             configMap:
               name: mySettings
+
+  - it: nfs persistence type should pass
+    set:
+      persistence:
+        nfs:
+          enabled: true
+          type: nfs
+          server: 10.10.0.8
+          path: /tank/nas/library
+    asserts:
+      - documentIndex: 0
+        isKind:
+          of: Deployment
+      - documentIndex: 0
+        equal:
+          path: spec.template.spec.volumes[0]
+          value:
+            name: nfs
+            nfs:
+              path: /tank/nas/library
+              server: 10.10.0.8
