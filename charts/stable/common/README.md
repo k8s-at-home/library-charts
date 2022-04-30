@@ -202,6 +202,7 @@ N/A
 | service | object | See below | Configure the services for the chart here. Additional services can be added by adding a dictionary key similar to the 'main' service. |
 | service.main.annotations | object | `{}` | Provide additional annotations which may be required. |
 | service.main.enabled | bool | `true` | Enables or disables the service |
+| service.main.externalTrafficPolicy | string | `nil` | Specify the externalTrafficPolicy for the service. Options: Cluster, Local -- [[ref](https://kubernetes.io/docs/tutorials/services/source-ip/)] |
 | service.main.ipFamilies | list | `[]` | The ip families that should be used. Options: IPv4, IPv6 |
 | service.main.ipFamilyPolicy | string | `nil` | Specify the ip policy. Options: SingleStack, PreferDualStack, RequireDualStack |
 | service.main.labels | object | `{}` | Provide additional labels which may be required. |

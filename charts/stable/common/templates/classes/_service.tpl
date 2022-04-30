@@ -42,15 +42,15 @@ spec:
   {{- if $values.loadBalancerIP }}
   loadBalancerIP: {{ $values.loadBalancerIP }}
   {{- end }}
-  {{- if $values.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
-  {{- end }}
   {{- if $values.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
     {{ toYaml $values.loadBalancerSourceRanges | nindent 4 }}
   {{- end -}}
   {{- else }}
   type: {{ $svcType }}
+  {{- end }}
+  {{- if $values.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ $values.externalTrafficPolicy }}
   {{- end }}
   {{- if $values.sessionAffinity }}
   sessionAffinity: {{ $values.sessionAffinity }}
