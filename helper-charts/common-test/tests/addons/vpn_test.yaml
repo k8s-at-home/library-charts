@@ -103,3 +103,29 @@ tests:
                 - key: vpnConfigfile
                   path: vpnConfigfile
               secretName: test-secret
+
+  - it: addon enabled with managed secret should pass
+    set:
+      addons:
+        vpn:
+          enabled: true
+          openvpn:
+            auth: |
+              <auth>
+    asserts:
+      - hasDocuments:
+          count: 3
+      - documentIndex: &SecretDocument 0
+        isKind:
+          of: Secret
+      - documentIndex: &DeploymentDocument 1
+        isKind:
+          of: Deployment
+      - documentIndex: 2
+        isKind:
+          of: Service
+      - documentIndex: *DeploymentDocument
+        not: true
+        equal:
+          path: spec.template.spec.containers[0].name
+          value: vpn

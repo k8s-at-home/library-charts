@@ -11,8 +11,8 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $hpaName }}
-  labels: {{- include "common.labels" . | nindent 4 }}
-  annotations: {{- include "common.annotations" . | nindent 4 }}
+  labels: {{- include "common.labels" $ | nindent 4 }}
+  annotations: {{- include "common.annotations" $ | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
