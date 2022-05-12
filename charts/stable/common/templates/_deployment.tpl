@@ -39,8 +39,9 @@ spec:
       {{- include "common.labels.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{ if .Values.podAnnotations }}
       annotations:
+        checksum/config: {{ include ("common.configmap") . | sha256sum }}
+      {{ if .Values.podAnnotations }}
         {{- tpl (toYaml .Values.podAnnotations) . | nindent 8 }}
       {{- end }}
       labels:
