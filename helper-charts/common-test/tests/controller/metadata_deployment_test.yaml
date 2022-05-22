@@ -14,11 +14,6 @@ tests:
           path: metadata.annotations
       - documentIndex: *ControllerDoc
         equal:
-          path: spec.template.metadata.annotations
-          value:
-            checksum/config: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-      - documentIndex: *ControllerDoc
-        equal:
           path: metadata.labels
           value:
             app.kubernetes.io/instance: RELEASE-NAME
@@ -43,11 +38,6 @@ tests:
           path: metadata.annotations
           value:
             test_annotation: test
-      - documentIndex: *ControllerDoc
-        equal:
-          path: spec.template.metadata.annotations
-          value:
-            checksum/config: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
@@ -81,11 +71,6 @@ tests:
           value:
             global_annotation: test
             test_annotation: test
-      - documentIndex: *ControllerDoc
-        equal:
-          path: spec.template.metadata.annotations
-          value:
-            checksum/config: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       - documentIndex: *ControllerDoc
         equal:
           path: metadata.labels
