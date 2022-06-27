@@ -39,7 +39,7 @@ jobs:
 
     - name: Install Helm
       if: steps.filter.outputs.addedOrModified == 'true'
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v3
       with:
         version: v3.5.4
 
@@ -115,7 +115,7 @@ jobs:
         git config user.email "k8s-at-home[bot]@users.noreply.github.com"
 
     - name: Install Helm
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v3
       with:
         version: v3.5.4
 
