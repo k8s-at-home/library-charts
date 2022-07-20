@@ -33,6 +33,11 @@ dependencies:
   repository: https://k8s-at-home.com/charts/
 ```
 
+Create a reference file `/template/common.yaml` with at least this line:
+```yaml
+{{ include "common.all" . }}
+```
+
 For more information, take a look at the [Docs](http://docs.k8s-at-home.com/our-helm-charts/common-library/).
 
 ## Configuration
