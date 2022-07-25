@@ -671,6 +671,11 @@ addons:
         # kubernetes.io/tls-acme: "true"
 
       labels: {}
+
+      # -- Set the ingressClass that is used for this ingress.
+      # Requires Kubernetes >=1.19
+      ingressClassName:  # "nginx"
+
       hosts:
         - host: code.chart-example.local
           paths:
