@@ -748,7 +748,7 @@ addons:
 
     image:
       # -- Specify the netshoot image
-      repository: docker.io/nicolaka/netshoot
+      repository: ghcr.io/nicolaka/netshoot
       # -- Specify the netshoot image tag
       tag: v0.7
       # -- Specify the netshoot image pull policy
