@@ -617,9 +617,9 @@ addons:
 
     image:
       # -- Specify the code-server image
-      repository: codercom/code-server
+      repository: docker.io/codercom/code-server
       # -- Specify the code-server image tag
-      tag: 3.9.2
+      tag: 4.5.1
       # -- Specify the code-server image pull policy
       pullPolicy: IfNotPresent
 
