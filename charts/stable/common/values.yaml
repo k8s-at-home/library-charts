@@ -483,7 +483,7 @@ addons:
     # -- Enable running a VPN in the pod to route traffic through a VPN
     enabled: false
 
-    # -- Specify the VPN type. Valid options are openvpn or wireguard
+    # -- Specify the VPN type. Valid options are `openvpn`, `wireguard` and `gluetun`.
     type: openvpn
 
     # -- OpenVPN specific configuration
@@ -512,6 +512,18 @@ addons:
         # -- Specify the WireGuard image tag
         tag: v1.0.20210914
         # -- Specify the WireGuard image pull policy
+        pullPolicy: IfNotPresent
+
+    # -- Gluetun specific configuration
+    # -- Make sure to read the [documentation](https://github.com/qdm12/gluetun/wiki) to see how to configure this addon!
+    # @default -- See below
+    gluetun:
+      image:
+        # -- Specify the Gluetun image
+        repository: docker.io/qmcgaw/gluetun
+        # -- Specify the Gluetun image tag
+        tag: v3.30.0
+        # -- Specify the Gluetun image pull policy
         pullPolicy: IfNotPresent
 
     # -- Set the VPN container securityContext
