@@ -129,3 +129,52 @@ tests:
         equal:
           path: spec.template.spec.containers[0].name
           value: vpn
+
+  - it: addon enabled with custom env vars dict should pass
+    set:
+      addons:
+        vpn:
+          enabled: true
+          env:
+            int: 1
+            float: 1.5
+            string: value_of_env
+            template: "{{ .Release.Name }}-admin"
+    asserts:
+      - hasDocuments:
+          count: 2
+      - documentIndex: &DeploymentDocument 0
+        isKind:
+          of: Deployment
+      - documentIndex: &ServiceDocument 1
+        isKind:
+          of: Service
+      - documentIndex: *DeploymentDocument
+        not: true
+        equal:
+          path: spec.template.spec.containers[1].name
+          value: vpn
+      - documentIndex: *DeploymentDocument
+        equal:
+          path: spec.template.spec.containers[1].env[0]
+          value:
+            name: float
+            value: "1.5"
+      - documentIndex: *DeploymentDocument
+        equal:
+          path: spec.template.spec.containers[1].env[1]
+          value:
+            name: int
+            value: "1"
+      - documentIndex: *DeploymentDocument
+        equal:
+          path: spec.template.spec.containers[1].env[2]
+          value:
+            name: string
+            value: value_of_env
+      - documentIndex: *DeploymentDocument
+        equal:
+          path: spec.template.spec.containers[1].env[3]
+          value:
+            name: template
+            value: RELEASE-NAME-admin

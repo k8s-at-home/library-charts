@@ -56,21 +56,6 @@ tests:
             name: string
             value: "1"
 
-  - it: KeyValue float should pass
-    set:
-      env:
-        string: 4.2
-    asserts:
-      - documentIndex: &DeploymentDoc 0
-        isKind:
-          of: Deployment
-      - documentIndex: *DeploymentDoc
-        equal:
-          path: spec.template.spec.containers[0].env[0]
-          value:
-            name: string
-            value: "4.2"
-
   - it: List should pass
     set:
       env:

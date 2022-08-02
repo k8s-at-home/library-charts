@@ -50,6 +50,11 @@ initContainers:
       {{- if not $container.name -}}
         {{- $_ := set $container "name" $key }}
       {{- end }}
+      {{- if $container.env -}}
+        {{- $_ := set $ "ObjectValues" (dict "env" $container.env) -}}
+        {{- $newEnv := fromYaml (include "common.controller.env_vars" $) -}}
+        {{- $_ := set $container "env" $newEnv.env }}
+      {{- end }}
       {{- $initContainers = append $initContainers $container }}
     {{- end }}
     {{- tpl (toYaml $initContainers) $ | nindent 2 }}
@@ -61,6 +66,11 @@ containers:
     {{- range $name, $container := . }}
       {{- if not $container.name -}}
         {{- $_ := set $container "name" $name }}
+      {{- end }}
+      {{- if $container.env -}}
+        {{- $_ := set $ "ObjectValues" (dict "env" $container.env) -}}
+        {{- $newEnv := fromYaml (include "common.controller.env_vars" $) -}}
+        {{- $_ := set $container "env" $newEnv.env }}
       {{- end }}
       {{- $additionalContainers = append $additionalContainers $container }}
     {{- end }}
