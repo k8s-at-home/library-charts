@@ -53,6 +53,7 @@ initContainers:
       {{- if $container.env -}}
         {{- $_ := set $ "ObjectValues" (dict "env" $container.env) -}}
         {{- $newEnv := fromYaml (include "common.controller.env_vars" $) -}}
+        {{- $_ := unset $.ObjectValues "env" -}}
         {{- $_ := set $container "env" $newEnv.env }}
       {{- end }}
       {{- $initContainers = append $initContainers $container }}
@@ -71,6 +72,7 @@ containers:
         {{- $_ := set $ "ObjectValues" (dict "env" $container.env) -}}
         {{- $newEnv := fromYaml (include "common.controller.env_vars" $) -}}
         {{- $_ := set $container "env" $newEnv.env }}
+        {{- $_ := unset $.ObjectValues "env" -}}
       {{- end }}
       {{- $additionalContainers = append $additionalContainers $container }}
     {{- end }}

@@ -46,6 +46,8 @@ tests:
 
   - it: with custom env vars dict should pass
     set:
+      env:
+        main_env: value
       additionalContainers:
         additional1:
           env:
@@ -57,6 +59,12 @@ tests:
       - documentIndex: &DeploymentDocument 0
         isKind:
           of: Deployment
+      - documentIndex: *DeploymentDocument
+        equal:
+          path: spec.template.spec.containers[0].env[0]
+          value:
+            name: main_env
+            value: "value"
       - documentIndex: *DeploymentDocument
         equal:
           path: spec.template.spec.containers[1].env[0]
