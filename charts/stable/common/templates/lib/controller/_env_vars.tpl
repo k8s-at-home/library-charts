@@ -29,10 +29,14 @@ Environment variables used by containers.
         {{- end -}}
       {{- end -}}
       {{- if not (kindIs "map" $value) -}}
-        {{- if kindIs "string" $value -}}
-          {{- $result = append $result (dict "name" $name "value" (tpl $value $)) -}}
+        {{- if $value -}}
+          {{- if kindIs "string" $value -}}
+            {{- $result = append $result (dict "name" $name "value" (tpl $value $)) -}}
+          {{- else -}}
+            {{- $result = append $result (dict "name" $name "value" ($value | toString)) -}}
+          {{- end -}}
         {{- else -}}
-          {{- $result = append $result (dict "name" $name "value" ($value | toString)) -}}
+          {{- $result = append $result (dict "name" $name "value" $value) -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
