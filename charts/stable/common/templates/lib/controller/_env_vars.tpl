@@ -20,7 +20,8 @@ Environment variables used by containers.
 
       {{- if kindIs "map" $value -}}
         {{- if hasKey $value "value" -}}
-          {{- $result = append $result (dict "name" $name "value" (tpl $value.value $)) -}}
+          {{- $envValue := $value.value | toString -}}
+          {{- $result = append $result (dict "name" $name "value" (tpl $envValue $)) -}}
         {{- else if hasKey $value "valueFrom" -}}
           {{- $result = append $result (dict "name" $name "valueFrom" $value.valueFrom) -}}
         {{- else -}}
