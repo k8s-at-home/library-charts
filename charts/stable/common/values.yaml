@@ -702,6 +702,41 @@ addons:
     securityContext:
       runAsUser: 0
 
+  honeytail:
+    # -- Enable running a honeytail container in the pod
+    enabled: false
+
+    image:
+      # -- Specify the honeytail image
+      repository: registry.gitlab.com/mterhar/honeytail-sidecar
+      # -- Specify the honeytail image tag
+      tag: latest
+      # -- Specify the honeytail image pull policy
+      pullPolicy: Always
+
+    # -- Set any environment variables for honeytail here
+    env: {}
+    # HONEYCOMB_SERVICE_NAME: sonarr
+    # LOG_FILEPATH: /config/logs/sonarr.txt
+
+    # -- Specify a list of volumes that get mounted in the honeytail container.
+    # At least 1 volumeMount is required!
+    volumeMounts: []
+    # - name: config
+    #   mountPath: /config
+    #   readOnly: true
+    # -- Provide a customized honeytail configuration file
+    configFile:  # |-
+      # Some Example Config
+      # parser = keyval
+      # writekey = 000000000000000000000
+      # dataset = homelab
+
+    # -- Reference an existing secret that contains the honeytail configuration file
+    # The chart expects it to be present under the `honeytailConfigfile` key.
+    configFileSecret:
+    # This can be usd for services like Radarr and Sonarr which produce the same output
+
   # -- The common library supports adding a promtail add-on to to access logs and ship them to loki. It can be configured under this key.
   # @default -- See values.yaml
   promtail:
